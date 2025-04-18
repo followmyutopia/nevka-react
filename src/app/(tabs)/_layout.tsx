@@ -45,6 +45,12 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+          headerStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          },
+          tabBarStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          }
         }}
       />
       <Tabs.Screen
@@ -52,6 +58,12 @@ export default function TabLayout() {
         options={{
           title: 'Люди',
           tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
+          headerStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          },
+          tabBarStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          }
         }}
       />
       <Tabs.Screen
@@ -59,6 +71,12 @@ export default function TabLayout() {
         options={{
           title: 'Сообщения',
           tabBarIcon: ({ color }) => <TabBarIcon name="paper-plane" color={color} />,
+          headerStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          },
+          tabBarStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          }
         }}
       />
       <Tabs.Screen
@@ -66,6 +84,12 @@ export default function TabLayout() {
         options={{
           title: 'Обсуждения',
           tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
+          headerStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          },
+          tabBarStyle: {
+            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+          }
         }}
       />
     </Tabs>
