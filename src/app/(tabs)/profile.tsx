@@ -4,7 +4,7 @@ import { View, Text } from "@/src/components/Themed";
 export default function profile () {
     return (
         <View style={styles.container}>
-            <Text>Профиль</Text>
+            <Text>Тестируем</Text>
         </View>
     );
 }
