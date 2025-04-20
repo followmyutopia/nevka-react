@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import NevkaProvider from '../providers/nevkaProvider';
 
 import { useColorScheme } from '@/src/components/useColorScheme';
 import Colors from '../constants/Colors';
@@ -51,12 +52,14 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
-      </Stack>
+      <NevkaProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
+        </Stack>
+      </NevkaProvider>
     </ThemeProvider>
   );
 }

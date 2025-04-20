@@ -1,12 +1,17 @@
 import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
+import { useNevkaProvider } from "../providers/nevkaProvider";
+import { Redirect } from "expo-router";
 
 export default function signup () {
     const colorScheme = useColorScheme();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
+
+    const { token }: any = useNevkaProvider();
+    if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     return (
         <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
