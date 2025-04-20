@@ -1,10 +1,16 @@
 import { StyleSheet } from "react-native";
 import { View, Text } from "@/src/components/Themed";
+import { useNevkaProvider } from "@/src/providers/nevkaProvider";
+import { Redirect } from "expo-router";
 
 export default function people () {
+    const { token, checkToken }: any = useNevkaProvider();
+    if ( token == "") { return <Redirect href={'/'} /> }
+    // const loggedUser = checkToken(token);
+    
     return (
         <View style={styles.container}>
-            <Text>Люди</Text>
+            {/* <Text>{loggedUser}</Text> */}
         </View>
     );
 }

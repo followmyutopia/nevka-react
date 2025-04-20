@@ -1,28 +1,89 @@
-import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform, Button } from "react-native";
 import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
+import { useNevkaProvider } from "../providers/nevkaProvider";
+import { useState } from "react";
 
 export default function index () {
+    const { token, setToken }: any = useNevkaProvider();
+    if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
+
+    const [login, setLogin] = useState("");
+    const [password, setPassword] = useState("");
+    const [consoleMessage, setConsoleMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [session, setSession] = useState("");
+
     const colorScheme = useColorScheme();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
+
+    const isValidEmail = () => {
+        const atLocation = login.lastIndexOf("@");
+        const dotLocation = login.lastIndexOf("."); 
+        return (
+            atLocation > 0 &&
+            dotLocation > atLocation + 1 &&
+            dotLocation < login.length - 1
+        );
+    };
+
+    const signIn = async () => {
+        if (isValidEmail()) {
+            setLoading(true);
+
+            const formData = new FormData();
+            formData.append("login", login);
+            formData.append("password", password);
+
+            try {
+                const response = await fetch('https://nevka.site/api/login.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    setConsoleMessage(json.error)
+                } else if (json.result == "success") {
+                    setToken(json.token);
+                }
+            } catch (error) {
+                setConsoleMessage("Ошибка API запроса, обновите приложение")
+            }
+
+            setLoading(false);
+        } else {
+            setConsoleMessage("Введите электронную почту")
+        }
+    };
 
     return (
         <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <Text style={styles.logo}>Невка</Text>
 
             <Text style={styles.label}>Логин:</Text>
-            <TextInput style={inputStyle}></TextInput>
+            <TextInput style={inputStyle}
+                value={login}
+                onChangeText={setLogin}
+                maxLength={63}
+                spellCheck={false}
+                ></TextInput>
 
             <Text style={styles.label}>Пароль:</Text>
-            <TextInput style={inputStyle}></TextInput>
+            <TextInput style={inputStyle}
+                value={password}
+                onChangeText={setPassword}
+                maxLength={63}
+                secureTextEntry={true}
+                ></TextInput>
 
             <Pressable
                 style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                onPress={() => {router.navigate('/(tabs)/profile')}}>
-                <Text style={styles.buttonText}>Войти</Text>
+                onPress={signIn}
+                disabled={loading}>
+                <Text style={styles.buttonText}>{loading ? 'Выполняется вход...' : 'Войти'}</Text>
             </Pressable>
 
             <Pressable
@@ -31,7 +92,8 @@ export default function index () {
                 <Text style={styles.buttonText}>Зарегистрироваться</Text>
             </Pressable>
 
-            <Text style={styles.console}></Text>
+            <Text style={styles.console}>{consoleMessage}</Text>
+            <Button title="Debug" onPress={() => setToken("***REMOVED***cf56a93fe501e0550204534636e57f5880940d09")}></Button>
         </KeyboardAvoidingView>
     );
 }
@@ -55,7 +117,8 @@ const styles = StyleSheet.create({
     console: {
         fontSize: 20,
         color: 'orange',
-        marginTop: '2.5%'
+        marginTop: '2.5%',
+        textAlign: 'center'
     },
     darkInput: {
         width: '90%',
