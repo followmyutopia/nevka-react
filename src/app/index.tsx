@@ -6,7 +6,7 @@ import { useNevkaProvider } from "../providers/nevkaProvider";
 import { useState } from "react";
 
 export default function index () {
-    const { token, setToken }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, setLoggedUser }: any = useNevkaProvider();
     if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const [login, setLogin] = useState("");
@@ -48,6 +48,7 @@ export default function index () {
                     setConsoleMessage(json.error)
                 } else if (json.result == "success") {
                     setToken(json.token);
+                    setLoggedUser(json.userId);
                 }
             } catch (error) {
                 setConsoleMessage("Ошибка API запроса, обновите приложение")
@@ -93,7 +94,10 @@ export default function index () {
             </Pressable>
 
             <Text style={styles.console}>{consoleMessage}</Text>
-            <Button title="Debug" onPress={() => setToken("***REMOVED***cf56a93fe501e0550204534636e57f5880940d09")}></Button>
+            <Button title="Debug" onPress={() => {
+                setLogin("***REMOVED***");
+                setPassword("***REMOVED***");
+            }}></Button>
         </KeyboardAvoidingView>
     );
 }
