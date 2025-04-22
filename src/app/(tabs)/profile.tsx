@@ -29,7 +29,8 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                     aspectRatio: 1,
                     borderRadius: 15,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}} source={{uri: user.avatar}}></Image>
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                    source={{uri: user.avatar}}></Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%' }}>
                     <Text style={{ fontSize: 32 }}>{user.firstname}</Text>
                     <Text style={{ fontSize: 32, paddingBottom: 10 }}>{user.lastname}</Text>
@@ -88,7 +89,7 @@ export default function profile () {
 
     return (
         <View style={styles.container}>
-            <Text>{loading ? <ActivityIndicator /> : <UserInfoScreen user={userData!}/>}</Text>
+            {loading ? <ActivityIndicator /> : <UserInfoScreen user={userData!}/>}
         </View>
     );
 }
