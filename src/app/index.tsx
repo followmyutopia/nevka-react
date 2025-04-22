@@ -3,7 +3,7 @@ import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
 import { Redirect, router } from "expo-router";
 import { useNevkaProvider } from "../providers/nevkaProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function index () {
     const { token, setToken, loggedUser, setLoggedUser }: any = useNevkaProvider();
@@ -51,7 +51,7 @@ export default function index () {
                     setLoggedUser(json.userId);
                 }
             } catch (error) {
-                setConsoleMessage("Ошибка API запроса, обновите приложение")
+                setConsoleMessage("Проблемы с интернетом")
             }
 
             setLoading(false);
@@ -59,6 +59,11 @@ export default function index () {
             setConsoleMessage("Введите электронную почту")
         }
     };
+
+    useEffect(() => {
+        setLogin("avicus@ya.ru");
+        setPassword("Adel1509");
+    }, []);
 
     return (
         <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -94,10 +99,6 @@ export default function index () {
             </Pressable>
 
             <Text style={styles.console}>{consoleMessage}</Text>
-            <Button title="Debug" onPress={() => {
-                setLogin("avicus@ya.ru");
-                setPassword("Adel1509");
-            }}></Button>
         </KeyboardAvoidingView>
     );
 }
