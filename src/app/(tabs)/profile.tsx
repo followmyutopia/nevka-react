@@ -50,7 +50,7 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
 
 export default function profile () {
     const { token, loggedUser }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> }
+    if ( token == "") { return <Redirect href={'/'} /> };
 
     const [userData, setUserData] = useState<UserData>();
     const [loading, setLoading] = useState(true);
