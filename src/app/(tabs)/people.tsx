@@ -21,7 +21,7 @@ type PeopleListItemProps = {
 
 const PeopleListItem = ({ user }: PeopleListItemProps) => {
     return (
-        <View style={{ width: '100%', padding: '3%' }}>
+        <View style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
             <View style={{flexDirection: 'row', height: 70 }}>
                 <Image style={{
                     height: '100%',

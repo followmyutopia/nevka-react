@@ -1,4 +1,4 @@
-import { ActivityIndicator, Button, StyleSheet, Image, useColorScheme } from "react-native";
+import { ActivityIndicator, StyleSheet, Image, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
