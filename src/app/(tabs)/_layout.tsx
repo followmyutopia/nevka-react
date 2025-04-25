@@ -61,6 +61,7 @@ export default function TabLayout() {
           headerStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
           },
+          headerShown: false,
           tabBarStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
           }
@@ -74,6 +75,7 @@ export default function TabLayout() {
           headerStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
           },
+          headerShown: false,
           tabBarStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
           }
@@ -87,6 +89,7 @@ export default function TabLayout() {
           headerStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
           },
+          headerShown: false,
           tabBarStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
           }

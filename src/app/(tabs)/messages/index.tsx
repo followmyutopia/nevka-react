@@ -1,7 +1,7 @@
-import { StyleSheet, Image, useColorScheme, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, Image, useColorScheme, ActivityIndicator, FlatList, Pressable } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Link, Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
 
 type ChatsData = {
@@ -21,25 +21,27 @@ type ChatsListItemProps = {
 
 const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
     return (
-        <View style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
-            <View style={{flexDirection: 'row', height: 70 }}>
-                <Image style={{
-                    height: '100%',
-                    aspectRatio: 1,
-                    borderRadius: 15,
-                    borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
-                    source={{uri: user.avatar}}></Image>
-                <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
-                    <View style={{flexDirection: 'row'}}>
-                        <Text style={{ fontSize: 18, flex: 1 }} numberOfLines={1}>{user.firstname + " " + user.lastname}</Text>
-                        {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
-                        {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.online}</Text>}
+        <Link href={'/(tabs)/messages/chat'} asChild>
+            <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
+                <View style={{flexDirection: 'row', height: 70 }}>
+                    <Image style={{
+                        height: '100%',
+                        aspectRatio: 1,
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        source={{uri: user.avatar}}></Image>
+                    <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{ fontSize: 18, flex: 1 }} numberOfLines={1}>{user.firstname + " " + user.lastname}</Text>
+                            {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
+                            {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.online}</Text>}
+                        </View>
+                        <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText}</Text>
                     </View>
-                    <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText}</Text>
                 </View>
-            </View>
-        </View>
+            </Pressable>
+        </Link>
     );
 }
 
