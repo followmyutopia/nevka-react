@@ -15,6 +15,7 @@ export default function MenuStack() {
             }} />
             <Stack.Screen name="chat" options={{
                 title: 'Чат',
+                headerBackTitle: 'Сообщения',
                 headerStyle: {
                 backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
                 },

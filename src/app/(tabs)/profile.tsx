@@ -4,7 +4,6 @@ import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect } from "expo-router";
-import Colors from "@/src/constants/Colors";
 
 type UserData = {
     firstname: string,
@@ -57,8 +56,8 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                 textAlign: 'center',
                 padding: '4%'
             }}>{user.status}</Text>
-            <Text style={{ fontSize: 18, }}>Город: {user.city}</Text>
-            <Text style={{ fontSize: 18, paddingVertical: '3%' }}>Информация: {user.bio}</Text>
+            { user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
+            { user.bio != "" ? <Text style={{ fontSize: 18, paddingVertical: '3%' }}>Информация: {user.bio}</Text> : null}
         </View>
     );
 }
