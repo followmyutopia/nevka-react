@@ -21,7 +21,10 @@ type PeopleListItemProps = {
 
 const PeopleListItem = ({ user }: PeopleListItemProps) => {
     return (
-        <Link href={'/(tabs)/people/person'} asChild>
+        <Link href={{
+            pathname: '/(tabs)/people/person',
+            params: { id: user.id }
+          }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
                 <View style={{flexDirection: 'row', height: 70 }}>
                     <Image style={{
@@ -36,7 +39,10 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
                         {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
                         {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{'Был(а): ' + user.online}</Text>}
                     </View>
-                    <Link href={'/(tabs)/messages/chat'} asChild>
+                    <Link href={{
+                        pathname: '/(tabs)/messages/chat',
+                        params: { id: user.id }
+                    }} withAnchor asChild>
                         <Pressable style={{height: '100%', justifyContent: 'center', marginRight: '3%'}}>
                             {({ pressed }) => (
                                 <FontAwesome

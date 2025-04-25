@@ -1,15 +1,16 @@
 import { StyleSheet } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Redirect, useLocalSearchParams } from "expo-router";
 
 export default function topic () {
     const { token }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
+    const { id } = useLocalSearchParams();
 
     return (
         <View style={styles.container}>
-            <Text>Обсуждения</Text>
+            <Text>Обсуждения: {id}</Text>
         </View>
     );
 }

@@ -21,7 +21,10 @@ type ChatsListItemProps = {
 
 const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
     return (
-        <Link href={'/(tabs)/messages/chat'} asChild>
+        <Link href={{
+            pathname: '/(tabs)/messages/chat',
+            params: { id: user.id }
+          }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
                 <View style={{flexDirection: 'row', height: 70 }}>
                     <Image style={{
