@@ -82,7 +82,7 @@ export default function people () {
                 setPeopleData(json.people);
             }
         } catch (error) {
-            console.log("Ошибка API запроса, проблемы с соединением?\n" + error);
+            console.log("Ошибка запроса людей, проблемы с соединением?\n" + error);
         } finally {
             setLoading(false);
         }
@@ -90,7 +90,7 @@ export default function people () {
     
     useEffect(() => {
         getPeople(query);
-        console.log("getPeople update complete");
+        console.log("Updated: People");
     }, [update, query]);
     
     return (

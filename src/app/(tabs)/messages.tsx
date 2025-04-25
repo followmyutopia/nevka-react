@@ -73,7 +73,7 @@ export default function messages () {
                 setChatsData(json.chats);
             }
         } catch (error) {
-            console.log("Ошибка API запроса, проблемы с соединением?\n" + error);
+            console.log("Ошибка запроса чатов, проблемы с соединением?\n" + error);
         } finally {
             setLoading(false);
         }
@@ -81,7 +81,7 @@ export default function messages () {
 
     useEffect(() => {
         getChats(token);
-        console.log("getChats update complete");
+        console.log("Updated: Chats");
     }, [update]);
 
     return (
