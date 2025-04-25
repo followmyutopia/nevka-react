@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Image, TextInput, useColorScheme, Pressable, FlatList } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Link, Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -21,32 +21,36 @@ type PeopleListItemProps = {
 
 const PeopleListItem = ({ user }: PeopleListItemProps) => {
     return (
-        <View style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
-            <View style={{flexDirection: 'row', height: 70 }}>
-                <Image style={{
-                    height: '100%',
-                    aspectRatio: 1,
-                    borderRadius: 15,
-                    borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
-                    source={{uri: user.avatar}}></Image>
-                <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
-                    <Text style={{ fontSize: 18 }}>{user.firstname + " " + user.lastname}</Text>
-                    {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
-                    {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{'Был(а): ' + user.online}</Text>}
+        <Link href={'/(tabs)/people/person'} asChild>
+            <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
+                <View style={{flexDirection: 'row', height: 70 }}>
+                    <Image style={{
+                        height: '100%',
+                        aspectRatio: 1,
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        source={{uri: user.avatar}}></Image>
+                    <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
+                        <Text style={{ fontSize: 18 }}>{user.firstname + " " + user.lastname}</Text>
+                        {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
+                        {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{'Был(а): ' + user.online}</Text>}
+                    </View>
+                    <Link href={'/(tabs)/messages/chat'} asChild>
+                        <Pressable style={{height: '100%', justifyContent: 'center', marginRight: '3%'}}>
+                            {({ pressed }) => (
+                                <FontAwesome
+                                name="envelope-o"
+                                size={32}
+                                color={Colors[useColorScheme() ?? 'light'].text}
+                                style={{ opacity: pressed ? 0.5 : 1 }}
+                                />
+                            )}
+                        </Pressable>
+                    </Link>
                 </View>
-                <Pressable style={{height: '100%', justifyContent: 'center', marginRight: '3%'}}>
-                    {({ pressed }) => (
-                        <FontAwesome
-                        name="envelope-o"
-                        size={32}
-                        color={Colors[useColorScheme() ?? 'light'].text}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
-                        />
-                    )}
-                </Pressable>
-            </View>
-        </View>
+            </Pressable>
+        </Link>
     );
 }
 

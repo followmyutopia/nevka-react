@@ -9,7 +9,7 @@ export default function chat () {
 
     return (
         <View style={styles.container}>
-            <Text>Обсуждения</Text>
+            <Text>Чат</Text>
         </View>
     );
 }
