@@ -167,7 +167,7 @@ export default function person () {
     useEffect(() => {
         console.log("Focused person: " + isFocused);
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update+1), 60000);
             getUserData(id);
             console.log("Updated: UserData for: " + id);
             getWall(id);

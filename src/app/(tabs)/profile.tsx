@@ -165,7 +165,7 @@ export default function profile () {
     useEffect(() => {
         console.log("Focused profile: " + isFocused);
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update+1), 60000);
             getUserData(loggedUser);
             console.log("Updated: UserData for: " + loggedUser);
             getWall(loggedUser);

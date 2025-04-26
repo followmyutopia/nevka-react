@@ -85,7 +85,7 @@ export default function discussions () {
     useEffect(() => {
         console.log("Focused discussions: " + isFocused);
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update+1), 30000);
             getDiscussions(query);
             console.log("Updated: Discussions");
         }
