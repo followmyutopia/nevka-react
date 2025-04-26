@@ -30,7 +30,7 @@ const MessageItem = ({ item }: MessageItemProps) => {
             borderWidth: 1,
             alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
             borderRadius: 10,
-            maxWidth: '80%',
+            maxWidth: '84%',
             marginHorizontal: '3%',
             marginVertical: '1%'
             }}>

@@ -3,7 +3,7 @@ import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect, useLocalSearchParams } from "expo-router";
+import { Redirect, Stack, useLocalSearchParams } from "expo-router";
 import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -106,7 +106,7 @@ const WallPost = ({ item, user }: WallPostProps) => {
 export default function person () {
     const { token, loggedUser }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
     const isFocused = useIsFocused();
     const [update, setUpdate] = useState(0);
@@ -177,6 +177,7 @@ export default function person () {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{ title: name }} />
             {loading ? <ActivityIndicator /> : <FlatList
                 ListHeaderComponent={<UserInfoScreen user={userData!}/>}
                 style={{flex: 1, width: '100%'}}
