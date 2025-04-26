@@ -3,6 +3,7 @@ import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Link, Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 
 type ChatsData = {
     id: string,
@@ -52,11 +53,11 @@ export default function messages () {
     const { token, loggedUser }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
+    const isFocused = useIsFocused();
+    const [update, setUpdate] = useState(0);
     const colorScheme = useColorScheme();
     const [chatsData, setChatsData] = useState<ChatsData[]>();
     const [loading, setLoading] = useState(true);
-    const [update, setUpdate] = useState(0);
-    setTimeout(() => setUpdate(update+1), 60000);
 
     const getChats = async (token: string) => {
         const formData = new FormData();
@@ -85,9 +86,13 @@ export default function messages () {
     }
 
     useEffect(() => {
-        getChats(token);
-        console.log("Updated: Chats");
-    }, [update]);
+        console.log("Focused messages: " + isFocused);
+        if (isFocused) {
+            setTimeout(() => setUpdate(update+1), 10000);
+            getChats(token);
+            console.log("Updated: Chats");
+        }
+    }, [update, isFocused]);
 
     return (
         <View style={styles.container}>

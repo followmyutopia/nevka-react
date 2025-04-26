@@ -4,6 +4,7 @@ import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 
 type UserData = {
     firstname: string,
@@ -105,12 +106,12 @@ export default function profile () {
     const { token, loggedUser }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
+    const isFocused = useIsFocused();
+    const [update, setUpdate] = useState(0);
     const [userData, setUserData] = useState<UserData>();
     const [wallData, setWallData] = useState<WallData[]>([]);
     const [loading, setLoading] = useState(true);
     const [wallLoading, setWallLoading] = useState(true);
-    const [update, setUpdate] = useState(0);
-    setTimeout(() => setUpdate(update+1), 60000);
 
     const colorScheme = useColorScheme();
 
@@ -162,11 +163,15 @@ export default function profile () {
     }
 
     useEffect(() => {
-        getUserData(loggedUser);
-        console.log("Updated: UserData");
-        getWall(loggedUser);
-        console.log("Updated: Wall");
-    }, [update]);
+        console.log("Focused profile: " + isFocused);
+        if (isFocused) {
+            setTimeout(() => setUpdate(update+1), 10000);
+            getUserData(loggedUser);
+            console.log("Updated: UserData for: " + loggedUser);
+            getWall(loggedUser);
+            console.log("Updated: Wall for: " + loggedUser);
+        }
+    }, [update, isFocused]);
 
     return (
         <View style={styles.container}>
