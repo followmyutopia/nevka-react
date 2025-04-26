@@ -175,7 +175,7 @@ export default function profile () {
 
     return (
         <View style={styles.container}>
-            {loading ? <ActivityIndicator /> : <FlatList
+            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
                 ListHeaderComponent={<UserInfoScreen user={userData!}/>}
                 style={{flex: 1, width: '100%'}}
                 data={wallData || <ActivityIndicator /> }
