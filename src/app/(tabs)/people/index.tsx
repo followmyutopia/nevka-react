@@ -24,7 +24,7 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
     return (
         <Link href={{
             pathname: '/(tabs)/people/person',
-            params: { id: user.id }
+            params: { id: user.id, name: user.firstname + " " + user.lastname }
           }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
                 <View style={{flexDirection: 'row', height: 70 }}>
