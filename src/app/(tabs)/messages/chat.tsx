@@ -1,19 +1,60 @@
-import { StyleSheet, TextInput, useColorScheme } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
+import FullWidthImage from "react-native-fullwidth-image";
 
 type MessageData = {
     id: string,
-    me: boolean,
+    me: string,
     text: string,
     image: string,
     timestamp: string,
     formattedTime: string
 };
+
+type MessageItemProps = {
+    item: MessageData
+}
+
+const MessageItem = ({ item }: MessageItemProps) => {
+    return (
+        <View style={{
+            backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+            borderWidth: 1,
+            alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
+            borderRadius: 10,
+            maxWidth: '80%',
+            marginHorizontal: '3%',
+            marginVertical: '1%'
+            }}>
+            { item.text != "" ? <Text style={{
+                fontSize: 16,
+                paddingHorizontal: 7,
+                paddingTop: 5,
+                paddingBottom: item.image != "" ? 2 : 0
+            }}>{item.text}</Text> : null}
+            { item.image != "" ? <FullWidthImage style={{
+                minWidth: '100%',
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'
+            }} source={{uri: item.image}}>
+            </FullWidthImage> : null}
+            <Text style={{
+                fontSize: 14,
+                marginVertical: 2,
+                marginHorizontal: 7,
+                alignSelf: 'flex-end',
+                color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
+            }}>{item.formattedTime}</Text>
+        </View>
+    );
+}
 
 export default function chat () {
     const { token }: any = useNevkaProvider();
@@ -73,7 +114,14 @@ export default function chat () {
 
     return (
         <View style={styles.container}>
-            <Text>Чат: {id}</Text>
+            {loading ? <ActivityIndicator /> : <FlatList
+                inverted
+                style={{flex: 1, width: '100%'}}
+                data={messagesData}
+                contentContainerStyle={{ flexDirection: 'column-reverse' }}
+                renderItem={({ item }) => <MessageItem item={item} />}
+                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Сообщений нет</Text>}
+            />}
             <TextInput
                 multiline
                 enterKeyHint='send'
