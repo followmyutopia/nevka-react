@@ -5,6 +5,7 @@ import { Link, Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useIsFocused } from "@react-navigation/native";
 
 type DiscData = {
     id: string,
@@ -47,12 +48,12 @@ export default function discussions () {
     const { token }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
+    const isFocused = useIsFocused();
+    const [update, setUpdate] = useState(0);
     const [discData, setDiscData] = useState<DiscData[]>();
     const colorScheme = useColorScheme();
     const [loading, setLoading] = useState(true);
     const [query, setQuery] = useState("");
-    const [update, setUpdate] = useState(0);
-    setTimeout(() => setUpdate(update+1), 60000);
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
 
     const getDiscussions = async (query: string) => {
@@ -82,9 +83,13 @@ export default function discussions () {
     }
 
     useEffect(() => {
-        getDiscussions(query);
+        console.log("Focused discussions: " + isFocused);
+        if (isFocused) {
+            setTimeout(() => setUpdate(update+1), 10000);
+            getDiscussions(query);
             console.log("Updated: Discussions");
-        }, [update, query]);
+        }
+    }, [update, isFocused, query]);
 
     return (
         <View style={styles.container}>
