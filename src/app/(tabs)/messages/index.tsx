@@ -88,7 +88,7 @@ export default function messages () {
     useEffect(() => {
         console.log("Focused messages: " + isFocused);
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update+1), 30000);
             getChats(token);
             console.log("Updated: Chats");
         }
