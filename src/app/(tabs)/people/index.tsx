@@ -42,7 +42,7 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
                     </View>
                     <Link href={{
                         pathname: '/(tabs)/messages/chat',
-                        params: { id: user.id }
+                        params: { id: user.id, name: user.firstname + " " + user.lastname }
                     }} withAnchor asChild>
                         <Pressable style={{height: '100%', justifyContent: 'center', marginRight: '3%'}}>
                             {({ pressed }) => (

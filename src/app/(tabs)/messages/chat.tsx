@@ -1,11 +1,13 @@
-import { ActivityIndicator, FlatList, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect, useLocalSearchParams } from "expo-router";
+import { Redirect, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
+import { FontAwesome } from "@expo/vector-icons";
+import { useHeaderHeight } from "@react-navigation/elements"
 
 type MessageData = {
     id: string,
@@ -33,7 +35,7 @@ const MessageItem = ({ item }: MessageItemProps) => {
             marginVertical: '1%'
             }}>
             { item.text != "" ? <Text style={{
-                fontSize: 16,
+                fontSize: 17,
                 paddingHorizontal: 7,
                 paddingTop: 5,
                 paddingBottom: item.image != "" ? 2 : 0
@@ -59,7 +61,7 @@ const MessageItem = ({ item }: MessageItemProps) => {
 export default function chat () {
     const { token }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
     const isFocused = useIsFocused();
     const [update, setUpdate] = useState(0);
@@ -68,6 +70,7 @@ export default function chat () {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
+    const headerHeight = useHeaderHeight();
 
     const getMessages = async (token: string, chat: string) => {
         const formData = new FormData();
@@ -114,7 +117,8 @@ export default function chat () {
 
     return (
         <View style={styles.container}>
-            {loading ? <ActivityIndicator /> : <FlatList
+            <Stack.Screen options={{ title: name }} />
+            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
                 inverted
                 style={{flex: 1, width: '100%'}}
                 data={messagesData}
@@ -122,15 +126,42 @@ export default function chat () {
                 renderItem={({ item }) => <MessageItem item={item} />}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Сообщений нет</Text>}
             />}
-            <TextInput
-                multiline
-                enterKeyHint='send'
-                onKeyPress={send}
-                style={inputStyle}
-                value={message}
-                onChangeText={setMessage}
-                maxLength={1023}
-            ></TextInput>
+            <KeyboardAvoidingView
+                style={{flexDirection: 'row'}}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={headerHeight}
+                
+                >
+                <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}>
+                    {({ pressed }) => (
+                        <FontAwesome
+                        name="picture-o"
+                        size={27}
+                        color={Colors[useColorScheme() ?? 'light'].text}
+                        style={{ opacity: pressed ? 0.5 : 1 }}
+                        />
+                    )}
+                </Pressable>
+                <TextInput
+                    multiline
+                    enterKeyHint='send'
+                    onKeyPress={send}
+                    style={inputStyle}
+                    value={message}
+                    onChangeText={setMessage}
+                    maxLength={1023}
+                ></TextInput>
+                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', margin: '3%'}}>
+                    {({ pressed }) => (
+                        <FontAwesome
+                        name="paper-plane-o"
+                        size={27}
+                        color={Colors[useColorScheme() ?? 'light'].text}
+                        style={{ opacity: pressed ? 0.5 : 1 }}
+                        />
+                    )}
+                </Pressable>
+            </KeyboardAvoidingView>
         </View>
     );
 }
@@ -142,26 +173,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     darkInput: {
-        width: '94%',
-        height: 70,
+        flex: 1,
+        maxHeight: 80,
         color: Colors.dark.text,
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
         padding: '3%',
         borderRadius: 15,
-        margin: '3%',
-        fontSize: 20,
+        marginVertical: '3%',
+        fontSize: 17,
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.15)'
     },
     lightInput: {
-        width: '94%',
-        height: 70,
+        flex: 1,
+        maxHeight: 80,
         color: Colors.light.text,
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
         padding: '3%',
         borderRadius: 15,
-        margin: '3%',
-        fontSize: 20,
+        marginVertical: '3%',
+        fontSize: 17,
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.15)'
     },
