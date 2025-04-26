@@ -8,6 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements"
+import * as ImagePicker from 'expo-image-picker';
 
 type MessageData = {
     id: string,
@@ -71,6 +72,7 @@ export default function chat () {
     const [message, setMessage] = useState("");
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const headerHeight = useHeaderHeight();
+    const [image, setImage] = useState<string | null>(null);
 
     const getMessages = async (token: string, chat: string) => {
         const formData = new FormData();
@@ -98,13 +100,34 @@ export default function chat () {
         }
     }
 
-    const send = (e: any) => {
-        if(e.nativeEvent.key == "Enter"){
-            e.stopPropagation();
-            e.preventDefault();
-            console.log("Sending... " + message);
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ['images'],
+          allowsEditing: true,
+        //   aspect: [4, 3],
+        //   quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
         }
-    }
+    };
+
+    const sendMessage = () => {
+        console.log("Sending... " + message);
+        // const formData = new FormData();
+        // formData.append(
+        // 'image',
+        // {
+        //     uri: result.assets[0].uri,
+        //     name: <name>,
+        //     type: <type>
+        // }
+        // );
+    };
 
     useEffect(() => {
         console.log("Focused chat: " + isFocused);
@@ -132,7 +155,8 @@ export default function chat () {
                 keyboardVerticalOffset={headerHeight}
                 
                 >
-                <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}>
+                <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}
+                onPress={pickImage}>
                     {({ pressed }) => (
                         <FontAwesome
                         name="picture-o"
@@ -145,13 +169,15 @@ export default function chat () {
                 <TextInput
                     multiline
                     enterKeyHint='send'
-                    onKeyPress={send}
                     style={inputStyle}
                     value={message}
                     onChangeText={setMessage}
                     maxLength={1023}
+                    submitBehavior='submit'
+                    onSubmitEditing={sendMessage}
                 ></TextInput>
-                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', margin: '3%'}}>
+                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', margin: '3%'}}
+                onPress={sendMessage}>
                     {({ pressed }) => (
                         <FontAwesome
                         name="paper-plane-o"
