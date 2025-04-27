@@ -41,7 +41,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                             {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
                             {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.online}</Text>}
                         </View>
-                        <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText}</Text>
+                        <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
                     </View>
                 </View>
             </Pressable>

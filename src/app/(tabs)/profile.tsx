@@ -162,9 +162,28 @@ export default function profile () {
         }
     }
 
+    // const updateOnline = async () => {
+    //     const formData = new FormData();
+    //     formData.append("token", token);
+
+    //     try {
+    //         const response = await fetch('https://nevka.site/api/updateOnline.php', {
+    //             method: 'POST',
+    //             body: formData
+    //         });
+    //         const json = await response.json();
+    //         if (json.result == "success") {
+    //             console.log("Онлайн обновлён");
+    //         }
+    //     } catch (error) {
+    //         console.log("Ошибка обновления онлайна, проблемы с соединением?\n" + error);
+    //     }
+    // }
+
     useEffect(() => {
         console.log("Focused profile: " + isFocused);
         if (isFocused) {
+            // updateOnline();
             setTimeout(() => setUpdate(update+1), 60000);
             getUserData(loggedUser);
             console.log("Updated: UserData for: " + loggedUser);
