@@ -1,7 +1,7 @@
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect, useLocalSearchParams } from "expo-router";
+import { Redirect, Stack, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
@@ -63,7 +63,7 @@ export default function topic () {
 
     const getTopic = async (discussion: string) => {
         const formData = new FormData();
-        formData.append("discussion", discussion);
+        formData.append("id", discussion);
 
         try {
             const response = await fetch('https://nevka.site/api/getTopic.php', {
@@ -109,6 +109,7 @@ export default function topic () {
     
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{ title: header || "Загрузка..." }} />
             {loading ? null : <TopicHeader header={header!} author={author!} message={message!} time={time!}/>}
             {loading ? null : <KeyboardAvoidingView
                 style={{flexDirection: 'row', padding: '3%'}}

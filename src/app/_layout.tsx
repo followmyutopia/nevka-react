@@ -58,6 +58,7 @@ function RootLayoutNav() {
           <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
+          <Stack.Screen name="create-discussion" options={{ presentation: 'modal', headerShown: false }} />
         </Stack>
       </NevkaProvider>
     </ThemeProvider>
