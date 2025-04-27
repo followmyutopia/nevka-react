@@ -9,6 +9,7 @@ import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements"
 import * as ImagePicker from 'expo-image-picker';
+import { Directory, File, Paths } from 'expo-file-system/next';
 
 type MessageData = {
     id: string,
@@ -113,17 +114,21 @@ export default function chat () {
         if (!result.canceled) {
             setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
             setStatus("Выбран файл: " + result.assets[0].fileName);
+            // need to delete the file from the cache, wtf
         }
     };
 
     const sendMessage = async () => {
-        if (!sending) {
+        let text = message.trim();
+
+        if (!sending && (text != "" || image != "")) {
             setSending(true);
+            if (image != "") setStatus("Отправка...");
 
             const formData = new FormData();
             formData.append("token", token);
             formData.append("chat", id);
-            formData.append("text", message);
+            formData.append("text", text);
             formData.append("image", image);
 
             try {
