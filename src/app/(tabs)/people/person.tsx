@@ -120,6 +120,7 @@ export default function person () {
     const getUserData = async (id: string) => {
         const formData = new FormData();
         formData.append("id", id);
+        formData.append("token", token);
 
         try {
             const response = await fetch('https://nevka.site/api/getUserData.php', {
