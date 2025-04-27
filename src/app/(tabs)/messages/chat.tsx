@@ -72,7 +72,9 @@ export default function chat () {
     const [message, setMessage] = useState("");
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const headerHeight = useHeaderHeight();
-    const [image, setImage] = useState<string | null>(null);
+    const [image, setImage] = useState("");
+    const [status, setStatus] = useState("");
+    const [sending, setSending] = useState(false);
 
     const getMessages = async (token: string, chat: string) => {
         const formData = new FormData();
@@ -102,36 +104,53 @@ export default function chat () {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-        //   mediaTypes: ['images'],
-        //   allowsEditing: true,
-        //   aspect: [4, 3],
-        //   quality: 1,
+            base64: true
+            //   allowsEditing: true,
+            //   aspect: [4, 3],
+            //   quality: 1,
         });
     
-        console.log(result);
-    
         if (!result.canceled) {
-          setImage(result.assets[0].uri);
+            setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
+            setStatus("Выбран файл: " + result.assets[0].fileName);
         }
     };
 
-    const sendMessage = () => {
-        console.log("Sending... " + message);
-        // const formData = new FormData();
-        // formData.append(
-        // 'image',
-        // {
-        //     uri: result.assets[0].uri,
-        //     name: <name>,
-        //     type: <type>
-        // }
-        // );
-    };
+    const sendMessage = async () => {
+        if (!sending) {
+            setSending(true);
+
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("chat", id);
+            formData.append("text", message);
+            formData.append("image", image);
+
+            try {
+                const response = await fetch('https://nevka.site/api/sendMessage.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    setStatus(json.error);
+                } else if (json.result == "success") {
+                    setMessage("");
+                    setImage("");
+                    setStatus("");
+                }
+            } catch (error) {
+                console.log("Ошибка отправки сообщения " + id + ", проблемы с соединением?\n" + error);
+            } finally {
+                setSending(false);
+            }
+        }
+    }
 
     useEffect(() => {
         console.log("Focused chat: " + isFocused);
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update+1), 1000);
             getMessages(token, id);
             console.log("Updated: Messages for: " + id);
         }
@@ -149,6 +168,11 @@ export default function chat () {
                 renderItem={({ item }) => <MessageItem item={item} />}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Сообщений нет</Text>}
             />}
+            {status === "" ? null : <Text style={{
+                color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
+                fontSize: 17,
+                marginTop: 7
+            }}>{status}</Text>}
             <KeyboardAvoidingView
                 style={{flexDirection: 'row'}}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
