@@ -91,9 +91,7 @@ export default function chat () {
                 setMessagesData([]);
             } else if (json.result == "success") {
                 json.messages.pop();
-                if (json !== messagesData) {
-                    setMessagesData(json.messages);
-                }
+                setMessagesData(json.messages);
             }
         } catch (error) {
             console.log("Ошибка запроса сообщений с " + chat + ", проблемы с соединением?\n" + error);
@@ -144,6 +142,7 @@ export default function chat () {
             <Stack.Screen options={{ title: name }} />
             {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
                 inverted
+                initialNumToRender={100}
                 style={{flex: 1, width: '100%'}}
                 data={messagesData}
                 contentContainerStyle={{ flexDirection: 'column-reverse' }}
