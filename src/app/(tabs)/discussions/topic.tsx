@@ -60,6 +60,7 @@ export default function topic () {
     const [time, setTime] = useState();
     const [loading, setLoading] = useState(true);
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
+    const [sending, setSending] = useState(false);
 
     const getTopic = async (discussion: string) => {
         const formData = new FormData();
@@ -94,6 +95,36 @@ export default function topic () {
         }
     }
 
+    const sendTopicReply = async () => {
+        let text = newMessage.trim();
+
+        if (!sending && text != "") {
+            setSending(true);
+
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("topic", id);
+            formData.append("text", text);
+
+            try {
+                const response = await fetch('https://nevka.site/api/sendTopicReply.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    console.log(json.error);
+                } else if (json.result == "success") {
+                    setNewMessage("");
+                }
+            } catch (error) {
+                console.log("Ошибка отправки ответа на тему " + id + ", проблемы с соединением?\n" + error);
+            } finally {
+                setSending(false);
+            }
+        }
+    }
+
     const sendMessage = () => {
         console.log("Sending... " + newMessage);
     };
@@ -113,9 +144,7 @@ export default function topic () {
             {loading ? null : <TopicHeader header={header!} author={author!} message={message!} time={time!}/>}
             {loading ? null : <KeyboardAvoidingView
                 style={{flexDirection: 'row', padding: '3%'}}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                // keyboardVerticalOffset={headerHeight}
-                >
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                 <TextInput
                     multiline
                     enterKeyHint='send'
@@ -124,10 +153,10 @@ export default function topic () {
                     onChangeText={setNewMessage}
                     maxLength={1023}
                     submitBehavior='submit'
-                    onSubmitEditing={sendMessage}
+                    onSubmitEditing={sendTopicReply}
                 ></TextInput>
                 <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', marginLeft: '3%'}}
-                onPress={sendMessage}>
+                onPress={sendTopicReply}>
                     {({ pressed }) => (
                         <FontAwesome
                         name="arrow-circle-o-down"
