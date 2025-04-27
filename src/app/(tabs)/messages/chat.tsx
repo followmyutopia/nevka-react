@@ -91,7 +91,9 @@ export default function chat () {
                 setMessagesData([]);
             } else if (json.result == "success") {
                 json.messages.pop();
-                setMessagesData(json.messages);
+                if (json !== messagesData) {
+                    setMessagesData(json.messages);
+                }
             }
         } catch (error) {
             console.log("Ошибка запроса сообщений с " + chat + ", проблемы с соединением?\n" + error);
@@ -101,10 +103,9 @@ export default function chat () {
     }
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ['images'],
-          allowsEditing: true,
+        //   mediaTypes: ['images'],
+        //   allowsEditing: true,
         //   aspect: [4, 3],
         //   quality: 1,
         });
@@ -153,7 +154,6 @@ export default function chat () {
                 style={{flexDirection: 'row'}}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}
-                
                 >
                 <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}
                 onPress={pickImage}>
