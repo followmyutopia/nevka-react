@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         fontSize: 40,
-        color: 'rgb(75, 154, 180)',
+        color: 'rgb(70, 150, 185)',
         margin: '7.5%'
     },
     label: {
