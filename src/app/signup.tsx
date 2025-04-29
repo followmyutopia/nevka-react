@@ -3,9 +3,11 @@ import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
 import { useNevkaProvider } from "../providers/nevkaProvider";
 import { Redirect } from "expo-router";
+import { useHeaderHeight } from "@react-navigation/elements"
 
 export default function signup () {
     const colorScheme = useColorScheme();
+    const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
@@ -14,7 +16,9 @@ export default function signup () {
     if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     return (
-        <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={headerHeight}>
         
 
         <Text style={styles.label}>Электронная почта:</Text>
