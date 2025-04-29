@@ -118,10 +118,15 @@ export default function chat () {
         }
     };
 
+    const resetImage = () => {
+        setImage("");
+        setStatus("");
+    };
+
     const sendMessage = async () => {
         let text = message.trim();
 
-        if (!sending && (text != "" || image != "")) {
+        if (!sending && id && (text != "" || image != "")) {
             setSending(true);
             if (image != "") setStatus("Отправка...");
 
@@ -183,7 +188,7 @@ export default function chat () {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}
                 >
-                <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}
+                {image === "" ? <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}
                 onPress={pickImage}>
                     {({ pressed }) => (
                         <FontAwesome
@@ -193,7 +198,17 @@ export default function chat () {
                         style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}
-                </Pressable>
+                </Pressable> : <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%', paddingHorizontal: 1}}
+                onPress={resetImage}>
+                    {({ pressed }) => (
+                        <FontAwesome
+                        name="window-close-o"
+                        size={27}
+                        color={Colors[useColorScheme() ?? 'light'].text}
+                        style={{ opacity: pressed ? 0.5 : 1 }}
+                        />
+                    )}
+                </Pressable>}
                 <TextInput
                     multiline
                     enterKeyHint='send'
