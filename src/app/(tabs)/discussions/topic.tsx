@@ -6,6 +6,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useHeaderHeight } from "@react-navigation/elements"
 
 type TopicMessageData = {
     name: string,
@@ -61,6 +62,7 @@ export default function topic () {
     const [loading, setLoading] = useState(true);
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const [sending, setSending] = useState(false);
+    const headerHeight = useHeaderHeight();
 
     const getTopic = async (discussion: string) => {
         const formData = new FormData();
@@ -144,7 +146,8 @@ export default function topic () {
             {loading ? null : <TopicHeader header={header!} author={author!} message={message!} time={time!}/>}
             {loading ? null : <KeyboardAvoidingView
                 style={{flexDirection: 'row', padding: '3%'}}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={headerHeight}>
                 <TextInput
                     multiline
                     enterKeyHint='send'

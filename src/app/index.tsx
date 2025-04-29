@@ -4,6 +4,7 @@ import Colors from "../constants/Colors";
 import { Redirect, router } from "expo-router";
 import { useNevkaProvider } from "../providers/nevkaProvider";
 import { useEffect, useState } from "react";
+import { useHeaderHeight } from "@react-navigation/elements"
 
 export default function index () {
     const { token, setToken, loggedUser, setLoggedUser }: any = useNevkaProvider();
@@ -14,6 +15,7 @@ export default function index () {
     const [consoleMessage, setConsoleMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [session, setSession] = useState("");
+    const headerHeight = useHeaderHeight();
 
     const colorScheme = useColorScheme();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
@@ -66,7 +68,9 @@ export default function index () {
     }, []);
 
     return (
-        <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={headerHeight}>
             <Text style={styles.logo}>Невка</Text>
 
             <Text style={styles.label}>Логин:</Text>
