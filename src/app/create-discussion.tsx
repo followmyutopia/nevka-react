@@ -40,7 +40,7 @@ export default function settings () {
                 <TextInput
                     multiline
                     enterKeyHint='send'
-                    style={inputStyle}
+                    style={[inputStyle, {height: '15%'}]}
                     value={message}
                     onChangeText={setMessage}
                     maxLength={1023}
@@ -70,7 +70,8 @@ const styles = StyleSheet.create({
     console: {
         fontSize: 20,
         color: 'orange',
-        marginVertical: '2.5%',
+        marginTop: '2.5%',
+        marginBottom: '12.5%',
         textAlign: 'center'
     },
     label: {
@@ -88,7 +89,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.15)',
-        maxHeight: 80,
     },
     lightInput: {
         width: '90%',
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.15)',
-        maxHeight: 80,
     },
     darkButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.15)',

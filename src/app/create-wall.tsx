@@ -29,14 +29,7 @@ export default function settings () {
             >
                 <StatusBar style="light" />
                 <Text style={{fontSize: 32, marginVertical: '7%'}}>Написать на стене</Text>
-                <Text style={styles.label}>Тема:</Text>
-                <TextInput style={inputStyle}
-                    value={title}
-                    onChangeText={setTitle}
-                    maxLength={127}
-                    // spellCheck={false}
-                    ></TextInput>
-                <Text style={styles.label}>Сообщение:</Text>
+                <Text style={styles.label}>Пост:</Text>
                 <TextInput
                     multiline
                     enterKeyHint='send'
@@ -80,6 +73,7 @@ const styles = StyleSheet.create({
     },
     darkInput: {
         width: '90%',
+        height: '15%',
         color: Colors.dark.text,
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
         padding: '3%',
@@ -88,10 +82,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.15)',
-        maxHeight: 80,
     },
     lightInput: {
         width: '90%',
+        height: '15%',
         color: Colors.light.text,
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
         padding: '3%',
@@ -100,7 +94,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.15)',
-        maxHeight: 80,
     },
     darkButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
