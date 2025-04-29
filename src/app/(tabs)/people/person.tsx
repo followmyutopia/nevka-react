@@ -1,13 +1,14 @@
-import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList } from "react-native";
+import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable } from "react-native";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
 import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 
 type UserData = {
+    id: string,
     firstname: string,
     lastname: string,
     status: string,
@@ -60,6 +61,12 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
             }}>{user.status}</Text>
             { user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
             { user.bio != "" ? <Text style={{ fontSize: 18, paddingVertical: '3%' }}>Информация: {user.bio}</Text> : null}
+            <Pressable
+                style={({pressed}) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, {withAnchor: true})}
+                >
+                <Text style={styles.buttonText}>Отправить сообщение</Text>
+            </Pressable>
         </View>
     );
 }
@@ -193,5 +200,30 @@ export default function person () {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    darkButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        // width: '90%',
+        // margin: '2%',
+        borderRadius: 15,
+        padding: '3%',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.15)',
+        marginVertical: '3%'
+    },
+    lightButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        // width: '90%',
+        // margin: '2%',
+        borderRadius: 15,
+        padding: '3%',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.15)',
+        marginVertical: '3%'
+    },
+    buttonText: {
+        fontSize: 20
     }
 });
