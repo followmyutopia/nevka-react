@@ -14,13 +14,18 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": {
+        "dark": "./assets/icns/ios-dark.png",
+        "light": "./assets/icns/ios-light.png",
+        "tinted": "./assets/icns/ios-tinted.png"
+      }
     },
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icns/adaptive-icon.png",
+        "backgroundColor": "#122730"
       }
     },
     "web": {
@@ -35,7 +40,19 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ],
-      "expo-router"
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#b5d5e3",
+          "image": "./assets/icns/splash-icon-dark.png",
+          "dark": {
+            "image": "./assets/icns/splash-icon-light.png",
+            "backgroundColor": "#122730"
+          },
+          "imageWidth": 200
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
