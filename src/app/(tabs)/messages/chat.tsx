@@ -7,7 +7,7 @@ import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
-import { useHeaderHeight } from "@react-navigation/elements"
+import { useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import { Directory, File, Paths } from 'expo-file-system/next';
 

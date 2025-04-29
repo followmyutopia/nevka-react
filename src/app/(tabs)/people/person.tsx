@@ -39,7 +39,7 @@ type WallPostProps = {
 const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
     return (
         <View style={{ width: '100%', padding: '3%' }}>
-            <View style={{flexDirection: 'row', height: 150 }}>
+            <View style={{flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
@@ -54,13 +54,23 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                     {user.online !== 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}}>{'Был(а) в сети:\n' + user.online}</Text>}
                 </View>
             </View>
-            <Text style={{
+            { user.status != "" ? <Text style={{
                 fontSize: 18,
                 textAlign: 'center',
-                padding: '4%'
-            }}>{user.status}</Text>
-            { user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
-            { user.bio != "" ? <Text style={{ fontSize: 18, paddingVertical: '3%' }}>Информация: {user.bio}</Text> : null}
+                paddingBottom: '4%',
+                paddingHorizontal: '4%'
+            }}>{user.status}</Text> : null}
+            { user.city != "" || user.bio != "" ? <View style={{
+                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+                borderRadius: 15,
+                borderWidth: 1,
+                padding: 15,
+                marginBottom: '4%',
+                gap: 10
+            }}>
+                { user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
+                { user.bio != "" ? <Text style={{ fontSize: 18 }}>Информация: {user.bio}</Text> : null}
+            </View> : null}
             <Pressable
                 style={({pressed}) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                 onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, {withAnchor: true})}
@@ -74,8 +84,12 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
 const WallPost = ({ item, user }: WallPostProps) => {
     return (
         <View style={{
-            width: '100%',
-            padding: '3%'
+            width: '94%',
+            margin: '3%',
+            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+            borderRadius: 15,
+            borderWidth: 1,
+            padding: 15,
             }}>
 
         <View style={{
@@ -210,7 +224,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.15)',
-        marginVertical: '3%'
+        // marginVertical: '3%'
     },
     lightButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
@@ -221,7 +235,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.15)',
-        marginVertical: '3%'
+        // marginVertical: '3%'
     },
     buttonText: {
         fontSize: 20
