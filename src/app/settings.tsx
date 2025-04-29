@@ -11,6 +11,14 @@ export default function settings () {
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
+            <Text style={{fontSize: 32, marginVertical: '7%'}}>Настройки</Text>
+
+
+
+
+
+
+
             <Button title="Logout" onPress={() => setToken("")}/>
         </View>
     );
