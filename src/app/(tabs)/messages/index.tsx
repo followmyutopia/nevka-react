@@ -3,13 +3,14 @@ import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Link, Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type ChatsData = {
     id: string,
     firstname: string,
     lastname: string,
     lastText: string,
+    isUnread: string,
     online: string,
     avatar: string,
     lastTextAuthor: string
@@ -41,7 +42,15 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                             {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
                             {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.online}</Text>}
                         </View>
-                        <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{fontSize: 16, flex: 1, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
+                            { user.isUnread == '1' && user.lastTextAuthor != loggedUser ? <FontAwesome
+                                name="circle"
+                                size={16}
+                                color='orange'
+                                style={{ marginLeft: '3%' }}
+                                /> : null}
+                        </View>
                     </View>
                 </View>
             </Pressable>
@@ -50,10 +59,9 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages () {
-    const { token, loggedUser }: any = useNevkaProvider();
+    const { token, loggedUser, setMessageCounter }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
-    const isFocused = useIsFocused();
     const [update, setUpdate] = useState(0);
     const colorScheme = useColorScheme();
     const [chatsData, setChatsData] = useState<ChatsData[]>();
@@ -77,6 +85,8 @@ export default function messages () {
             } else if (json.result == "success") {
                 json.chats.pop();
                 setChatsData(json.chats);
+                let newMessageCounter = json.chats.filter((item: ChatsData) => item.isUnread == '1' && item.lastTextAuthor != loggedUser).length;
+                setMessageCounter(newMessageCounter);
             }
         } catch (error) {
             console.log("Ошибка запроса чатов, проблемы с соединением?\n" + error);
@@ -86,13 +96,10 @@ export default function messages () {
     }
 
     useEffect(() => {
-        console.log("Focused messages: " + isFocused);
-        if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 30000);
-            getChats(token);
-            console.log("Updated: Chats");
-        }
-    }, [update, isFocused]);
+        setTimeout(() => setUpdate(update+1), 10000);
+        getChats(token);
+        console.log("Updated: Chats");
+    }, [update]);
 
     return (
         <View style={styles.container}>

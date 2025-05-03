@@ -9,7 +9,6 @@ import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
-import { Directory, File, Paths } from 'expo-file-system/next';
 
 type MessageData = {
     id: string,
@@ -17,7 +16,8 @@ type MessageData = {
     text: string,
     image: string,
     timestamp: string,
-    formattedTime: string
+    formattedTime: string,
+    isUnread: string
 };
 
 type MessageItemProps = {
@@ -49,13 +49,23 @@ const MessageItem = ({ item }: MessageItemProps) => {
                 borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'
             }} source={{uri: item.image}}>
             </FullWidthImage> : null}
-            <Text style={{
-                fontSize: 14,
-                marginVertical: 2,
-                marginHorizontal: 7,
-                alignSelf: 'flex-end',
-                color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
-            }}>{item.formattedTime}</Text>
+            <View style={{
+                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
+                flexDirection: 'row', justifyContent: 'space-between'
+                }}>
+                <FontAwesome
+                    name={item.isUnread == '1' ? 'circle' : 'check-circle'}
+                    size={14}
+                    color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                    style={{ marginTop: 3, marginLeft: 7 }}
+                    />
+                <Text style={{
+                    fontSize: 14,
+                    marginVertical: 2,
+                    marginHorizontal: 7,
+                    color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
+                }}>{item.formattedTime}</Text>
+            </View>
         </View>
     );
 }

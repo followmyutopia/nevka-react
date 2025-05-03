@@ -111,7 +111,7 @@ const WallPost = ({ item, user }: WallPostProps) => {
             { item.text != "" ? <Text style={{ fontSize: 18 }}>{item.text}</Text> : null}
             { item.image != "" ? <FullWidthImage style={{
                 width: '100%',
-                borderRadius: 7,
+                borderRadius: 10,
                 marginTop: 10,
                 borderWidth: 1,
                 borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
