@@ -100,7 +100,6 @@ export default function people () {
     }
     
     useEffect(() => {
-        console.log("Focused people: " + isFocused);
         if (isFocused) {
             setTimeout(() => setUpdate(update+1), 60000);
             getPeople(query);

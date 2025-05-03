@@ -87,11 +87,11 @@ export default function settings () {
     
     return (
         <View style={styles.container}>
+            <StatusBar style="light" />
             <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={headerHeight}
             >
-                <StatusBar style="light" />
                 <Text style={{fontSize: 32, marginVertical: '7%'}}>Написать на стене</Text>
                 <Text style={styles.label}>Пост:</Text>
                 <TextInput

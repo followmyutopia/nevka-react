@@ -132,7 +132,6 @@ export default function topic () {
     };
 
     useEffect(() => {
-        console.log("Focused topic: " + isFocused);
         if (isFocused) {
             setTimeout(() => setUpdate(update+1), 10000);
             getTopic(id);
