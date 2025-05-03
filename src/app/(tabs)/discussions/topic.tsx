@@ -158,7 +158,7 @@ export default function topic () {
                     submitBehavior='submit'
                     onSubmitEditing={sendTopicReply}
                 ></TextInput>
-                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', marginLeft: '3%'}}
+                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', marginLeft: '3%', marginBottom: '3%'}}
                 onPress={sendTopicReply}>
                     {({ pressed }) => (
                         <FontAwesome

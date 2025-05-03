@@ -2,7 +2,7 @@ import { Button, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInpu
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useState } from "react";
 import Colors from "../constants/Colors";
 import { useHeaderHeight } from "@react-navigation/elements"
@@ -13,13 +13,50 @@ export default function settings () {
 
     const [title, setTitle] = useState("");
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState("123");
+    const [status, setStatus] = useState("");
+    const [sending, setSending] = useState(false);
     const colorScheme = useColorScheme();
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
+
+    const createTopic = async () => {
+        let trimmedTitle = title.trim();
+        let trimmedMessage = message.trim();
+
+        if (trimmedTitle == "" || trimmedMessage == "") {
+            setStatus("Тема и сообщение обязательны");
+        }
+
+        if (!sending && trimmedTitle != "" && trimmedMessage != "") {
+            setSending(true);
+
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("title", trimmedTitle);
+            formData.append("message", trimmedMessage);
+
+            try {
+                const response = await fetch('https://nevka.site/api/createTopic.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    setStatus(json.error);
+                } else if (json.result == "success") {
+                    setTitle("");
+                    setMessage("");
+                    router.back();
+                }
+            } catch (error) {
+                console.log("Ошибка создания темы, проблемы с соединением?\n" + error);
+            } finally {
+                setSending(false);
+            }
+        }
+    }
     
     return (
         <View style={styles.container}>
@@ -34,7 +71,6 @@ export default function settings () {
                     value={title}
                     onChangeText={setTitle}
                     maxLength={127}
-                    // spellCheck={false}
                     ></TextInput>
                 <Text style={styles.label}>Сообщение:</Text>
                 <TextInput
@@ -45,13 +81,12 @@ export default function settings () {
                     onChangeText={setMessage}
                     maxLength={1023}
                     submitBehavior='submit'
-                    // onSubmitEditing={sendTopicReply}
                 ></TextInput>
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    // onPress={signIn}
-                    disabled={loading}>
-                    <Text style={styles.buttonText}>{loading ? 'Создание...' : 'Создать тему'}</Text>
+                    onPress={createTopic}
+                    disabled={sending}>
+                    <Text style={styles.buttonText}>{sending ? 'Создание...' : 'Создать тему'}</Text>
                 </Pressable>
                 <Text style={styles.console}>{status}</Text>
             </KeyboardAvoidingView>

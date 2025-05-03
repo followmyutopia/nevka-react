@@ -104,23 +104,27 @@ export default function chat () {
     }
 
     const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            base64: true
-            //   allowsEditing: true,
-            //   aspect: [4, 3],
-            //   quality: 1,
-        });
-    
-        if (!result.canceled) {
-            setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
-            setStatus("Выбран файл: " + result.assets[0].fileName);
-            // need to delete the file from the cache, wtf
+        if (!sending) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                base64: true
+                //   allowsEditing: true,
+                //   aspect: [4, 3],
+                //   quality: 1,
+            });
+        
+            if (!result.canceled) {
+                setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
+                setStatus("Выбран файл: " + result.assets[0].fileName);
+                // need to delete the file from the cache, wtf
+            }
         }
     };
 
     const resetImage = () => {
-        setImage("");
-        setStatus("");
+        if (!sending) {
+            setImage("");
+            setStatus("");
+        }
     };
 
     const sendMessage = async () => {
