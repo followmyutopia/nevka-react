@@ -112,7 +112,7 @@ const WallPost = ({ item, user }: WallPostProps) => {
             </View>
         </View>
         <View style={{flexDirection: 'column'}}>
-            <Text style={{ fontSize: 18 }}>{item.text}</Text>
+            { item.text != "" ? <Text style={{ fontSize: 18 }}>{item.text}</Text> : null}
             { item.image != "" ? <FullWidthImage style={{
                 width: '100%',
                 borderRadius: 7,

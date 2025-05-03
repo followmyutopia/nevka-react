@@ -2,7 +2,7 @@ import { Button, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInpu
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useState } from "react";
 import Colors from "../constants/Colors";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -14,8 +14,7 @@ export default function settings () {
     if ( token == "") { return <Redirect href={'/'} /> }
 
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState("123");
+    const [status, setStatus] = useState("");
     const [imageStatus, setImageStatus] = useState("Можно добавить изображение");
     const colorScheme = useColorScheme();
     const headerHeight = useHeaderHeight();
@@ -23,8 +22,10 @@ export default function settings () {
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
     const [image, setImage] = useState("");
+    const [sending, setSending] = useState(false);
 
     const pickImage = async () => {
+        if (!sending) {
             let result = await ImagePicker.launchImageLibraryAsync({
                 base64: true
                 //   allowsEditing: true,
@@ -37,12 +38,52 @@ export default function settings () {
                 setImageStatus("Выбран файл: " + result.assets[0].fileName);
                 // need to delete the file from the cache, wtf
             }
-        };
+        }
+    };
     
-        const resetImage = () => {
+    const resetImage = () => {
+        if (!sending) {
             setImage("");
             setImageStatus("Файл откреплён!");
-        };
+        }
+    };
+
+    const postWall = async () => {
+        let text = message.trim();
+
+        if (text == "" && image == "") {
+            setStatus("Пост не может быть пустым");
+        }
+
+        if (!sending && (text != "" || image != "")) {
+            setSending(true);
+
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("text", text);
+            formData.append("image", image);
+
+            try {
+                const response = await fetch('https://nevka.site/api/postWall.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    setStatus(json.error);
+                } else if (json.result == "success") {
+                    setMessage("");
+                    setImage("");
+                    setStatus("");
+                    router.back();
+                }
+            } catch (error) {
+                console.log("Ошибка публикации записи, проблемы с соединением?\n" + error);
+            } finally {
+                setSending(false);
+            }
+        }
+    }
     
     return (
         <View style={styles.container}>
@@ -96,9 +137,9 @@ export default function settings () {
                 </View>
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    // onPress={signIn}
-                    disabled={loading}>
-                    <Text style={styles.buttonText}>{loading ? 'Публикация...' : 'Опубликовать'}</Text>
+                    onPress={postWall}
+                    disabled={sending}>
+                    <Text style={styles.buttonText}>{sending ? 'Публикация...' : 'Опубликовать'}</Text>
                 </Pressable>
                 <Text style={styles.console}>{status}</Text>
             </KeyboardAvoidingView>
