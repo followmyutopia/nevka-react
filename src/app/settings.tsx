@@ -7,6 +7,7 @@ import Colors from "../constants/Colors";
 import { useEffect, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as AppConfig from "../../app.json";
+import { registerForNotifications } from "../providers/expoNotifications";
 
 type UserData = {
     id: string,
@@ -21,7 +22,7 @@ type UserData = {
 };
 
 export default function settings () {
-    const { token, setToken, loggedUser }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, pushToken, setPushToken }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -30,7 +31,9 @@ export default function settings () {
     const [city, setCity] = useState("");
     const [bio, setBio] = useState("");
     const [infoStatus, setInfoStatus] = useState("");
+    const [pushStatus, setPushStatus] = useState("");
     const [settingUserData, setSettingUserData] = useState(false);
+    const [settingPush, setSettingPush] = useState(false);
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
@@ -97,6 +100,37 @@ export default function settings () {
         }
     }
 
+    const enablePush = async () => {
+        setSettingPush(true);
+
+        registerForNotifications()
+            .then(async result => {
+                setPushToken(result ?? '');
+
+                const formData = new FormData();
+                formData.append("token", token);
+                formData.append("push_token", pushToken);
+
+                try {
+                    const response = await fetch('https://nevka.site/api/setPushToken.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const json = await response.json();
+                    if (json.result == "failure") {
+                        console.log("setPushToken error: " + json.error)
+                    } else if (json.result == "success") {
+                        setPushStatus("Уведомления включены!");
+                    }
+                } catch (error) {
+                    console.log("Ошибка записи push-токена, проблемы с соединением?\n" + error);
+                } finally {
+                    setSettingUserData(false);
+                }
+            })
+            .catch((error: any) => console.log(`${error}`));
+    }
+
     useEffect(() => {
         getUserData(loggedUser);
     }, []);
@@ -150,6 +184,14 @@ export default function settings () {
                 <Text style={{fontSize: 26, marginVertical: '4%' }}>Аватар</Text>
 
                 <Text style={{fontSize: 26, marginVertical: '4%' }}>Уведомления</Text>
+                <Text style={styles.label}>Push-уведомления о входящих личных сообщениях находятся в режиме бета-тестирования.</Text>
+                <Pressable
+                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                    onPress={enablePush}
+                    disabled={settingPush}>
+                    <Text style={styles.buttonText}>Включить уведомления</Text>
+                </Pressable>
+                <Text style={styles.console}>{pushStatus}</Text>
 
                 <Text style={{fontSize: 26, marginVertical: '4%' }}>Тема</Text>
 
