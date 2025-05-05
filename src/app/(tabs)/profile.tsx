@@ -129,7 +129,7 @@ const WallPost = ({ item, user }: WallPostProps) => {
 }
 
 export default function profile () {
-    const { token, loggedUser }: any = useNevkaProvider();
+    const { token, loggedUser, setIsNameSet }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -155,6 +155,11 @@ export default function profile () {
             if (json.result == "failure") {
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
+                if (json.firstname == "" || json.lastname == "") {
+                    router.navigate("/settings");
+                } else {
+                    setIsNameSet(true);
+                }
                 setUserData(json);
             }
         } catch (error) {

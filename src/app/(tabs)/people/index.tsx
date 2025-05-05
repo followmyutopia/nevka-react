@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Image, TextInput, useColorScheme, Pressable, FlatList } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Link, Redirect } from "expo-router";
+import { Link, Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -62,7 +62,7 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
 }
 
 export default function people () {
-    const { token, loggedUser }: any = useNevkaProvider();
+    const { token, loggedUser, isNameSet }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -100,6 +100,9 @@ export default function people () {
     }
     
     useEffect(() => {
+        if (!isNameSet) {
+            router.navigate("/settings");
+        }
         if (isFocused) {
             setTimeout(() => setUpdate(update+1), 60000);
             getPeople(query);

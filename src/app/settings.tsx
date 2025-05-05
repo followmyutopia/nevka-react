@@ -4,12 +4,24 @@ import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
 import { Redirect } from "expo-router";
 import Colors from "../constants/Colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as AppConfig from "../../app.json";
 
+type UserData = {
+    id: string,
+    firstname: string,
+    lastname: string,
+    status: string,
+    city: string,
+    bio: string,
+    timestamp: number,
+    avatar: string,
+    online: string
+};
+
 export default function settings () {
-    const { token, setToken }: any = useNevkaProvider();
+    const { token, setToken, loggedUser }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -18,11 +30,76 @@ export default function settings () {
     const [city, setCity] = useState("");
     const [bio, setBio] = useState("");
     const [infoStatus, setInfoStatus] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [settingUserData, setSettingUserData] = useState(false);
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
+
+    const getUserData = async (id: string) => {
+        const formData = new FormData();
+        formData.append("id", id);
+        formData.append("token", token);
+
+        try {
+            const response = await fetch('https://nevka.site/api/getUserData.php', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await response.json();
+            if (json.result == "failure") {
+                console.log("getUserData error: " + json.error)
+            } else if (json.result == "success") {
+                setFirstname(json.firstname);
+                setLastname(json.lastname);
+                setCity(json.city);
+                setBio(json.bio);
+            }
+        } catch (error) {
+            console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
+        }
+    }
+
+    const setUserData = async () => {
+        let newFirstname = firstname.trim();
+        let newLastname = lasttname.trim();
+        let newCity = city.trim();
+        let newBio = bio.trim();
+
+        if (newLastname == "" || newFirstname == "") {
+            setInfoStatus("Имя и фамилия не могут быть пустыми");
+        } else {
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("firstname", newFirstname);
+            formData.append("lastname", newLastname);
+            formData.append("city", newCity);
+            formData.append("bio", newBio);
+
+            setSettingUserData(true);
+
+            try {
+                const response = await fetch('https://nevka.site/api/setUserData.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    console.log("setUserData error: " + json.error)
+                } else if (json.result == "success") {
+                    setInfoStatus("Успешно обновлено!");
+                }
+            } catch (error) {
+                console.log("Ошибка записи данных пользователя, проблемы с соединением?\n" + error);
+            } finally {
+                setSettingUserData(false);
+            }
+        }
+    }
+
+    useEffect(() => {
+        getUserData(loggedUser);
+    }, []);
     
     return (
         <View style={styles.container}>
@@ -33,7 +110,7 @@ export default function settings () {
             <StatusBar style="light" />
             <ScrollView style={{width: '100%'}}>
                 <Text style={{fontSize: 32, marginVertical: '7%', textAlign: 'center'}}>Настройки</Text>
-                <Text style={{fontSize: 26, marginBottom: '3%' }}>Личная информация</Text>
+                <Text style={{fontSize: 26, marginBottom: '4%' }}>Личная информация</Text>
 
                 <Text style={styles.label}>Имя (обязательно):</Text>
                 <TextInput style={inputStyle}
@@ -55,24 +132,32 @@ export default function settings () {
                     ></TextInput>
                 <Text style={styles.label}>Информация:</Text>
                 <TextInput style={inputStyle}
+                    multiline
+                    enterKeyHint='done'
+                    submitBehavior='submit'
                     value={bio}
                     onChangeText={setBio}
-                    maxLength={63}
+                    maxLength={255}
                     ></TextInput>
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    // onPress={signIn}
-                    disabled={loading}>
-                    <Text style={styles.buttonText}>{loading ? 'Установка...' : 'Установить информацию'}</Text>
+                    onPress={setUserData}
+                    disabled={settingUserData}>
+                    <Text style={styles.buttonText}>{settingUserData ? 'Установка...' : 'Установить информацию'}</Text>
                 </Pressable>
                 <Text style={styles.console}>{infoStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '3%' }}>Аватар</Text>
+                <Text style={{fontSize: 26, marginVertical: '4%' }}>Аватар</Text>
+
+                <Text style={{fontSize: 26, marginVertical: '4%' }}>Уведомления</Text>
+
+                <Text style={{fontSize: 26, marginVertical: '4%' }}>Тема</Text>
+
+                <Text style={{fontSize: 26, marginVertical: '4%' }}>Безопасность</Text>
 
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={() => setToken("")}
-                    disabled={loading}>
+                    onPress={() => setToken("")}>
                     <Text style={styles.buttonText}>Выйти из аккаунта</Text>
                 </Pressable>
 
