@@ -173,7 +173,7 @@ export default function chat () {
 
     useEffect(() => {
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 1000);
+            setTimeout(() => setUpdate(update+1), 500);
             getMessages(token, id);
             console.log("Updated: Messages for: " + id);
         }

@@ -133,7 +133,7 @@ export default function topic () {
 
     useEffect(() => {
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update+1), 1000);
             getTopic(id);
             console.log("Updated: Topic with ID: " + id);
         }
