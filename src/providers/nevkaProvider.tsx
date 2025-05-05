@@ -24,10 +24,6 @@ export default function NevkaProvider({children}: PropsWithChildren) {
       });
 
     useEffect(() => {
-        registerForNotifications()
-            .then(token => setPushToken(token ?? ''))
-            .catch((error: any) => console.log(`${error}`));
-
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
         setNotification(notification);
         });
@@ -48,9 +44,11 @@ export default function NevkaProvider({children}: PropsWithChildren) {
 
     return(
         <NevkaContext.Provider value={{
-            token, setToken, loggedUser, setLoggedUser,
+            token, setToken,
+            loggedUser, setLoggedUser,
             messageCounter, setMessageCounter,
-            isNameSet, setIsNameSet
+            isNameSet, setIsNameSet,
+            pushToken, setPushToken
             }}>
             {children}
         </NevkaContext.Provider>
