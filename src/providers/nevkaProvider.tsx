@@ -9,6 +9,7 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     const [token, setToken] = useState<string>("");
     const [loggedUser, setLoggedUser] = useState<string>("");
     const [messageCounter, setMessageCounter] = useState<number>(0);
+    const [isNameSet, setIsNameSet] = useState<boolean>(false);
     const [pushToken, setPushToken] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const notificationListener = useRef<Notifications.EventSubscription>();
@@ -46,7 +47,11 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     }, [])
 
     return(
-        <NevkaContext.Provider value={{ token, setToken, loggedUser, setLoggedUser, messageCounter, setMessageCounter }}>
+        <NevkaContext.Provider value={{
+            token, setToken, loggedUser, setLoggedUser,
+            messageCounter, setMessageCounter,
+            isNameSet, setIsNameSet
+            }}>
             {children}
         </NevkaContext.Provider>
     );

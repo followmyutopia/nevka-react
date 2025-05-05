@@ -59,7 +59,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages () {
-    const { token, loggedUser, setMessageCounter }: any = useNevkaProvider();
+    const { token, loggedUser, setMessageCounter, isNameSet }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
@@ -96,6 +96,9 @@ export default function messages () {
     }
 
     useEffect(() => {
+        if (!isNameSet) {
+            router.navigate("/settings");
+        }
         setTimeout(() => setUpdate(update+1), 10000);
         getChats(token);
         console.log("Updated: Chats");
