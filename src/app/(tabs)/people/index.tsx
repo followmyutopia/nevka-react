@@ -104,7 +104,7 @@ export default function people () {
             router.navigate("/settings");
         }
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 60000);
+            setTimeout(() => setUpdate(update+1), 10000);
             getPeople(query);
         console.log("Updated: People");
         }

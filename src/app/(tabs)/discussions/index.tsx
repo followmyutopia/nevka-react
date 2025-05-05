@@ -87,7 +87,7 @@ export default function discussions () {
             router.navigate("/settings");
         }
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 30000);
+            setTimeout(() => setUpdate(update+1), 10000);
             getDiscussions(query);
             console.log("Updated: Discussions");
         }

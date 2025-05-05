@@ -99,7 +99,7 @@ export default function messages () {
         if (!isNameSet) {
             router.navigate("/settings");
         }
-        setTimeout(() => setUpdate(update+1), 10000);
+        setTimeout(() => setUpdate(update+1), 5000);
         getChats(token);
         console.log("Updated: Chats");
     }, [update]);
