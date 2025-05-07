@@ -20,16 +20,17 @@
         "light": "./assets/icns/ios-light.png",
         "tinted": "./assets/icns/ios-tinted.png"
       },
-      "bundleIdentifier": "com.followmyutopia.Nevka"
+      "bundleIdentifier": "com.followmyutopia.nevka"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icns/adaptive-icon.png",
         "backgroundColor": "#122730"
       },
       "permissions": [],
-      "package": "com.followmyutopia.Nevka"
+      "package": "com.followmyutopia.nevka"
     },
     "web": {
       "bundler": "metro",
