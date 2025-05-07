@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "472518935658",
+    "project_id": "nevka-mobile",
+    "storage_bucket": "nevka-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472518935658:android:31dd153be5bbef59973613",
+        "android_client_info": {
+          "package_name": "com.followmyutopia.nevka"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu1Cp3w2fy8b2vZEy4AwWfHjzgB3MzxME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
