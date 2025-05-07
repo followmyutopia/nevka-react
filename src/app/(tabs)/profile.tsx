@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, router } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
+import Dialog from "react-native-dialog";
 
 type UserData = {
     id: string,
@@ -28,6 +29,7 @@ type WallData = {
 
 type MyInfoScreenProps = {
     user: UserData;
+    onStatusChange: () => void;
 }
 
 type WallPostProps = {
@@ -35,7 +37,7 @@ type WallPostProps = {
     user: UserData
 }
 
-const MyInfoScreen = ({ user }: MyInfoScreenProps) => {
+const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
     return (
         <View style={{ width: '100%', padding: '3%' }}>
             <View style={{flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
@@ -59,7 +61,7 @@ const MyInfoScreen = ({ user }: MyInfoScreenProps) => {
                 paddingBottom: '2%',
                 paddingHorizontal: '4%'
             }}>{user.status}</Text> : null}
-            <Pressable style={{alignItems: 'center'}}><Text style={{
+            <Pressable style={{alignItems: 'center'}} onPress={onStatusChange}><Text style={{
                 fontSize: 18,
                 color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray',
                 marginBottom: '4%'
@@ -96,34 +98,32 @@ const WallPost = ({ item, user }: WallPostProps) => {
             padding: 15,
             }}>
 
-        <View style={{
-            flexDirection: 'row', height: 50, paddingBottom: '2%', }}>
-            <Image style={{
-                height: '100%',
-                aspectRatio: 1,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
-                source={{uri: user.avatar}}>
-            </Image>
-            <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
-                <Text style={{ fontSize: 18 }}>{user.firstname} {user.lastname}</Text>
-                <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}>{item.formattedTime}</Text>
+            <View style={{
+                flexDirection: 'row', height: 50, paddingBottom: '2%', }}>
+                <Image style={{
+                    height: '100%',
+                    aspectRatio: 1,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                    source={{uri: user.avatar}}>
+                </Image>
+                <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
+                    <Text style={{ fontSize: 18 }}>{user.firstname} {user.lastname}</Text>
+                    <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}>{item.formattedTime}</Text>
+                </View>
             </View>
-        </View>
-        <View style={{flexDirection: 'column'}}>
-            { item.text != "" ? <Text style={{ fontSize: 18 }}>{item.text}</Text> : null}
-            { item.image != "" ? <FullWidthImage style={{
-                width: '100%',
-                borderRadius: 10,
-                marginTop: 10,
-                borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
-                source={{uri: item.image}}>
-            </FullWidthImage> : null}
-
-        </View>
-
+            <View style={{flexDirection: 'column'}}>
+                { item.text != "" ? <Text style={{ fontSize: 18 }}>{item.text}</Text> : null}
+                { item.image != "" ? <FullWidthImage style={{
+                    width: '100%',
+                    borderRadius: 10,
+                    marginTop: 10,
+                    borderWidth: 1,
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                    source={{uri: item.image}}>
+                </FullWidthImage> : null}
+            </View>
         </View>
     );
 }
@@ -138,6 +138,8 @@ export default function profile () {
     const [wallData, setWallData] = useState<WallData[]>([]);
     const [loading, setLoading] = useState(true);
     const [wallLoading, setWallLoading] = useState(true);
+    const [newStatus, setNewStatus] = useState("");
+    const [showStatusEditor, setShowStatusEditor] = useState(false);
 
     const colorScheme = useColorScheme();
 
@@ -194,6 +196,31 @@ export default function profile () {
         }
     }
 
+    const setStatus = async () => {
+        setShowStatusEditor(false)
+        let status = newStatus.trim();
+
+        const formData = new FormData();
+        formData.append("token", token);
+        formData.append("status", status);
+
+        try {
+            const response = await fetch('https://nevka.site/api/setStatus.php', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await response.json();
+            if (json.result == "failure") {
+                console.log("setUserData error: " + json.error)
+            } else if (json.result == "success") {
+                setUpdate(0);
+                setNewStatus("");
+            }
+        } catch (error) {
+            console.log("Ошибка установки статуса, проблемы с соединением?\n" + error);
+        }
+    }
+
     useEffect(() => {
         if (isFocused) {
             setTimeout(() => setUpdate(update+1), 5000);
@@ -207,12 +234,20 @@ export default function profile () {
     return (
         <View style={styles.container}>
             {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
-                ListHeaderComponent={<MyInfoScreen user={userData!}/>}
+                ListHeaderComponent={<MyInfoScreen user={userData!} onStatusChange={() => setShowStatusEditor(true)}/>}
                 style={{flex: 1, width: '100%'}}
                 data={wallData || <ActivityIndicator /> }
                 renderItem={({ item }) => <WallPost item={item} user={userData!}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Записей на стене нет</Text>}
             />}
+            <Dialog.Container visible={showStatusEditor}>
+                <Dialog.Title>Введите новый статус:</Dialog.Title>
+                <Dialog.Input value={newStatus}
+                    onChangeText={setNewStatus}
+                    maxLength={127}/>
+                <Dialog.Button label="Отменить" onPress={() => setShowStatusEditor(false)}/>
+                <Dialog.Button label="Установить" onPress={setStatus}/>
+            </Dialog.Container>
         </View>
     );
 }

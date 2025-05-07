@@ -17,11 +17,12 @@ export default function NevkaProvider({children}: PropsWithChildren) {
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
-          shouldShowAlert: true,
-          shouldPlaySound: true,
-          shouldSetBadge: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+          shouldShowBanner: true,
+          shouldShowList: true,
         }),
-      });
+    });
 
     useEffect(() => {
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -38,8 +39,6 @@ export default function NevkaProvider({children}: PropsWithChildren) {
             responseListener.current &&
                 Notifications.removeNotificationSubscription(responseListener.current);
         };
-        
-        console.log("Push token is: " + pushToken);
     }, [])
 
     return(
