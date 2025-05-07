@@ -1,4 +1,4 @@
-import { Button, KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { Appearance, KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -41,7 +41,6 @@ export default function settings () {
     const [image, setImage] = useState("");
     const [currentAvatar, setCurrentAvatar] = useState("");
     const [latestVersion, setLatestVersion] = useState("");
-    const [imageStatus, setImageStatus] = useState("Нажмите на иконку для выбора файла");
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
@@ -150,7 +149,6 @@ export default function settings () {
         
             if (!result.canceled) {
                 setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
-                setImageStatus('Файл выбран и готов к загрузке');
                 // need to delete the file from the cache, wtf
             }
         }
@@ -176,7 +174,6 @@ export default function settings () {
                     console.log("setUserData error: " + json.error)
                 } else if (json.result == "success") {
                     setImage("");
-                    setImageStatus('Нажмите на иконку для выбора файла');
                     setAvatarStatus("Аватар успешно загружен");
                     getUserData(loggedUser);
                 }
@@ -301,6 +298,18 @@ export default function settings () {
                 <Text style={styles.console}>{pushStatus}</Text>
 
                 <Text style={{fontSize: 26, marginVertical: '5%' }}>Тема</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Pressable
+                        style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor, width: '47%' }]}
+                        onPress={() => Appearance.setColorScheme('dark')}>
+                        <Text style={styles.buttonText}>Тёмная</Text>
+                    </Pressable>
+                    <Pressable
+                        style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor, width: '47%' }]}
+                        onPress={() => Appearance.setColorScheme('light')}>
+                        <Text style={styles.buttonText}>Светлая</Text>
+                    </Pressable>
+                </View>
 
                 <Text style={{fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
 
@@ -335,7 +344,6 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 20,
-        // width: '90%',
         textAlign: 'left',
         marginVertical: 8
     },
@@ -351,7 +359,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
         padding: '3%',
         borderRadius: 15,
-        // margin: '2%',
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.15)'
@@ -362,7 +369,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
         padding: '3%',
         borderRadius: 15,
-        // margin: '2%',
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.15)'
@@ -370,7 +376,6 @@ const styles = StyleSheet.create({
     darkButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
         width: '100%',
-        // margin: '2%',
         marginVertical: '4%',
         borderRadius: 15,
         padding: '3%',
@@ -381,8 +386,7 @@ const styles = StyleSheet.create({
     lightButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.15)',
         width: '100%',
-        // margin: '2%',
-        marginVertical: 20,
+        marginVertical: '4%',
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
