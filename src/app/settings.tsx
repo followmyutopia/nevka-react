@@ -1,4 +1,4 @@
-import { Button, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { Button, KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as AppConfig from "../../app.json";
 import { registerForNotifications } from "../providers/expoNotifications";
+import * as ImagePicker from 'expo-image-picker';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type UserData = {
     id: string,
@@ -32,8 +34,13 @@ export default function settings () {
     const [bio, setBio] = useState("");
     const [infoStatus, setInfoStatus] = useState("");
     const [pushStatus, setPushStatus] = useState("");
+    const [avatarStatus, setAvatarStatus] = useState("");
     const [settingUserData, setSettingUserData] = useState(false);
     const [settingPush, setSettingPush] = useState(false);
+    const [settingAvatar, setSettingAvatar] = useState(false);
+    const [image, setImage] = useState("");
+    const [currentAvatar, setCurrentAvatar] = useState("");
+    const [imageStatus, setImageStatus] = useState("Нажмите на иконку для выбора файла");
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
@@ -57,6 +64,7 @@ export default function settings () {
                 setLastname(json.lastname);
                 setCity(json.city);
                 setBio(json.bio);
+                setCurrentAvatar(json.avatar);
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
@@ -131,6 +139,61 @@ export default function settings () {
             .catch((error: any) => console.log(`${error}`));
     }
 
+    const pickImage = async () => {
+        if (!settingAvatar) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                base64: true,
+                allowsEditing: true,
+                aspect: [1, 1]
+            });
+        
+            if (!result.canceled) {
+                setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
+                setImageStatus('Файл выбран и готов к загрузке');
+                // need to delete the file from the cache, wtf
+            }
+        }
+    };
+    
+    const resetImage = () => {
+        if (!settingAvatar) {
+            setImage("");
+            setImageStatus("Файл откреплён!");
+        }
+    };
+
+    const setAvatar = async () => {
+        if (image == "") {
+            setAvatarStatus("Файл не выбран!")
+        } else {
+            setSettingAvatar(true);
+
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("avatar", image);
+
+            try {
+                const response = await fetch('https://nevka.site/api/setAvatar.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    console.log("setUserData error: " + json.error)
+                } else if (json.result == "success") {
+                    setImage("");
+                    setImageStatus('Нажмите на иконку для выбора файла');
+                    setAvatarStatus("Аватар успешно загружен");
+                    getUserData(loggedUser);
+                }
+            } catch (error) {
+                console.log("Ошибка установки аватара, проблемы с соединением?\n" + error);
+            } finally {
+                setSettingAvatar(false);
+            }
+        }
+    }
+
     useEffect(() => {
         getUserData(loggedUser);
     }, []);
@@ -144,7 +207,7 @@ export default function settings () {
             <StatusBar style="light" />
             <ScrollView style={{width: '100%'}}>
                 <Text style={{fontSize: 32, marginVertical: '7%', textAlign: 'center'}}>Настройки</Text>
-                <Text style={{fontSize: 26, marginBottom: '4%' }}>Личная информация</Text>
+                <Text style={{fontSize: 26, marginBottom: '5%' }}>Личная информация</Text>
 
                 <Text style={styles.label}>Имя (обязательно):</Text>
                 <TextInput style={inputStyle}
@@ -181,10 +244,44 @@ export default function settings () {
                 </Pressable>
                 <Text style={styles.console}>{infoStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '4%' }}>Аватар</Text>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>Аватар</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10}}>
+                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>Сейчас:</Text>
+                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>Будет:</Text>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    <Image style={{
+                        width: '40%',
+                        aspectRatio: 1,
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        source={{uri: currentAvatar}}
+                        ></Image>
+                    {image == "" ? <Text style={{
+                        width: '40%',
+                        fontSize: 20,
+                        alignSelf: 'center',
+                        textAlign: 'center'
+                    }}>Не выбрано</Text> : <Image style={{
+                        width: '40%',
+                        aspectRatio: 1,
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        source={{uri: image}}
+                        ></Image>}
+                </View>
+                <Pressable
+                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                    onPress={image == "" ? pickImage : setAvatar}
+                    disabled={settingAvatar}>
+                    <Text style={styles.buttonText}>{image == "" ? "Выбрать файл" : settingAvatar ? 'Установка...' : 'Установить аватар'}</Text>
+                </Pressable>
+                <Text style={styles.console}>{avatarStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '4%' }}>Уведомления</Text>
-                <Text style={styles.label}>Push-уведомления о входящих личных сообщениях находятся в режиме бета-тестирования.</Text>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>Уведомления</Text>
+                <Text style={styles.text}>Push-уведомления о входящих личных сообщениях находятся в режиме бета-тестирования.</Text>
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={enablePush}
@@ -193,9 +290,9 @@ export default function settings () {
                 </Pressable>
                 <Text style={styles.console}>{pushStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '4%' }}>Тема</Text>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>Тема</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '4%' }}>Безопасность</Text>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
 
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
@@ -226,8 +323,14 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 20,
-        width: '90%',
+        // width: '90%',
         textAlign: 'left',
+        marginVertical: 8
+    },
+    text: {
+        fontSize: 20,
+        marginHorizontal: 15,
+        textAlign: 'center',
         marginVertical: 8
     },
     darkInput: {
