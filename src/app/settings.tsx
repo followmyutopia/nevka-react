@@ -40,6 +40,7 @@ export default function settings () {
     const [settingAvatar, setSettingAvatar] = useState(false);
     const [image, setImage] = useState("");
     const [currentAvatar, setCurrentAvatar] = useState("");
+    const [latestVersion, setLatestVersion] = useState("");
     const [imageStatus, setImageStatus] = useState("Нажмите на иконку для выбора файла");
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
@@ -154,13 +155,6 @@ export default function settings () {
             }
         }
     };
-    
-    const resetImage = () => {
-        if (!settingAvatar) {
-            setImage("");
-            setImageStatus("Файл откреплён!");
-        }
-    };
 
     const setAvatar = async () => {
         if (image == "") {
@@ -194,8 +188,19 @@ export default function settings () {
         }
     }
 
+    const checkUpdate = async () => {
+        try {
+            const response = await fetch('https://nevka.site/api/checkUpdate.php');
+            const json = await response.json();
+            setLatestVersion(json.latestVersion);
+        } catch (error) {
+            console.log("Ошибка запроса последней версии, проблемы с соединением?\n" + error);
+        }
+    }
+
     useEffect(() => {
         getUserData(loggedUser);
+        checkUpdate();
     }, []);
     
     return (
@@ -250,14 +255,19 @@ export default function settings () {
                     <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>Будет:</Text>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                    <Image style={{
+                    {currentAvatar == "" ? <Text style={{
+                        width: '40%',
+                        fontSize: 20,
+                        alignSelf: 'center',
+                        textAlign: 'center'
+                    }}>Загрузка...</Text> : <Image style={{
                         width: '40%',
                         aspectRatio: 1,
                         borderRadius: 15,
                         borderWidth: 1,
                         borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
                         source={{uri: currentAvatar}}
-                        ></Image>
+                        ></Image>}
                     {image == "" ? <Text style={{
                         width: '40%',
                         fontSize: 20,
@@ -281,7 +291,7 @@ export default function settings () {
                 <Text style={styles.console}>{avatarStatus}</Text>
 
                 <Text style={{fontSize: 26, marginVertical: '5%' }}>Уведомления</Text>
-                <Text style={styles.text}>Push-уведомления о входящих личных сообщениях находятся в режиме бета-тестирования.</Text>
+                <Text style={styles.text}>В настойщий момент push-уведомления о сообщениях работают только на Android и находятся в стадии beta-тестирования.</Text>
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={enablePush}
@@ -302,6 +312,8 @@ export default function settings () {
 
                 <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Nevka Mobile v{AppConfig.expo.version}</Text>
                 <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Авикус Делакруа</Text>
+
+                <Text style={{fontSize: 15, marginVertical: 16, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})`}</Text>
             </ScrollView>
         </KeyboardAvoidingView>
         </View>

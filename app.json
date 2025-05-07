@@ -2,7 +2,7 @@
   "expo": {
     "name": "Nevka",
     "slug": "Nevka",
-    "version": "0.37",
+    "version": "0.50",
     "orientation": "portrait",
     "icon": "./assets/icns/ios-dark.png",
     "scheme": "myapp",
@@ -20,7 +20,10 @@
         "light": "./assets/icns/ios-light.png",
         "tinted": "./assets/icns/ios-tinted.png"
       },
-      "bundleIdentifier": "com.followmyutopia.nevka"
+      "bundleIdentifier": "com.followmyutopia.nevka",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -29,7 +32,9 @@
         "foregroundImage": "./assets/icns/adaptive-icon.png",
         "backgroundColor": "#122730"
       },
-      "permissions": [],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.followmyutopia.nevka"
     },
     "web": {
