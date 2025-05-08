@@ -28,7 +28,15 @@ type TopicMessageProps = {
 
 const TopicHeader = ({ header, author, message, time }: TopicHeaderProps) => {
     return (
-        <View style={{ padding: '3%', width: '100%', paddingBottom: 0}}>
+        <View style={{
+            width: '94%',
+            margin: '3%',
+            marginBottom: 0,
+            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+            borderRadius: 15,
+            borderWidth: 1,
+            padding: 15,
+            }}>
             <Text style={{fontSize: 32, marginBottom: 10}}>{header}</Text>
             <Text style={{fontSize: 17, marginBottom: 10, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}}>{author} ({time})</Text>
             <Text style={{fontSize: 17}}>{message}</Text>
@@ -144,7 +152,7 @@ export default function topic () {
             <Stack.Screen options={{ title: header || "Загрузка..." }} />
             {loading ? null : <TopicHeader header={header!} author={author!} message={message!} time={time!}/>}
             {loading ? null : <KeyboardAvoidingView
-                style={{flexDirection: 'row', padding: '3%'}}
+                style={{flexDirection: 'row', padding: '3%', paddingHorizontal: '6%'}}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}>
                 <TextInput
@@ -208,5 +216,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.15)',
         marginBottom: '3%'
+    },
+    label: {
+        fontSize: 20,
+        textAlign: 'left',
+        marginVertical: 8
     },
 });
