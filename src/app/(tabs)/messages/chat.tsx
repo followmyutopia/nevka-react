@@ -91,6 +91,7 @@ export default function chat () {
         const formData = new FormData();
         formData.append("token", token);
         formData.append("chat", chat);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getMessages.php', {
@@ -149,6 +150,7 @@ export default function chat () {
             formData.append("chat", id);
             formData.append("text", text);
             formData.append("image", image);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/sendMessage.php', {

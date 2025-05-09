@@ -55,6 +55,7 @@ export default function settings () {
         const formData = new FormData();
         formData.append("id", id);
         formData.append("token", token);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getUserData.php', {
@@ -91,6 +92,7 @@ export default function settings () {
             formData.append("lastname", newLastname);
             formData.append("city", newCity);
             formData.append("bio", newBio);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             setSettingUserData(true);
 
@@ -123,6 +125,7 @@ export default function settings () {
                 const formData = new FormData();
                 formData.append("token", token);
                 formData.append("push_token", pushToken);
+                formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
                 try {
                     const response = await fetch('https://nevka.site/api/setPushToken.php', {
@@ -168,6 +171,7 @@ export default function settings () {
             const formData = new FormData();
             formData.append("token", token);
             formData.append("avatar", image);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/setAvatar.php', {
@@ -207,6 +211,7 @@ export default function settings () {
             formData.append("id", loggedUser);
             formData.append("old_password", oldPass);
             formData.append("new_password", newPass);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             setSettingUserData(true);
 

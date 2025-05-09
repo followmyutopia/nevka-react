@@ -62,6 +62,7 @@ export default function settings () {
             formData.append("token", token);
             formData.append("text", text);
             formData.append("image", image);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/postWall.php', {

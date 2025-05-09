@@ -142,6 +142,7 @@ export default function person () {
         const formData = new FormData();
         formData.append("id", id);
         formData.append("token", token);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getUserData.php', {
@@ -164,6 +165,7 @@ export default function person () {
     const getWall = async (id: string) => {
         const formData = new FormData();
         formData.append("id", id);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getWall.php', {
