@@ -64,7 +64,7 @@ export default function index () {
 
     useEffect(() => {
         setLogin("avicus@ya.ru");
-        setPassword("Adel1509");
+        setPassword("Nevka4518");
     }, []);
 
     return (

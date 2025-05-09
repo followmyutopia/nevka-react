@@ -35,12 +35,17 @@ export default function settings () {
     const [infoStatus, setInfoStatus] = useState("");
     const [pushStatus, setPushStatus] = useState("");
     const [avatarStatus, setAvatarStatus] = useState("");
+    const [passwordStatus, setPasswordStatus] = useState("");
     const [settingUserData, setSettingUserData] = useState(false);
     const [settingPush, setSettingPush] = useState(false);
     const [settingAvatar, setSettingAvatar] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
     const [image, setImage] = useState("");
     const [currentAvatar, setCurrentAvatar] = useState("");
     const [latestVersion, setLatestVersion] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
@@ -185,6 +190,52 @@ export default function settings () {
         }
     }
 
+    const changePassword = async () => {
+        let oldPass = oldPassword.trim();
+        let newPass = newPassword.trim();
+        let confirmPass = confirmPassword.trim();
+
+        if (newPass != confirmPass) {
+            setPasswordStatus("Пароли не совпадают");
+        } else if (newPass == "" || oldPass == "") {
+            setPasswordStatus("Пароль не может быть пустым");
+        } else {
+            setChangingPassword(true);
+
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("id", loggedUser);
+            formData.append("old_password", oldPass);
+            formData.append("new_password", newPass);
+
+            setSettingUserData(true);
+
+            try {
+                const response = await fetch('https://nevka.site/api/changePassword.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    setPasswordStatus(json.error);
+                    setOldPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                } else if (json.result == "success") {
+                    setToken(json.newToken);
+                    setPasswordStatus("Пароль обновлён!");
+                    setOldPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                }
+            } catch (error) {
+                console.log("Ошибка смены пароля, проблемы с соединением?\n" + error);
+            } finally {
+                setChangingPassword(false);
+            }
+        }
+    }
+
     const checkUpdate = async () => {
         try {
             const response = await fetch('https://nevka.site/api/checkUpdate.php');
@@ -312,6 +363,33 @@ export default function settings () {
                 </View>
 
                 <Text style={{fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
+                <Text style={styles.label}>Старый пароль:</Text>
+                <TextInput style={inputStyle}
+                    value={oldPassword}
+                    onChangeText={setOldPassword}
+                    maxLength={63}
+                    secureTextEntry={true}
+                    ></TextInput>
+                <Text style={styles.label}>Новый пароль:</Text>
+                <TextInput style={inputStyle}
+                    value={newPassword}
+                    onChangeText={setNewPassword}
+                    maxLength={63}
+                    secureTextEntry={true}
+                    ></TextInput>
+                <Text style={styles.label}>Повторите новый пароль:</Text>
+                <TextInput style={inputStyle}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    maxLength={63}
+                    secureTextEntry={true}
+                    ></TextInput>
+                <Pressable
+                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                    onPress={changePassword}>
+                    <Text style={styles.buttonText}>{changingPassword ? "Подождите..." : "Сменить пароль"}</Text>
+                </Pressable>
+                <Text style={styles.console}>{passwordStatus}</Text>
 
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
@@ -322,7 +400,7 @@ export default function settings () {
                 <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Nevka Mobile v{AppConfig.expo.version}</Text>
                 <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Авикус Делакруа</Text>
 
-                <Text style={{fontSize: 15, marginVertical: 16, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})`}</Text>
+                {latestVersion != "" ? <Text style={{fontSize: 15, marginVertical: 16, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})`}</Text> : null}
             </ScrollView>
         </KeyboardAvoidingView>
         </View>
