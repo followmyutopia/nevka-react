@@ -2,6 +2,7 @@ import { ExpoPushToken } from "expo-notifications";
 import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from "react";
 import { registerForNotifications } from "../providers/expoNotifications";
 import * as Notifications from "expo-notifications";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NevkaContext = createContext({});
 
@@ -14,6 +15,9 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const notificationListener = useRef<Notifications.EventSubscription>();
     const responseListener = useRef<Notifications.EventSubscription>();
+
+    // implement async storage
+    // https://react-native-async-storage.github.io/async-storage/docs/usage
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
