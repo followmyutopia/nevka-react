@@ -35,6 +35,7 @@ export default function signup () {
 
         const formData = new FormData();
         formData.append("email", trimmedEmail);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/sendConfirmation.php', {
@@ -76,6 +77,7 @@ export default function signup () {
             const formData = new FormData();
             formData.append("email", trimmedEmail);
             formData.append("password", newPass);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/signUp.php', {

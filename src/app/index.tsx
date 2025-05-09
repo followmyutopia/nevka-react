@@ -39,6 +39,7 @@ export default function index () {
             const formData = new FormData();
             formData.append("login", login);
             formData.append("password", password);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/login.php', {
@@ -62,10 +63,7 @@ export default function index () {
         }
     };
 
-    useEffect(() => {
-        setLogin("avicus@ya.ru");
-        setPassword("Nevka4518");
-    }, []);
+    useEffect(() => {}, []);
 
     return (
         <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}

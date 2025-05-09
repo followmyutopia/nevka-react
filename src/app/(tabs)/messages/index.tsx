@@ -70,6 +70,7 @@ export default function messages () {
     const getChats = async (token: string) => {
         const formData = new FormData();
         formData.append("token", token);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getChats.php', {

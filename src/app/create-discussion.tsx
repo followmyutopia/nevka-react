@@ -36,6 +36,7 @@ export default function settings () {
             formData.append("token", token);
             formData.append("title", trimmedTitle);
             formData.append("message", trimmedMessage);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/createTopic.php', {

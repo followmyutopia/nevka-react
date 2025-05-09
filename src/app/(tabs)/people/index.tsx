@@ -76,6 +76,7 @@ export default function people () {
     const getPeople = async (query: string) => {
         const formData = new FormData();
         formData.append("query", query);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getPeople.php', {

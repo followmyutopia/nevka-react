@@ -75,6 +75,7 @@ export default function topic () {
     const getTopic = async (discussion: string) => {
         const formData = new FormData();
         formData.append("id", discussion);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
             const response = await fetch('https://nevka.site/api/getTopic.php', {
@@ -115,6 +116,7 @@ export default function topic () {
             formData.append("token", token);
             formData.append("topic", id);
             formData.append("text", text);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
                 const response = await fetch('https://nevka.site/api/sendTopicReply.php', {
