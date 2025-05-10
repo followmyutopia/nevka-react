@@ -171,13 +171,9 @@ export default function profile () {
     const [newStatus, setNewStatus] = useState("");
     const [showStatusEditor, setShowStatusEditor] = useState(false);
     const [showDeletePostDialog, setShowDeletePostDialog] = useState(false);
+    const [postToDelete, setPostToDelete] = useState("");
 
     const colorScheme = useColorScheme();
-
-    const showDeleteDialog = (id: any) => {
-        setShowDeletePostDialog(true);
-        console.log("Deleting post with id: " + id);
-    }
 
     const getUserData = async (id: string) => {
         const formData = new FormData();
@@ -260,6 +256,35 @@ export default function profile () {
         }
     }
 
+    const showDeleteDialog = (id: string) => {
+        setShowDeletePostDialog(true);
+        setPostToDelete(id);
+    }
+
+    const deletePost = async () => {
+        setShowDeletePostDialog(false);
+        
+        const formData = new FormData();
+        formData.append("token", token);
+        formData.append("postId", postToDelete);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+        try {
+            const response = await fetch('https://nevka.site/api/deletePost.php', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await response.json();
+            if (json.result == "failure") {
+                console.log("deletePost error: " + json.error)
+            } else if (json.result == "success") {
+                getWall(loggedUser);
+            }
+        } catch (error) {
+            console.log("Ошибка удаления записи, проблемы с соединением?\n" + error);
+        }
+    }
+
     useEffect(() => {
         if (isFocused) {
             setTimeout(() => setUpdate(update+1), 5000);
@@ -290,7 +315,7 @@ export default function profile () {
             <Dialog.Container visible={showDeletePostDialog}>
                 <Dialog.Title>Удалить запись?</Dialog.Title>
                 <Dialog.Button label="Отменить" onPress={() => setShowDeletePostDialog(false)}/>
-                <Dialog.Button label="Удалить" onPress={() => console.log("Удаление...")}/>
+                <Dialog.Button label="Удалить" onPress={() => deletePost()}/>
             </Dialog.Container>
         </View>
     );
