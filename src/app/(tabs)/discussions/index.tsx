@@ -102,7 +102,7 @@ export default function discussions () {
                 maxLength={63}
                 spellCheck={false}
             ></TextInput>
-            {loading ? <ActivityIndicator /> : <FlatList
+            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
                 style={{flex: 1, width: '100%'}}
                 data={discData}
                 renderItem={({ item }) => <DiscListItem item={item}/>}

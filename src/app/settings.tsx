@@ -24,7 +24,7 @@ type UserData = {
 };
 
 export default function settings () {
-    const { token, setToken, loggedUser, pushToken, setPushToken }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -38,6 +38,7 @@ export default function settings () {
     const [passwordStatus, setPasswordStatus] = useState("");
     const [settingUserData, setSettingUserData] = useState(false);
     const [settingPush, setSettingPush] = useState(false);
+    const [tokenStored, setTokenStored] = useState(false);
     const [settingAvatar, setSettingAvatar] = useState(false);
     const [changingPassword, setChangingPassword] = useState(false);
     const [image, setImage] = useState("");
@@ -122,29 +123,34 @@ export default function settings () {
             .then(async result => {
                 setPushToken(result ?? '');
 
-                const formData = new FormData();
-                formData.append("token", token);
-                formData.append("push_token", pushToken);
-                formData.append("api-key", "qonxod-Kicmad-4puvhy");
-
-                try {
-                    const response = await fetch('https://nevka.site/api/setPushToken.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const json = await response.json();
-                    if (json.result == "failure") {
-                        console.log("setPushToken error: " + json.error)
-                    } else if (json.result == "success") {
-                        setPushStatus("Уведомления включены!");
-                    }
-                } catch (error) {
-                    console.log("Ошибка записи push-токена, проблемы с соединением?\n" + error);
-                } finally {
-                    setSettingUserData(false);
-                }
+                savePushToken();
             })
             .catch((error: any) => console.log(`${error}`));
+    }
+
+    const savePushToken = async () => {
+        if (pushToken != undefined) {
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("push_token", pushToken);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+            try {
+                const response = await fetch('https://nevka.site/api/setPushToken.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    console.log("setPushToken error: " + json.error)
+                } else if (json.result == "success") {
+                    setSettingPush(true);
+                    setTokenStored(true);
+                }
+            } catch (error) {
+                console.log("Ошибка записи push-токена, проблемы с соединением?\n" + error);
+            }
+        }
     }
 
     const pickImage = async () => {
@@ -254,7 +260,8 @@ export default function settings () {
     useEffect(() => {
         getUserData(loggedUser);
         checkUpdate();
-    }, []);
+        savePushToken();
+    }, [pushToken]);
     
     return (
         <View style={styles.container}>
@@ -349,7 +356,7 @@ export default function settings () {
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={enablePush}
                     disabled={settingPush}>
-                    <Text style={styles.buttonText}>Включить уведомления</Text>
+                    <Text style={styles.buttonText}>{tokenStored ? "Уведомления включены!" : "Включить уведомления"}</Text>
                 </Pressable>
                 <Text style={styles.console}>{pushStatus}</Text>
 
@@ -357,12 +364,12 @@ export default function settings () {
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Pressable
                         style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor, width: '47%' }]}
-                        onPress={() => Appearance.setColorScheme('dark')}>
+                        onPress={() => setTheme('dark')}>
                         <Text style={styles.buttonText}>Тёмная</Text>
                     </Pressable>
                     <Pressable
                         style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor, width: '47%' }]}
-                        onPress={() => Appearance.setColorScheme('light')}>
+                        onPress={() => setTheme('light')}>
                         <Text style={styles.buttonText}>Светлая</Text>
                     </Pressable>
                 </View>

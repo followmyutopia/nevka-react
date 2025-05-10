@@ -119,7 +119,7 @@ export default function people () {
                 maxLength={63}
                 spellCheck={false}
             ></TextInput>
-            {loading ? <ActivityIndicator /> : <FlatList
+            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
                 style={{flex: 1, width: '100%'}}
                 data={peopleData}
                 renderItem={({ item }) => <PeopleListItem user={item}/>}
