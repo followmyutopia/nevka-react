@@ -1,14 +1,14 @@
-import { ExpoPushToken } from "expo-notifications";
 import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from "react";
-import { registerForNotifications } from "../providers/expoNotifications";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Appearance } from "react-native";
 
 const NevkaContext = createContext({});
 
 export default function NevkaProvider({children}: PropsWithChildren) {
     const [token, setTokenLocal] = useState<string>("");
     const [loggedUser, setLoggedUserLocal] = useState<string>("");
+    const [theme, setThemeLocal] = useState<string>("");
     const [messageCounter, setMessageCounter] = useState<number>(0);
     const [isNameSet, setIsNameSet] = useState<boolean>(false);
     const [pushToken, setPushToken] = useState<string>();
@@ -37,6 +37,17 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         }
     };
 
+    const setTheme = async (value: string) => {
+        setThemeLocal(value);
+        if (value == 'light') Appearance.setColorScheme('light');
+        if (value == 'dark') Appearance.setColorScheme('dark');
+        try {
+            await AsyncStorage.setItem('theme', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
     const getToken = async () => {
         try {
             const value = await AsyncStorage.getItem('token');
@@ -59,6 +70,19 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         }
     };
 
+    const getTheme = async () => {
+        try {
+            const value = await AsyncStorage.getItem('theme');
+            if (value !== null) {
+                setThemeLocal(value);
+                if (value == 'light') Appearance.setColorScheme('light');
+                if (value == 'dark') Appearance.setColorScheme('dark');
+            }
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
           shouldPlaySound: false,
@@ -71,6 +95,7 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     useEffect(() => {
         getToken();
         getLoggedUser();
+        getTheme();
 
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
         setNotification(notification);
@@ -94,7 +119,8 @@ export default function NevkaProvider({children}: PropsWithChildren) {
             loggedUser, setLoggedUser,
             messageCounter, setMessageCounter,
             isNameSet, setIsNameSet,
-            pushToken, setPushToken
+            pushToken, setPushToken,
+            theme, setTheme
             }}>
             {children}
         </NevkaContext.Provider>
