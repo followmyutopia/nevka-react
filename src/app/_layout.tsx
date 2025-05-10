@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import NevkaProvider from '../providers/nevkaProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { useColorScheme } from '@/src/components/useColorScheme';
 import Colors from '../constants/Colors';
@@ -53,14 +54,16 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <NevkaProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
-          <Stack.Screen name="create-discussion" options={{ presentation: 'modal', headerShown: false }} />
-          <Stack.Screen name="create-wall" options={{ presentation: 'modal', headerShown: false }} />
-        </Stack>
+        <GestureHandlerRootView>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="create-discussion" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="create-wall" options={{ presentation: 'modal', headerShown: false }} />
+          </Stack>
+        </GestureHandlerRootView>
       </NevkaProvider>
     </ThemeProvider>
   );
