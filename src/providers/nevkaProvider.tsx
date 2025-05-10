@@ -85,8 +85,8 @@ export default function NevkaProvider({children}: PropsWithChildren) {
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
-          shouldPlaySound: false,
-          shouldSetBadge: false,
+          shouldPlaySound: true,
+          shouldSetBadge: true,
           shouldShowBanner: true,
           shouldShowList: true,
         }),
