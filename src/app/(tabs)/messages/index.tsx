@@ -49,6 +49,11 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                                 size={16}
                                 color='orange'
                                 style={{ marginLeft: '3%' }}
+                                /> : user.isUnread == '1' && user.lastTextAuthor == loggedUser ? <FontAwesome
+                                name="circle"
+                                size={16}
+                                color='lightslategray'
+                                style={{ marginLeft: '3%' }}
                                 /> : null}
                         </View>
                     </View>
