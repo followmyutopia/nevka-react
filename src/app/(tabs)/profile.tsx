@@ -116,6 +116,7 @@ const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
     return (
         <Swipeable
             renderRightActions={() => renderRightActions(() => deleteHandler(item.id)) }
+            ref={(ref) => ref?.close()}
             >
         <View style={{
             width: '94%',
@@ -169,10 +170,12 @@ export default function profile () {
     const [wallLoading, setWallLoading] = useState(true);
     const [newStatus, setNewStatus] = useState("");
     const [showStatusEditor, setShowStatusEditor] = useState(false);
+    const [showDeletePostDialog, setShowDeletePostDialog] = useState(false);
 
     const colorScheme = useColorScheme();
 
-    const deletePost = (id: any) => {
+    const showDeleteDialog = (id: any) => {
+        setShowDeletePostDialog(true);
         console.log("Deleting post with id: " + id);
     }
 
@@ -273,7 +276,7 @@ export default function profile () {
                 ListHeaderComponent={<MyInfoScreen user={userData!} onStatusChange={() => setShowStatusEditor(true)}/>}
                 style={{flex: 1, width: '100%'}}
                 data={wallData || <ActivityIndicator /> }
-                renderItem={({ item }) => <WallPost item={item} user={userData!} deleteHandler={deletePost}/>}
+                renderItem={({ item }) => <WallPost item={item} user={userData!} deleteHandler={showDeleteDialog}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Записей на стене нет</Text>}
             />}
             <Dialog.Container visible={showStatusEditor}>
@@ -283,6 +286,11 @@ export default function profile () {
                     maxLength={127}/>
                 <Dialog.Button label="Отменить" onPress={() => setShowStatusEditor(false)}/>
                 <Dialog.Button label="Установить" onPress={setStatus}/>
+            </Dialog.Container>
+            <Dialog.Container visible={showDeletePostDialog}>
+                <Dialog.Title>Удалить запись?</Dialog.Title>
+                <Dialog.Button label="Отменить" onPress={() => setShowDeletePostDialog(false)}/>
+                <Dialog.Button label="Удалить" onPress={() => console.log("Удаление...")}/>
             </Dialog.Container>
         </View>
     );
