@@ -97,19 +97,17 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         getLoggedUser();
         getTheme();
 
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification);
+        const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
         });
-    
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log(response);
+
+        const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
         });
 
         return () => {
-            notificationListener.current &&
-                Notifications.removeNotificationSubscription(notificationListener.current);
-            responseListener.current &&
-                Notifications.removeNotificationSubscription(responseListener.current);
+            notificationListener.remove();
+            responseListener.remove();
         };
     }, [])
 

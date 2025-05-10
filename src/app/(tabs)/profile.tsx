@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable } from "react-native";
+import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable, Button } from "react-native";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
@@ -6,6 +6,9 @@ import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, router } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import Dialog from "react-native-dialog";
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Colors from "@/src/constants/Colors";
 
 type UserData = {
     id: string,
@@ -34,7 +37,8 @@ type MyInfoScreenProps = {
 
 type WallPostProps = {
     item: WallData,
-    user: UserData
+    user: UserData,
+    deleteHandler: (id: any) => void
 }
 
 const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
@@ -87,8 +91,32 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
     );
 }
 
-const WallPost = ({ item, user }: WallPostProps) => {
+const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
+    const renderRightActions = (deleteHandler: any) => {
+        return (
+            <Pressable style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: '3%',
+                    marginRight: '6%'
+                }}
+                onPress={deleteHandler}>
+                {({ pressed }) => (
+                    <FontAwesome
+                    name="trash-o"
+                    size={35}
+                    color='crimson'
+                    style={{ opacity: pressed ? 0.5 : 1 }}
+                    />
+                )}
+            </Pressable>
+        );
+    };
+
     return (
+        <Swipeable
+            renderRightActions={() => renderRightActions(() => deleteHandler(item.id)) }
+            >
         <View style={{
             width: '94%',
             margin: '3%',
@@ -125,6 +153,7 @@ const WallPost = ({ item, user }: WallPostProps) => {
                 </FullWidthImage> : null}
             </View>
         </View>
+        </Swipeable>
     );
 }
 
@@ -142,6 +171,10 @@ export default function profile () {
     const [showStatusEditor, setShowStatusEditor] = useState(false);
 
     const colorScheme = useColorScheme();
+
+    const deletePost = (id: any) => {
+        console.log("Deleting post with id: " + id);
+    }
 
     const getUserData = async (id: string) => {
         const formData = new FormData();
@@ -240,7 +273,7 @@ export default function profile () {
                 ListHeaderComponent={<MyInfoScreen user={userData!} onStatusChange={() => setShowStatusEditor(true)}/>}
                 style={{flex: 1, width: '100%'}}
                 data={wallData || <ActivityIndicator /> }
-                renderItem={({ item }) => <WallPost item={item} user={userData!}/>}
+                renderItem={({ item }) => <WallPost item={item} user={userData!} deleteHandler={deletePost}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Записей на стене нет</Text>}
             />}
             <Dialog.Container visible={showStatusEditor}>
