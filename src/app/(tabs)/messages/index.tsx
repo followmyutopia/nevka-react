@@ -4,6 +4,7 @@ import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Link, Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import * as Notifications from "expo-notifications";
 
 type ChatsData = {
     id: string,
@@ -64,7 +65,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages () {
-    const { token, loggedUser, setMessageCounter, isNameSet }: any = useNevkaProvider();
+    const { token, loggedUser, messageCounter, setMessageCounter, isNameSet }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
@@ -107,6 +108,7 @@ export default function messages () {
         }
         setTimeout(() => setUpdate(update+1), 5000);
         getChats(token);
+        if (chatsData && messageCounter == 0) Notifications.dismissAllNotificationsAsync();
         console.log("Updated: Chats");
     }, [update]);
 

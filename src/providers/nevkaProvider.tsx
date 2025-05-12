@@ -9,13 +9,15 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     const [token, setTokenLocal] = useState<string>("");
     const [loggedUser, setLoggedUserLocal] = useState<string>("");
     const [theme, setThemeLocal] = useState<string>("");
-    const [messageCounter, setMessageCounter] = useState<number>(0);
+    const [messageCounter, setMessageCounterLocal] = useState<number>(0);
     const [isNameSet, setIsNameSet] = useState<boolean>(false);
     const [pushToken, setPushToken] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
 
-    // implement async storage
-    // https://react-native-async-storage.github.io/async-storage/docs/usage
+    const setMessageCounter = async (value: number) => {
+        setMessageCounterLocal(value);
+        Notifications.setBadgeCountAsync(value);
+    };
 
     const setToken = async (value: string) => {
         setTokenLocal(value);
