@@ -94,6 +94,7 @@ export default function messages () {
                 setChatsData(json.chats);
                 let newMessageCounter = json.chats.filter((item: ChatsData) => item.isUnread == '1' && item.lastTextAuthor != loggedUser).length;
                 setMessageCounter(newMessageCounter);
+                if (newMessageCounter == 0) Notifications.dismissAllNotificationsAsync();
             }
         } catch (error) {
             console.log("Ошибка запроса чатов, проблемы с соединением?\n" + error);
@@ -108,7 +109,6 @@ export default function messages () {
         }
         setTimeout(() => setUpdate(update+1), 5000);
         getChats(token);
-        if (chatsData && messageCounter == 0) Notifications.dismissAllNotificationsAsync();
         console.log("Updated: Chats");
     }, [update]);
 
