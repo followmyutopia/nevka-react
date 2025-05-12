@@ -153,11 +153,10 @@ export default function person () {
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
                 setUserData(json);
+                setLoading(false);
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
-        } finally {
-            setLoading(false);
         }
     }
 

@@ -57,6 +57,7 @@ function RootLayoutNav() {
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="passwordReset" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="create-discussion" options={{ presentation: 'modal', headerShown: false }} />

@@ -189,6 +189,7 @@ export default function profile () {
             if (json.result == "failure") {
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
+                setLoading(false);
                 if (json.firstname == "" || json.lastname == "") {
                     router.navigate("/settings");
                 } else {
@@ -198,8 +199,6 @@ export default function profile () {
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
-        } finally {
-            setLoading(false);
         }
     }
 
