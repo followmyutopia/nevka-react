@@ -14,7 +14,6 @@ export default function index () {
     const [password, setPassword] = useState("");
     const [consoleMessage, setConsoleMessage] = useState("");
     const [loading, setLoading] = useState(false);
-    const [session, setSession] = useState("");
     const headerHeight = useHeaderHeight();
 
     const colorScheme = useColorScheme();
