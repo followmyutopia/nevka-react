@@ -34,7 +34,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                         aspectRatio: 1,
                         borderRadius: 15,
                         borderWidth: 1,
-                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                         source={{uri: user.avatar}}></Image>
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
                         <View style={{flexDirection: 'row'}}>

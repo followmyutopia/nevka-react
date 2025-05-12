@@ -49,7 +49,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                     aspectRatio: 1,
                     borderRadius: 15,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                     source={{uri: user.avatar}}></Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%' }}>
                     <Text style={{ fontSize: 32 }}>{user.firstname}</Text>
@@ -70,7 +70,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 marginBottom: '4%'
             }}>Установить статус</Text></Pressable>
             { user.city != "" || user.bio != "" ? <View style={{
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
                 borderRadius: 15,
                 borderWidth: 1,
                 padding: 15,
@@ -81,7 +81,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 { user.bio != "" ? <Text style={{ fontSize: 18 }}>Информация: {user.bio}</Text> : null}
             </View> : null}
             <Pressable
-                style={({pressed}) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                style={({pressed}) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                 onPress={() => router.navigate('/create-wall')}
                 >
                 <Text style={styles.buttonText}>Написать на стене</Text>
@@ -120,7 +120,7 @@ const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
         <View style={{
             width: '94%',
             margin: '3%',
-            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
             borderRadius: 15,
             borderWidth: 1,
             padding: 15,
@@ -133,7 +133,7 @@ const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
                     aspectRatio: 1,
                     borderRadius: 10,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                     source={{uri: user.avatar}}>
                 </Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
@@ -148,7 +148,7 @@ const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
                     borderRadius: 10,
                     marginTop: 10,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                     source={{uri: item.image}}>
                 </FullWidthImage> : null}
             </View>
@@ -325,25 +325,25 @@ const styles = StyleSheet.create({
         flex: 1
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         // width: '90%',
         // margin: '2%',
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)',
+        borderColor: 'rgba(255, 255, 255, 0.07)',
         // marginVertical: '3%'
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         // width: '90%',
         // margin: '2%',, paddingVertical: '3%'
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)',
+        borderColor: 'rgba(0, 0, 0, 0.07)',
         // marginVertical: '3%'
     },
     buttonText: {

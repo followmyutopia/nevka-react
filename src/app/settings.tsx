@@ -49,7 +49,7 @@ export default function settings () {
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
-    const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
+    const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)';
 
     const getUserData = async (id: string) => {
         const formData = new FormData();
@@ -324,7 +324,7 @@ export default function settings () {
                         aspectRatio: 1,
                         borderRadius: 15,
                         borderWidth: 1,
-                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                         source={{uri: currentAvatar}}
                         ></Image>}
                     {image == "" ? <Text style={{
@@ -337,7 +337,7 @@ export default function settings () {
                         aspectRatio: 1,
                         borderRadius: 15,
                         borderWidth: 1,
-                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'}}
+                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                         source={{uri: image}}
                         ></Image>}
                 </View>
@@ -445,42 +445,42 @@ const styles = StyleSheet.create({
     darkInput: {
         width: '100%',
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         padding: '3%',
         borderRadius: 15,
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)'
+        borderColor: 'rgba(255, 255, 255, 0.07)'
     },
     lightInput: {
         width: '100%',
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         padding: '3%',
         borderRadius: 15,
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)'
+        borderColor: 'rgba(0, 0, 0, 0.07)'
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         width: '100%',
         marginVertical: '4%',
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)'
+        borderColor: 'rgba(255, 255, 255, 0.07)'
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         width: '100%',
         marginVertical: '4%',
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)'
+        borderColor: 'rgba(0, 0, 0, 0.07)'
     },
     buttonText: {
         fontSize: 20

@@ -121,23 +121,23 @@ const styles = StyleSheet.create({
     darkInput: {
         width: '94%',
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         padding: '3%',
         borderRadius: 15,
         margin: '3%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)'
+        borderColor: 'rgba(255, 255, 255, 0.07)'
     },
     lightInput: {
         width: '94%',
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         padding: '3%',
         borderRadius: 15,
         margin: '3%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)'
+        borderColor: 'rgba(0, 0, 0, 0.07)'
     },
 });

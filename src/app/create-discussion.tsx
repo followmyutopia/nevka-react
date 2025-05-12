@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { Button, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -19,7 +19,7 @@ export default function settings () {
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
-    const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)';
+    const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)';
 
     const createTopic = async () => {
         let trimmedTitle = title.trim();
@@ -118,44 +118,44 @@ const styles = StyleSheet.create({
     darkInput: {
         width: '90%',
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         padding: '3%',
         borderRadius: 15,
         margin: '2%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)',
+        borderColor: 'rgba(255, 255, 255, 0.07)',
     },
     lightInput: {
         width: '90%',
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         padding: '3%',
         borderRadius: 15,
         margin: '2%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)',
+        borderColor: 'rgba(0, 0, 0, 0.07)',
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         width: '90%',
         margin: '2%',
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)'
+        borderColor: 'rgba(255, 255, 255, 0.07)'
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         width: '90%',
         margin: '2%',
         borderRadius: 15,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)'
+        borderColor: 'rgba(0, 0, 0, 0.07)'
     },
     buttonText: {
         fontSize: 20

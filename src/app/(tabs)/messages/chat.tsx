@@ -27,8 +27,8 @@ type MessageItemProps = {
 const MessageItem = ({ item }: MessageItemProps) => {
     return (
         <View style={{
-            backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
-            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
+            backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
+            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
             borderWidth: 1,
             alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
             borderRadius: 10,
@@ -46,7 +46,7 @@ const MessageItem = ({ item }: MessageItemProps) => {
                 minWidth: '100%',
                 borderRadius: 10,
                 borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)'
+                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
             }} source={{uri: item.image}}>
             </FullWidthImage> : null}
             <View style={{
@@ -260,24 +260,24 @@ const styles = StyleSheet.create({
         flex: 1,
         maxHeight: 80,
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255, 255, 255, 0.07)',
         padding: '3%',
         borderRadius: 15,
         marginVertical: '3%',
         fontSize: 17,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.15)'
+        borderColor: 'rgba(255, 255, 255, 0.07)'
     },
     lightInput: {
         flex: 1,
         maxHeight: 80,
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.07)',
         padding: '3%',
         borderRadius: 15,
         marginVertical: '3%',
         fontSize: 17,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.15)'
+        borderColor: 'rgba(0, 0, 0, 0.07)'
     },
 });
