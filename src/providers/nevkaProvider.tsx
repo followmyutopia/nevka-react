@@ -13,8 +13,6 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     const [isNameSet, setIsNameSet] = useState<boolean>(false);
     const [pushToken, setPushToken] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
-    const notificationListener = useRef<Notifications.EventSubscription>();
-    const responseListener = useRef<Notifications.EventSubscription>();
 
     // implement async storage
     // https://react-native-async-storage.github.io/async-storage/docs/usage

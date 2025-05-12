@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
 import { useNevkaProvider } from "../providers/nevkaProvider";
