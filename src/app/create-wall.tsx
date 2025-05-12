@@ -1,4 +1,4 @@
-import { Button, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";

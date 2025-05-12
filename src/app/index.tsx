@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform, Button } from "react-native";
+import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
 import { Redirect, router } from "expo-router";
@@ -14,7 +14,6 @@ export default function index () {
     const [password, setPassword] = useState("");
     const [consoleMessage, setConsoleMessage] = useState("");
     const [loading, setLoading] = useState(false);
-    const [session, setSession] = useState("");
     const headerHeight = useHeaderHeight();
 
     const colorScheme = useColorScheme();

@@ -1,4 +1,4 @@
-import { Appearance, KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -9,7 +9,6 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import * as AppConfig from "../../app.json";
 import { registerForNotifications } from "../providers/expoNotifications";
 import * as ImagePicker from 'expo-image-picker';
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type UserData = {
     id: string,
