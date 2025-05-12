@@ -98,8 +98,12 @@ export default function index () {
                 onPress={() => {router.navigate('/signup')}}>
                 <Text style={styles.buttonText}>Зарегистрироваться</Text>
             </Pressable>
-
             <Text style={styles.console}>{consoleMessage}</Text>
+
+            <Pressable onPress={() => {router.navigate('/passwordReset')}}><Text style={{
+                fontSize: 20,
+                color: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'
+            }}>Забыли пароль?</Text></Pressable>
         </KeyboardAvoidingView>
     );
 }
@@ -108,12 +112,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingTop: '5%'
     },
     logo: {
         fontSize: 40,
         color: 'rgb(70, 150, 185)',
-        margin: '7.5%'
+        margin: '5%'
     },
     label: {
         fontSize: 20,
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
     console: {
         fontSize: 20,
         color: 'orange',
-        marginTop: '2.5%',
+        marginVertical: '2%',
         textAlign: 'center'
     },
     darkInput: {
