@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform, Button } from "react-native";
+import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
 import { Redirect, router } from "expo-router";
