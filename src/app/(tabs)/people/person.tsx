@@ -4,7 +4,6 @@ import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
-import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 
 type UserData = {

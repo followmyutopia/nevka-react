@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable, Button } from "react-native";
+import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable } from "react-native";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
@@ -8,7 +8,6 @@ import { useIsFocused } from "@react-navigation/native";
 import Dialog from "react-native-dialog";
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Colors from "@/src/constants/Colors";
 
 type UserData = {
     id: string,
