@@ -154,7 +154,7 @@ export default function signup () {
                     textAlign: 'center',
                     fontSize: 20,
                     marginVertical: '5%'
-                }}>Регистрируясь в Невке, Вы принимаете политику здравого смысла. Ведите себя хорошо и не будете забанены.</Text>
+                }}>Обратите внимание, при сбросе пароля все текущие сессии, включая веб-версию, будут завершены.</Text>
             </ScrollView>
 
         </KeyboardAvoidingView>
