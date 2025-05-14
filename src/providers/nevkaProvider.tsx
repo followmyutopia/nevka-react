@@ -2,8 +2,13 @@ import { createContext, PropsWithChildren, useContext, useEffect, useRef, useSta
 import * as Notifications from "expo-notifications";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from "react-native";
+import { RelativePathString, router } from "expo-router";
 
 const NevkaContext = createContext({});
+
+type PushDataObject = {
+    url?: RelativePathString
+};
 
 export default function NevkaProvider({children}: PropsWithChildren) {
     const [token, setTokenLocal] = useState<string>("");
@@ -97,12 +102,15 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         getLoggedUser();
         getTheme();
 
-        const notificationListener = Notifications.addNotificationReceivedListener(notification => {
-            setNotification(notification);
+        const notificationListener = Notifications.addNotificationReceivedListener(notif => {
+            setNotification(notif);
         });
 
         const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
-            console.log(response);
+            const data: PushDataObject = response.notification.request.content.data;
+            if (data.url) {
+                router.navigate(data.url, {withAnchor: true})
+            }
         });
 
         return () => {
