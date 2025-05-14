@@ -53,7 +53,9 @@ const MessageItem = ({ item, replyHandler }: MessageItemProps) => {
             }}>
             {item.reply != "" ? <View style={{
                 backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
-                flexDirection: 'row'
+                flexDirection: 'row',
+                borderBottomWidth: 1,
+                borderBottomColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
                 }}><FontAwesome
                     name="reply"
                     size={16}
@@ -63,8 +65,9 @@ const MessageItem = ({ item, replyHandler }: MessageItemProps) => {
                         numberOfLines={1}
                         style={{
                             fontSize: 16,
-                            marginTop: 4,
+                            marginVertical: 4,
                             marginHorizontal: 7,
+                            marginRight: 28,
                             color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
                     }}>{item.reply}</Text></View> : null}
             { item.text != "" ? <Text style={{
