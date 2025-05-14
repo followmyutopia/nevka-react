@@ -77,6 +77,7 @@ export default function people () {
         const formData = new FormData();
         formData.append("query", query);
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
+        if (loggedUser == "1") formData.append("safe", "true");
 
         try {
             const response = await fetch('https://nevka.site/api/getPeople.php', {
