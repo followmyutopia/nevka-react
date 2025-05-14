@@ -77,6 +77,7 @@ export default function messages () {
         const formData = new FormData();
         formData.append("token", token);
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
+        if (loggedUser == "1") formData.append("safe", "true");
 
         try {
             const response = await fetch('https://nevka.site/api/getChats.php', {
