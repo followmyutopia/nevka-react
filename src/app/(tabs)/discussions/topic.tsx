@@ -54,7 +54,7 @@ const TopicMessage = ({ item }: TopicMessageProps) => {
 };
 
 export default function topic () {
-    const { token }: any = useNevkaProvider();
+    const { token, setToken }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -125,6 +125,9 @@ export default function topic () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     console.log(json.error);
                 } else if (json.result == "success") {
                     setNewMessage("");

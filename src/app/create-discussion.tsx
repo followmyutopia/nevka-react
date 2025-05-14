@@ -45,6 +45,9 @@ export default function settings () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     setStatus(json.error);
                 } else if (json.result == "success") {
                     setTitle("");
