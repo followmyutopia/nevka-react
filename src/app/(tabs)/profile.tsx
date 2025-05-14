@@ -158,7 +158,7 @@ const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
 }
 
 export default function profile () {
-    const { token, loggedUser, setIsNameSet }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, setIsNameSet }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -187,6 +187,9 @@ export default function profile () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
                 setLoading(false);
@@ -244,6 +247,9 @@ export default function profile () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("setUserData error: " + json.error)
             } else if (json.result == "success") {
                 setUpdate(0);
@@ -274,6 +280,9 @@ export default function profile () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("deletePost error: " + json.error)
             } else if (json.result == "success") {
                 getWall(loggedUser);

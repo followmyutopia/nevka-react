@@ -64,6 +64,9 @@ export default function settings () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
                 setFirstname(json.firstname);
@@ -103,6 +106,9 @@ export default function settings () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     console.log("setUserData error: " + json.error)
                 } else if (json.result == "success") {
                     setInfoStatus("Успешно обновлено!");
@@ -141,6 +147,9 @@ export default function settings () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     console.log("setPushToken error: " + json.error)
                 } else if (json.result == "success") {
                     setSettingPush(true);
@@ -185,6 +194,9 @@ export default function settings () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     console.log("setUserData error: " + json.error)
                 } else if (json.result == "success") {
                     setImage("");
@@ -227,6 +239,9 @@ export default function settings () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     setPasswordStatus(json.error);
                     setOldPassword("");
                     setNewPassword("");

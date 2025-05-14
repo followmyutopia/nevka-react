@@ -124,7 +124,7 @@ const WallPost = ({ item, user }: WallPostProps) => {
 }
 
 export default function person () {
-    const { token, loggedUser }: any = useNevkaProvider();
+    const { token, setToken, loggedUser }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
@@ -150,6 +150,9 @@ export default function person () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
                 setUserData(json);

@@ -103,7 +103,7 @@ const MessageItem = ({ item, replyHandler }: MessageItemProps) => {
 }
 
 export default function chat () {
-    const { token }: any = useNevkaProvider();
+    const { token, setToken }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
@@ -134,6 +134,9 @@ export default function chat () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("getMessages error: " + json.error)
             } else if (json.result == "empty") {
                 setMessagesData([]);
@@ -194,6 +197,9 @@ export default function chat () {
                 });
                 const json = await response.json();
                 if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
                     setStatus(json.error);
                 } else if (json.result == "success") {
                     setMessage("");

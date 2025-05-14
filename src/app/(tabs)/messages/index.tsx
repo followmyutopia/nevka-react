@@ -65,7 +65,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages () {
-    const { token, loggedUser, messageCounter, setMessageCounter, isNameSet }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
@@ -85,6 +85,9 @@ export default function messages () {
             });
             const json = await response.json();
             if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
                 console.log("getChats error: " + json.error)
             } else if (json.result == "empty") {
                 setChatsData([]);
