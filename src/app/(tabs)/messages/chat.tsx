@@ -7,8 +7,9 @@ import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { Button, useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 type MessageData = {
     id: string,
@@ -17,15 +18,29 @@ type MessageData = {
     image: string,
     timestamp: string,
     formattedTime: string,
-    isUnread: string
+    isUnread: string,
+    reply: string
 };
 
 type MessageItemProps = {
-    item: MessageData
+    item: MessageData,
+    replyHandler: (id: any) => void
 }
 
-const MessageItem = ({ item }: MessageItemProps) => {
+const MessageItem = ({ item, replyHandler }: MessageItemProps) => {
+    const renderRightActions = () => {
+        return (
+            <View style={{width: 1}}></View>
+        );
+    };
+
     return (
+        <Swipeable
+            hitSlop={{left: -60}}
+            renderRightActions={() => renderRightActions() }
+            onSwipeableWillOpen={() => replyHandler(item.id)}
+            ref={(ref) => ref?.close()}
+            >
         <View style={{
             backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
             borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
@@ -36,6 +51,22 @@ const MessageItem = ({ item }: MessageItemProps) => {
             marginHorizontal: '3%',
             marginVertical: '1%'
             }}>
+            {item.reply != "" ? <View style={{
+                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
+                flexDirection: 'row'
+                }}><FontAwesome
+                    name="reply"
+                    size={16}
+                    color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                    style={{ marginTop: 5, marginLeft: 7 }}/>
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            fontSize: 16,
+                            marginTop: 4,
+                            marginHorizontal: 7,
+                            color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
+                    }}>{item.reply}</Text></View> : null}
             { item.text != "" ? <Text style={{
                 fontSize: 17,
                 paddingHorizontal: 7,
@@ -67,6 +98,7 @@ const MessageItem = ({ item }: MessageItemProps) => {
                 }}>{item.formattedTime}</Text>
             </View>
         </View>
+        </Swipeable>
     );
 }
 
@@ -86,6 +118,8 @@ export default function chat () {
     const [image, setImage] = useState("");
     const [status, setStatus] = useState("");
     const [sending, setSending] = useState(false);
+    const [replyTo, setReplyTo] = useState("");
+    const [textToReply, setTextToReply] = useState("");
 
     const getMessages = async (token: string, chat: string) => {
         const formData = new FormData();
@@ -150,6 +184,7 @@ export default function chat () {
             formData.append("chat", id);
             formData.append("text", text);
             formData.append("image", image);
+            formData.append("reply", replyTo);
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
@@ -164,6 +199,7 @@ export default function chat () {
                     setMessage("");
                     setImage("");
                     setStatus("");
+                    setReplyTo("");
                 }
             } catch (error) {
                 console.log("Ошибка отправки сообщения " + id + ", проблемы с соединением?\n" + error);
@@ -171,6 +207,12 @@ export default function chat () {
                 setSending(false);
             }
         }
+    }
+
+    const reply = (id: string) => {
+        setReplyTo(id);
+        const messageObject = messagesData?.find(item => item.id === id);
+        setTextToReply(messageObject?.text || "(изображение)")
     }
 
     useEffect(() => {
@@ -190,13 +232,44 @@ export default function chat () {
                 style={{flex: 1, width: '100%'}}
                 data={messagesData}
                 contentContainerStyle={{ flexDirection: 'column-reverse' }}
-                renderItem={({ item }) => <MessageItem item={item} />}
+                renderItem={({ item }) => <MessageItem item={item} replyHandler={reply}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Сообщений нет</Text>}
             />}
+            {replyTo === "" ? null : <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <View style={{justifyContent: 'center', alignItems: 'center', margin: '3%', marginBottom: 0}}>
+                    <FontAwesome
+                        name="reply"
+                        size={27}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        />
+                    </View>
+                    <Text numberOfLines={2}
+                        style={{
+                            color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
+                            fontSize: 17,
+                            margin: '1%',
+                            marginBottom: -1,
+                            flex: 1,
+                            justifyContent: 'center'
+                }}>Ответ на: {textToReply}</Text>
+                <Pressable style={{justifyContent: 'center', alignItems: 'center', margin: '3%', paddingHorizontal: 4}}
+                onPress={() => setReplyTo("")}>
+                    {({ pressed }) => (
+                        <FontAwesome
+                        name="times"
+                        size={27}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{ opacity: pressed ? 0.5 : 1 }}
+                        />
+                    )}
+                </Pressable>
+            </View>}
             {status === "" ? null : <Text style={{
                 color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
                 fontSize: 17,
-                marginTop: 7
+                marginTop: 7,
+                marginHorizontal: '3%',
+                textAlign: 'center'
             }}>{status}</Text>}
             <KeyboardAvoidingView
                 style={{flexDirection: 'row'}}
