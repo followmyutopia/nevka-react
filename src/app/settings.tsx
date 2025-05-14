@@ -426,7 +426,7 @@ export default function settings () {
                 <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Nevka Mobile v{AppConfig.expo.version}</Text>
                 <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Авикус Делакруа</Text>
 
-                {latestVersion != "" ? <Text style={{fontSize: 15, marginTop: 16, marginBottom: 32, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})`}</Text> : null}
+                {latestVersion != "" ? <Text style={{fontSize: 15, marginTop: 16, marginBottom: 48, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})`}</Text> : null}
             </ScrollView>
         </KeyboardAvoidingView>
         </View>
