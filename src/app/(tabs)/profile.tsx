@@ -8,6 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Dialog from "react-native-dialog";
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Colors from "@/src/constants/Colors";
 
 type UserData = {
     id: string,
@@ -26,7 +27,8 @@ type WallData = {
     text: string,
     image: string,
     timestamp: string,
-    formattedTime: string
+    formattedTime: string,
+    likes: string
 };
 
 type MyInfoScreenProps = {
@@ -91,6 +93,8 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
 }
 
 const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
+    const likesArray = JSON.parse(item.likes);
+
     const renderRightActions = (deleteHandler: any) => {
         return (
             <Pressable style={{
@@ -151,6 +155,35 @@ const WallPost = ({ item, user, deleteHandler }: WallPostProps) => {
                     borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                     source={{uri: item.image}}>
                 </FullWidthImage> : null}
+            </View>
+            <View style={{flexDirection: 'row',
+                marginTop: '3%',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+            }}>
+                    <Pressable style={{
+                        flexDirection: 'row',
+                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        padding: '3%',
+                    }}
+                onPress={() => console.log("Like pressed on post: " + item.id)}>
+                    {({ pressed }) => (
+                        <> 
+                        <FontAwesome
+                            name="heart"
+                            size={18}
+                            color={Colors[useColorScheme() ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }} />
+                        {likesArray.length != 0 ? <Text style={{
+                            fontSize: 16,
+                            marginLeft: 10
+                        }}>{likesArray.length}</Text> : null}
+                        </>
+                    )}
+                </Pressable>
+                <View style={{flex: 1}}></View>
             </View>
         </View>
         </Swipeable>
