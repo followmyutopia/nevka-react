@@ -26,7 +26,8 @@ type WallData = {
     image: string,
     timestamp: string,
     formattedTime: string,
-    likes: string
+    likes: string,
+    author: string
 };
 
 type UserInfoScreenProps = {
@@ -35,7 +36,9 @@ type UserInfoScreenProps = {
 
 type WallPostProps = {
     item: WallData,
-    user: UserData
+    user: UserData,
+    likeHandler: (id: any) => void,
+    me: string
 }
 
 const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
@@ -83,8 +86,9 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
     );
 }
 
-const WallPost = ({ item, user }: WallPostProps) => {
+const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
     const likesArray = JSON.parse(item.likes);
+    const colorScheme = useColorScheme();
 
     return (
         <View style={{
@@ -133,13 +137,13 @@ const WallPost = ({ item, user }: WallPostProps) => {
                         borderWidth: 1,
                         padding: '3%',
                     }}
-                onPress={() => console.log("Like pressed on post: " + item.id)}>
+                onPress={() => likeHandler(item.id)}>
                     {({ pressed }) => (
                         <> 
                         <FontAwesome
                             name="heart"
                             size={18}
-                            color={Colors[useColorScheme() ?? 'light'].text}
+                            color={likesArray.includes(parseInt(me)) ? 'crimson' : Colors[colorScheme ?? 'light'].text}
                             style={{ opacity: pressed ? 0.5 : 1 }} />
                         {likesArray.length != 0 ? <Text style={{
                             fontSize: 16,
@@ -222,6 +226,31 @@ export default function person () {
         }
     }
 
+    const likePost = async (postId: string) => {
+        const formData = new FormData();
+        formData.append("token", token);
+        formData.append("postId", postId);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+        try {
+            const response = await fetch('https://nevka.site/api/likePost.php', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await response.json();
+            if (json.result == "failure") {
+                if (json.error == "wrong_token") {
+                    setToken("");
+                }
+                console.log("likePost error: " + json.error)
+            } else if (json.result == "success") {
+                getWall(id);
+            }
+        } catch (error) {
+            console.log("Ошибка лайка записи, проблемы с соединением?\n" + error);
+        }
+    }
+
     useEffect(() => {
         if (isFocused) {
             setTimeout(() => setUpdate(update+1), 5000);
@@ -239,7 +268,7 @@ export default function person () {
                 ListHeaderComponent={<UserInfoScreen user={userData!}/>}
                 style={{flex: 1, width: '100%'}}
                 data={wallData || <ActivityIndicator /> }
-                renderItem={({ item }) => <WallPost item={item} user={userData!}/>}
+                renderItem={({ item }) => <WallPost item={item} user={userData!} likeHandler={likePost} me={loggedUser}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Записей на стене нет</Text>}
             />}
         </View>
