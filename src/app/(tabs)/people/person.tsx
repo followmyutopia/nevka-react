@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Colors from "@/src/constants/Colors";
 
 type UserData = {
     id: string,
@@ -23,7 +25,8 @@ type WallData = {
     text: string,
     image: string,
     timestamp: string,
-    formattedTime: string
+    formattedTime: string,
+    likes: string
 };
 
 type UserInfoScreenProps = {
@@ -81,6 +84,8 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
 }
 
 const WallPost = ({ item, user }: WallPostProps) => {
+    const likesArray = JSON.parse(item.likes);
+
     return (
         <View style={{
             width: '94%',
@@ -116,7 +121,35 @@ const WallPost = ({ item, user }: WallPostProps) => {
                 borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
                 source={{uri: item.image}}>
             </FullWidthImage> : null}
-
+            <View style={{flexDirection: 'row',
+                marginTop: '3%',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+            }}>
+                    <Pressable style={{
+                        flexDirection: 'row',
+                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        padding: '3%',
+                    }}
+                onPress={() => console.log("Like pressed on post: " + item.id)}>
+                    {({ pressed }) => (
+                        <> 
+                        <FontAwesome
+                            name="heart"
+                            size={18}
+                            color={Colors[useColorScheme() ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }} />
+                        {likesArray.length != 0 ? <Text style={{
+                            fontSize: 16,
+                            marginLeft: 10
+                        }}>{likesArray.length}</Text> : null}
+                        </>
+                    )}
+                </Pressable>
+                <View style={{flex: 1}}></View>
+            </View>
         </View>
 
         </View>
