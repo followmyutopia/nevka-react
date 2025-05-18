@@ -7,7 +7,7 @@ import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
-import { Button, useHeaderHeight } from "@react-navigation/elements";
+import { useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
@@ -183,7 +183,7 @@ export default function chat () {
 
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
-            if (image != "") setStatus("Отправка...");
+            setStatus("Отправка...");
 
             const formData = new FormData();
             formData.append("token", token);
@@ -192,6 +192,10 @@ export default function chat () {
             formData.append("image", image);
             formData.append("reply", replyTo);
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+            setMessage("");
+            setImage("");
+            setReplyTo("");
 
             try {
                 const response = await fetch('https://nevka.site/api/sendMessage.php', {
@@ -205,10 +209,7 @@ export default function chat () {
                     }
                     setStatus(json.error);
                 } else if (json.result == "success") {
-                    setMessage("");
-                    setImage("");
                     setStatus("");
-                    setReplyTo("");
                 }
             } catch (error) {
                 console.log("Ошибка отправки сообщения " + id + ", проблемы с соединением?\n" + error);
