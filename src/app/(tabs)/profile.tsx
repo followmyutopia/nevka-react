@@ -180,7 +180,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
                             color={likesArray.includes(parseInt(user.id)) ? 'crimson' : Colors[colorScheme ?? 'light'].text}
                             style={{ opacity: pressed ? 0.5 : 1 }} />
                         {likesArray.length != 0 ? <Text style={{
-                            fontSize: 16,
+                            fontSize: 15,
                             marginLeft: 10
                         }}>{likesArray.length}</Text> : null}
                         </>
