@@ -23,7 +23,7 @@ export default function signup () {
     const [buttonInactive, setButtonInactive] = useState(false);
     const [emailEditable, setEmailEditable] = useState(true);
 
-    const { token }: any = useNevkaProvider();
+    const { token, setToken, setLoggedUser }: any = useNevkaProvider();
     if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const sendConfirmation = async () => {
@@ -90,12 +90,39 @@ export default function signup () {
                 } else if (json.result == "success") {
                     setEmailStatus("Пользователь успешно создан!");
                     setCodeSent(false);
+                    setTimeout(() => signIn(), 2000);
                 }
             } catch (error) {
                 console.log("Ошибка регистрации, проблемы с соединением?\n" + error);
             }
         }
     }
+
+    const signIn = async () => {
+        let trimmedEmail = email.trim();
+        let newPass = newPassword.trim();
+
+        const formData = new FormData();
+        formData.append("login", trimmedEmail);
+        formData.append("password", newPass);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+        try {
+            const response = await fetch('https://nevka.site/api/login.php', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await response.json();
+            if (json.result == "failure") {
+                setEmailStatus(json.error)
+            } else if (json.result == "success") {
+                setToken(json.token);
+                setLoggedUser(json.userId);
+            }
+        } catch (error) {
+            setEmailStatus("Вернитесь к окну входа");
+        }
+    };
 
     return (
         <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}

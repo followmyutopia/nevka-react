@@ -127,13 +127,14 @@ export default function settings () {
         registerForNotifications()
             .then(async result => {
                 setPushToken(result ?? '');
-
+            }).then(() => {
                 savePushToken();
             })
             .catch((error: any) => console.log(`${error}`));
     }
 
     const savePushToken = async () => {
+        console.log("Storing token: " + pushToken);
         if (pushToken != undefined) {
             const formData = new FormData();
             formData.append("token", token);
@@ -274,7 +275,7 @@ export default function settings () {
     useEffect(() => {
         getUserData(loggedUser);
         checkUpdate();
-        savePushToken();
+        if (pushToken != undefined) savePushToken();
     }, [pushToken]);
     
     return (
