@@ -111,9 +111,38 @@ export default function messages () {
         if (!isNameSet) {
             router.navigate("/settings");
         }
-        setTimeout(() => setUpdate(update+1), 5000);
-        getChats(token);
-        console.log("Updated: Chats");
+
+        const ws = new WebSocket('ws://nevka.site:7190');
+
+        ws.onopen = () => {
+            ws.send(JSON.stringify({token: token, subscribeToChatList: true}));
+            console.log("WebSocket connection opened (Chat list)");
+        };
+
+        ws.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            setChatsData(data);
+            setLoading(false);
+            let newMessageCounter = data.filter((item: ChatsData) => item.isUnread == '1' && item.lastTextAuthor != loggedUser).length;
+            setMessageCounter(newMessageCounter);
+            if (newMessageCounter == 0) Notifications.dismissAllNotificationsAsync();
+            console.log("Updated: Chats via WS");
+        };
+
+        ws.onclose = (e) => {
+            console.log("WebSocket connection closed (Chat list):", e.code);
+
+            if (e.code == 1006 || e.code == 1001) {
+                // if websocket is not available or terminated, get messages via API
+                getChats(token);
+                console.log("Updated: Chats via API");
+                setTimeout(() => setUpdate(update+1), 5000);
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
     }, [update]);
 
     return (
