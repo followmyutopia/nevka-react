@@ -183,7 +183,7 @@ export default function chat () {
 
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
-            setStatus("Отправка...");
+            if (image != "") setStatus("Отправка...");
 
             const formData = new FormData();
             formData.append("token", token);
@@ -232,7 +232,7 @@ export default function chat () {
 
             ws.onopen = () => {
                 ws.send(JSON.stringify({token: token, subscribeToChat: id}));
-                console.log("WebSocket connection opened");
+                console.log("WebSocket connection opened (Chat)");
             };
 
             ws.onmessage = (e) => {
@@ -243,7 +243,7 @@ export default function chat () {
             };
 
             ws.onclose = (e) => {
-                console.log("WebSocket connection closed:", e.code, e.reason);
+                console.log("WebSocket connection closed:", e.code);
 
                 if (e.code == 1006 || e.code == 1001) {
                     // if websocket is not available or terminated, get messages via API
