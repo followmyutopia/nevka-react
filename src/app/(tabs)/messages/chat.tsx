@@ -228,9 +228,34 @@ export default function chat () {
 
     useEffect(() => {
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 500);
-            getMessages(token, id);
-            console.log("Updated: Messages for: " + id);
+            const ws = new WebSocket('ws://nevka.site:7190');
+
+            ws.onopen = () => {
+                ws.send(JSON.stringify({token: token, subscribeToChat: id}));
+                console.log("WebSocket connection opened");
+            };
+
+            ws.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                setMessagesData(data);
+                setLoading(false);
+                console.log("Updated: Messages via WS for: " + id);
+            };
+
+            ws.onclose = (e) => {
+                console.log("WebSocket connection closed:", e.code, e.reason);
+
+                if (e.code == 1006 || e.code == 1001) {
+                    // if websocket is not available or terminated, get messages via API
+                    getMessages(token, id);
+                    console.log("Updated: Messages via API for: " + id);
+                    setTimeout(() => setUpdate(update+1), 500);
+                }
+            };
+
+            return () => {
+                ws.close();
+            };
         }
     }, [update, isFocused]);
 
