@@ -243,7 +243,7 @@ export default function chat () {
             };
 
             ws.onclose = (e) => {
-                console.log("WebSocket connection closed:", e.code);
+                console.log("WebSocket connection closed (Chat):", e.code);
 
                 if (e.code == 1006 || e.code == 1001) {
                     // if websocket is not available or terminated, get messages via API
