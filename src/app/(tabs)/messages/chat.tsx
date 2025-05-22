@@ -208,6 +208,7 @@ export default function chat () {
                         setToken("");
                     }
                     setStatus(json.error);
+                    setMessage(text);
                 } else if (json.result == "success") {
                     setStatus("");
                 }
