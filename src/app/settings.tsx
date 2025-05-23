@@ -275,7 +275,7 @@ export default function settings () {
     useEffect(() => {
         getUserData(loggedUser);
         checkUpdate();
-        if (pushToken != undefined) savePushToken();
+        if (pushToken != undefined && pushToken != "") savePushToken();
     }, [pushToken]);
     
     return (

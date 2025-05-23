@@ -33,6 +33,7 @@
         "backgroundColor": "#122730"
       },
       "permissions": [
+        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.followmyutopia.nevka"
@@ -73,6 +74,12 @@
       "eas": {
         "projectId": "80934168-3872-486f-af7f-25249a5921b4"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/80934168-3872-486f-af7f-25249a5921b4"
     }
   }
 }
