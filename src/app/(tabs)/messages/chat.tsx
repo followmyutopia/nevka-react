@@ -183,7 +183,6 @@ export default function chat () {
 
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
-            if (image != "") setStatus("Отправка...");
 
             const formData = new FormData();
             formData.append("token", token);
@@ -193,6 +192,28 @@ export default function chat () {
             formData.append("reply", replyTo);
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
+            const preview = {
+                id: "0",
+                me: "true",
+                text: text,
+                image: image,
+                timestamp: Math.floor(Date.now() / 1000).toString(),
+                formattedTime: "Отправка...",
+                isUnread: "1",
+                reply: ""
+            };
+
+            if (replyTo !== "") {
+                const messageObject = messagesData?.find(item => item.id === replyTo);
+                const replyString = messageObject?.text || "(изображение)";
+                if (messageObject!.me === "true") {
+                    preview['reply'] = "Вы: " + replyString;
+                } else {
+                    preview['reply'] = replyString;
+                }
+            }
+
+            setMessagesData([...messagesData!, preview]);
             setMessage("");
             setImage("");
             setReplyTo("");
