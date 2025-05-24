@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 import Colors from '@/src/constants/Colors';
 import { Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';

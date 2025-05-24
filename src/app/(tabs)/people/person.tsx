@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable } from "react-native";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
