@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 import { StyleSheet, Image, useColorScheme, ActivityIndicator, FlatList, Pressable } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";

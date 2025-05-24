@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 import Colors from '@/src/constants/Colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Stack } from 'expo-router';

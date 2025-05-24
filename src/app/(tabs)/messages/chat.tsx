@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
@@ -278,7 +283,7 @@ export default function chat () {
                 ws.close();
             };
         }
-    }, [update, isFocused]);
+    }, [update, isFocused, id]);
 
     return (
         <View style={styles.container}>

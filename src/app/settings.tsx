@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
@@ -366,7 +371,7 @@ export default function settings () {
                 <Text style={styles.console}>{avatarStatus}</Text>
 
                 <Text style={{fontSize: 26, marginVertical: '5%' }}>Уведомления</Text>
-                <Text style={styles.text}>В настойщий момент push-уведомления о сообщениях работают только на Android и находятся в стадии beta-тестирования.</Text>
+                <Text style={styles.text}>В настойщий момент push-уведомления о сообщениях находятся в стадии beta-тестирования.</Text>
                 <Pressable
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={enablePush}

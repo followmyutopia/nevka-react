@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.0
+ * 2025 Avicus Delacroix
+ */
+
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
 
