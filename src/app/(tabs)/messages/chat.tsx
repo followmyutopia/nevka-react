@@ -222,6 +222,7 @@ export default function chat () {
             setMessage("");
             setImage("");
             setReplyTo("");
+            if (status != "") setStatus("Изображение прикрепляется...");
 
             try {
                 const response = await fetch('https://nevka.site/api/sendMessage.php', {
