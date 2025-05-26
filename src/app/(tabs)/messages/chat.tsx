@@ -222,7 +222,7 @@ export default function chat () {
             setMessage("");
             setImage("");
             setReplyTo("");
-            if (status != "") setStatus("Изображение прикрепляется...");
+            setStatus("");
 
             try {
                 const response = await fetch('https://nevka.site/api/sendMessage.php', {
@@ -237,7 +237,7 @@ export default function chat () {
                     setStatus(json.error);
                     setMessage(text);
                 } else if (json.result == "success") {
-                    setStatus("");
+                    // setStatus(""); moved it before sending
                 }
             } catch (error) {
                 console.log("Ошибка отправки сообщения " + id + ", проблемы с соединением?\n" + error);
