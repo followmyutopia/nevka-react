@@ -38,12 +38,9 @@ export default function settings () {
     const [city, setCity] = useState("");
     const [bio, setBio] = useState("");
     const [infoStatus, setInfoStatus] = useState("");
-    const [pushStatus, setPushStatus] = useState("");
     const [avatarStatus, setAvatarStatus] = useState("");
     const [passwordStatus, setPasswordStatus] = useState("");
     const [settingUserData, setSettingUserData] = useState(false);
-    const [settingPush, setSettingPush] = useState(false);
-    const [tokenStored, setTokenStored] = useState(false);
     const [settingAvatar, setSettingAvatar] = useState(false);
     const [changingPassword, setChangingPassword] = useState(false);
     const [image, setImage] = useState("");
@@ -58,6 +55,8 @@ export default function settings () {
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)';
 
     const [themeSwitch, setThemeSwitch] = useState(false);
+    const [notificationSwitch, setNotificationSwitch] = useState(false);
+    const [receivedPushToken, setReceivedPushToken] = useState("");
 
     const toggleTheme = () => {
         if (themeSwitch) {
@@ -66,6 +65,14 @@ export default function settings () {
         } else {
             setTheme('dark');
             setThemeSwitch(true);
+        }
+    }
+
+    const toggleNotifications = () => {
+        if (notificationSwitch) {
+            console.log("Implement disabling notifications!");
+        } else {
+            enablePush();
         }
     }
 
@@ -92,6 +99,7 @@ export default function settings () {
                 setCity(json.city);
                 setBio(json.bio);
                 setCurrentAvatar(json.avatar);
+                setReceivedPushToken(json.push_token);
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
@@ -140,8 +148,6 @@ export default function settings () {
     }
 
     const enablePush = async () => {
-        setSettingPush(true);
-
         registerForNotifications()
             .then(async result => {
                 setPushToken(result ?? '');
@@ -153,7 +159,7 @@ export default function settings () {
 
     const savePushToken = async () => {
         console.log("Storing token: " + pushToken);
-        if (pushToken != undefined) {
+        if (pushToken != undefined && pushToken != "") {
             const formData = new FormData();
             formData.append("token", token);
             formData.append("push_token", pushToken);
@@ -171,8 +177,7 @@ export default function settings () {
                     }
                     console.log("setPushToken error: " + json.error)
                 } else if (json.result == "success") {
-                    setSettingPush(true);
-                    setTokenStored(true);
+                    setNotificationSwitch(true);
                 }
             } catch (error) {
                 console.log("Ошибка записи push-токена, проблемы с соединением?\n" + error);
@@ -385,18 +390,12 @@ export default function settings () {
                 </Pressable>
                 <Text style={styles.console}>{avatarStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>Уведомления</Text>
-                <Text style={styles.text}>В настойщий момент push-уведомления о сообщениях находятся в стадии beta-тестирования.</Text>
-                <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={enablePush}
-                    disabled={settingPush}>
-                    <Text style={styles.buttonText}>{tokenStored ? "Уведомления включены!" : "Включить уведомления"}</Text>
-                </Pressable>
-                <Text style={styles.console}>{pushStatus}</Text>
-
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>Внешний вид</Text>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>Приложение</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
+                    <Text style={{fontSize: 20}}>Push-уведомления</Text>
+                    <Switch value={notificationSwitch} onValueChange={toggleNotifications}/>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5}}>
                     <Text style={{fontSize: 20}}>Тёмная тема</Text>
                     <Switch value={themeSwitch} onValueChange={toggleTheme}/>
                 </View>
