@@ -56,7 +56,6 @@ export default function settings () {
 
     const [themeSwitch, setThemeSwitch] = useState(false);
     const [notificationSwitch, setNotificationSwitch] = useState(false);
-    const [receivedPushToken, setReceivedPushToken] = useState("");
 
     const toggleTheme = () => {
         if (themeSwitch) {
@@ -99,7 +98,8 @@ export default function settings () {
                 setCity(json.city);
                 setBio(json.bio);
                 setCurrentAvatar(json.avatar);
-                setReceivedPushToken(json.push_token);
+
+                if (pushToken == json.push_token) setNotificationSwitch(true);
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
