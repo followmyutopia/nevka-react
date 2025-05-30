@@ -7,7 +7,7 @@ import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView,
 import { Text } from "../components/Themed"
 import Colors from "../constants/Colors";
 import { useNevkaProvider } from "../providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useHeaderHeight } from "@react-navigation/elements"
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -95,7 +95,10 @@ export default function signup () {
                 } else if (json.result == "success") {
                     setEmailStatus("Пользователь успешно создан!");
                     setCodeSent(false);
-                    setTimeout(() => signIn(), 2000);
+                    setTimeout(() => {
+                        router.back();
+                        signIn();
+                    }, 1500);
                 }
             } catch (error) {
                 console.log("Ошибка регистрации, проблемы с соединением?\n" + error);
