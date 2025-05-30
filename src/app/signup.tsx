@@ -98,7 +98,7 @@ export default function signup () {
                     setTimeout(() => {
                         router.back();
                         signIn();
-                    }, 1500);
+                    }, 1000);
                 }
             } catch (error) {
                 console.log("Ошибка регистрации, проблемы с соединением?\n" + error);

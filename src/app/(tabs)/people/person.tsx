@@ -22,7 +22,8 @@ type UserData = {
     bio: string,
     timestamp: number,
     avatar: string,
-    online: string
+    online: string,
+    push_token: string
 };
 
 type WallData = {

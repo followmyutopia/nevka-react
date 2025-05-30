@@ -291,7 +291,7 @@ export default function chat () {
             <Stack.Screen options={{ title: name }} />
             {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
                 inverted
-                initialNumToRender={100}
+                initialNumToRender={1000}
                 style={{flex: 1, width: '100%'}}
                 data={messagesData}
                 contentContainerStyle={{ flexDirection: 'column-reverse' }}

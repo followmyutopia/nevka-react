@@ -3,7 +3,7 @@
  * 2025 Avicus Delacroix
  */
 
-import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme, Switch } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -24,7 +24,8 @@ type UserData = {
     bio: string,
     timestamp: number,
     avatar: string,
-    online: string
+    online: string,
+    push_token: string
 };
 
 export default function settings () {
@@ -55,6 +56,18 @@ export default function settings () {
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
     const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
     const pressedColor = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)';
+
+    const [themeSwitch, setThemeSwitch] = useState(false);
+
+    const toggleTheme = () => {
+        if (themeSwitch) {
+            setTheme('light');
+            setThemeSwitch(false);
+        } else {
+            setTheme('dark');
+            setThemeSwitch(true);
+        }
+    }
 
     const getUserData = async (id: string) => {
         const formData = new FormData();
@@ -281,6 +294,8 @@ export default function settings () {
         getUserData(loggedUser);
         checkUpdate();
         if (pushToken != undefined && pushToken != "") savePushToken();
+
+        if (colorScheme === 'dark') setThemeSwitch(true);
     }, [pushToken]);
     
     return (
@@ -380,18 +395,10 @@ export default function settings () {
                 </Pressable>
                 <Text style={styles.console}>{pushStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>Тема</Text>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>Внешний вид</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <Pressable
-                        style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor, width: '47%' }]}
-                        onPress={() => setTheme('dark')}>
-                        <Text style={styles.buttonText}>Тёмная</Text>
-                    </Pressable>
-                    <Pressable
-                        style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor, width: '47%' }]}
-                        onPress={() => setTheme('light')}>
-                        <Text style={styles.buttonText}>Светлая</Text>
-                    </Pressable>
+                    <Text style={{fontSize: 20}}>Тёмная тема</Text>
+                    <Switch value={themeSwitch} onValueChange={toggleTheme}/>
                 </View>
 
                 <Text style={{fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
