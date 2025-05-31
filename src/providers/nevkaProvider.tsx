@@ -21,12 +21,21 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     const [theme, setThemeLocal] = useState<string>("");
     const [messageCounter, setMessageCounterLocal] = useState<number>(0);
     const [isNameSet, setIsNameSet] = useState<boolean>(false);
-    const [pushToken, setPushToken] = useState<string>();
+    const [pushToken, setPushTokenLocal] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
 
     const setMessageCounter = async (value: number) => {
         setMessageCounterLocal(value);
         Notifications.setBadgeCountAsync(value);
+    };
+
+    const setPushToken = async (value: string) => {
+        setPushTokenLocal(value);
+        try {
+            await AsyncStorage.setItem('push_token', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
     };
 
     const setToken = async (value: string) => {
@@ -53,6 +62,17 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         if (value == 'dark') Appearance.setColorScheme('dark');
         try {
             await AsyncStorage.setItem('theme', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const getPushToken = async () => {
+        try {
+            const value = await AsyncStorage.getItem('push_token');
+            if (value !== null) {
+                setPushTokenLocal(value);
+            }
         } catch (e) {
             console.log("AsyncStorage error: " + e);
         }
@@ -106,6 +126,7 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         getToken();
         getLoggedUser();
         getTheme();
+        getPushToken();
 
         const notificationListener = Notifications.addNotificationReceivedListener(notif => {
             setNotification(notif);
