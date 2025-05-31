@@ -69,9 +69,15 @@ export default function settings () {
 
     const toggleNotifications = () => {
         if (notificationSwitch) {
-            console.log("Implement disabling notifications!");
+            savePushToken("null");
         } else {
-            enablePush();
+            registerForNotifications()
+                .then(async result => {
+                    setPushToken(result ?? '');
+                }).then(() => {
+                    savePushToken(pushToken);
+                })
+                .catch((error: any) => console.log(`${error}`));
         }
     }
 
@@ -147,22 +153,11 @@ export default function settings () {
         }
     }
 
-    const enablePush = async () => {
-        registerForNotifications()
-            .then(async result => {
-                setPushToken(result ?? '');
-            }).then(() => {
-                savePushToken();
-            })
-            .catch((error: any) => console.log(`${error}`));
-    }
-
-    const savePushToken = async () => {
-        console.log("Storing token: " + pushToken);
-        if (pushToken != undefined && pushToken != "") {
+    const savePushToken = async (value: string) => {
+        if (pushToken != undefined && value != "") {
             const formData = new FormData();
             formData.append("token", token);
-            formData.append("push_token", pushToken);
+            formData.append("push_token", value);
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
@@ -177,7 +172,11 @@ export default function settings () {
                     }
                     console.log("setPushToken error: " + json.error)
                 } else if (json.result == "success") {
-                    setNotificationSwitch(true);
+                    if (value === "null") {
+                        setNotificationSwitch(false);
+                    } else {
+                        setNotificationSwitch(true);
+                    }
                 }
             } catch (error) {
                 console.log("Ошибка записи push-токена, проблемы с соединением?\n" + error);
@@ -298,7 +297,8 @@ export default function settings () {
     useEffect(() => {
         getUserData(loggedUser);
         checkUpdate();
-        if (pushToken != undefined && pushToken != "") savePushToken();
+        // i may not need it anymore if guys with Android have no issues.
+        // if (pushToken != undefined && pushToken != "") savePushToken(pushToken);
 
         if (colorScheme === 'dark') setThemeSwitch(true);
     }, [pushToken]);
@@ -395,7 +395,7 @@ export default function settings () {
                     <Text style={{fontSize: 20}}>Push-уведомления</Text>
                     <Switch value={notificationSwitch} onValueChange={toggleNotifications}/>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5}}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
                     <Text style={{fontSize: 20}}>Тёмная тема</Text>
                     <Switch value={themeSwitch} onValueChange={toggleTheme}/>
                 </View>
