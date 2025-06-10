@@ -29,7 +29,7 @@ type UserData = {
 };
 
 export default function settings () {
-    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -311,28 +311,28 @@ export default function settings () {
             >
             <StatusBar style="light" />
             <ScrollView style={{width: '100%'}}>
-                <Text style={{fontSize: 32, marginVertical: '7%', textAlign: 'center'}}>Настройки</Text>
-                <Text style={{fontSize: 26, marginBottom: '5%' }}>Личная информация</Text>
+                <Text style={{fontSize: 32, marginVertical: '7%', textAlign: 'center'}}>{locales.t('settings')}</Text>
+                <Text style={{fontSize: 26, marginBottom: '5%' }}>{locales.t('personal')}</Text>
 
-                <Text style={styles.label}>Имя (обязательно):</Text>
+                <Text style={styles.label}>{locales.t('firstname')}:</Text>
                 <TextInput style={inputStyle}
                     value={firstname}
                     onChangeText={setFirstname}
                     maxLength={63}
                     ></TextInput>
-                <Text style={styles.label}>Фамилия (обязательно):</Text>
+                <Text style={styles.label}>{locales.t('lastname')}:</Text>
                 <TextInput style={inputStyle}
                     value={lasttname}
                     onChangeText={setLastname}
                     maxLength={63}
                     ></TextInput>
-                <Text style={styles.label}>Город:</Text>
+                <Text style={styles.label}>{locales.t('city')}:</Text>
                 <TextInput style={inputStyle}
                     value={city}
                     onChangeText={setCity}
                     maxLength={63}
                     ></TextInput>
-                <Text style={styles.label}>Информация:</Text>
+                <Text style={styles.label}>{locales.t('bio')}:</Text>
                 <TextInput style={inputStyle}
                     multiline
                     enterKeyHint='done'
@@ -345,14 +345,14 @@ export default function settings () {
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={setUserData}
                     disabled={settingUserData}>
-                    <Text style={styles.buttonText}>{settingUserData ? 'Установка...' : 'Установить информацию'}</Text>
+                    <Text style={styles.buttonText}>{settingUserData ? locales.t('setting') : locales.t('setinfo')}</Text>
                 </Pressable>
                 <Text style={styles.console}>{infoStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>Аватар</Text>
+                <Text style={{fontSize: 26, marginVertical: '5%' }}>{locales.t('avatar')}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10}}>
-                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>Сейчас:</Text>
-                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>Будет:</Text>
+                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>{locales.t('now')}:</Text>
+                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>{locales.t('willbe')}:</Text>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     {currentAvatar == "" ? <Text style={{
@@ -373,7 +373,7 @@ export default function settings () {
                         fontSize: 20,
                         alignSelf: 'center',
                         textAlign: 'center'
-                    }}>Не выбрано</Text> : <Image style={{
+                    }}>{locales.t('notselected')}</Text> : <Image style={{
                         width: '40%',
                         aspectRatio: 1,
                         borderRadius: 15,
@@ -386,7 +386,7 @@ export default function settings () {
                     style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={image == "" ? pickImage : setAvatar}
                     disabled={settingAvatar}>
-                    <Text style={styles.buttonText}>{image == "" ? "Выбрать файл" : settingAvatar ? 'Установка...' : 'Установить аватар'}</Text>
+                    <Text style={styles.buttonText}>{image == "" ? locales.t('choosefile') : settingAvatar ? locales.t('setting') : locales.t('setavatar')}</Text>
                 </Pressable>
                 <Text style={styles.console}>{avatarStatus}</Text>
 
