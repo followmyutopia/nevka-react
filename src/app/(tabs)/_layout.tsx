@@ -22,7 +22,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { messageCounter }: any = useNevkaProvider();
+  const { messageCounter, locales }: any = useNevkaProvider();
 
   return (
     <Tabs
@@ -35,7 +35,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Профиль',
+          title: locales.t('profile'),
           tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
           headerRight: () => (
             <Link href="/settings" asChild>
@@ -62,7 +62,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="people"
         options={{
-          title: 'Люди',
+          title: locales.t('people'),
           tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
           headerStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
@@ -76,7 +76,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: 'Сообщения',
+          title: locales.t('messages'),
           tabBarBadge: messageCounter == 0 ? null : messageCounter,
           tabBarIcon: ({ color }) => <TabBarIcon name="paper-plane" color={color} />,
           headerStyle: {
@@ -91,7 +91,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="discussions"
         options={{
-          title: 'Обсуждения',
+          title: locales.t('discussions'),
           tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
           headerStyle: {
             backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,

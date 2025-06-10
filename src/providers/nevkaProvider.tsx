@@ -3,11 +3,13 @@
  * 2025 Avicus Delacroix
  */
 
-import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from "react-native";
 import { RelativePathString, router } from "expo-router";
+import { getLocales } from 'expo-localization';
+import { I18n } from 'i18n-js';
 
 const NevkaContext = createContext({});
 
@@ -122,6 +124,30 @@ export default function NevkaProvider({children}: PropsWithChildren) {
         }),
     });
 
+    const locales = new I18n({
+        en: {
+            profile: 'Profile',
+            people: 'People',
+            messages: 'Messages',
+            discussions: 'Discussions'
+        },
+        ru: {
+            profile: 'Профиль',
+            people: 'Люди',
+            messages: 'Сообщения',
+            discussions: 'Обсуждения'
+        },
+        sv: {
+            profile: 'Profil',
+            people: 'Personer',
+            messages: 'Meddelanden',
+            discussions: 'Diskussioner'
+        },
+    });
+
+    // Set the locale once at the beginning of your app.
+    locales.locale = getLocales()[0].languageCode ?? 'ru';
+
     useEffect(() => {
         getToken();
         getLoggedUser();
@@ -146,7 +172,7 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     }, [])
 
     return(
-        <NevkaContext.Provider value={{
+        <NevkaContext.Provider value={{ locales,
             token, setToken,
             loggedUser, setLoggedUser,
             messageCounter, setMessageCounter,
