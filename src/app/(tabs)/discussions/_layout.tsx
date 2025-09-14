@@ -23,7 +23,7 @@ export default function MenuStack() {
                             name="plus"
                             size={25}
                             color={Colors[colorScheme ?? 'light'].text}
-                            style={{ marginTop: 5, opacity: pressed ? 0.5 : 1 }}
+                            style={{ marginTop: 2, marginLeft: 7.5, opacity: pressed ? 0.5 : 1 }}
                           />
                         )}
                       </Pressable>
