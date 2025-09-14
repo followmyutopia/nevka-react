@@ -174,8 +174,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     });
 
     // Set the locale once at the beginning of your app.
-    // locales.locale = getLocales()[0].languageCode ?? 'ru'; // TODO
-    locales.locale = 'ru';
+    locales.locale = getLocales()[0].languageCode ?? 'ru';
 
     useEffect(() => {
         getToken();
