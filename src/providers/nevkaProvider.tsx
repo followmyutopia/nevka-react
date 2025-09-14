@@ -17,7 +17,7 @@ type PushDataObject = {
     url?: RelativePathString
 };
 
-export default function NevkaProvider({children}: PropsWithChildren) {
+export default function NevkaProvider({ children }: PropsWithChildren) {
     const [token, setTokenLocal] = useState<string>("");
     const [loggedUser, setLoggedUserLocal] = useState<string>("");
     const [theme, setThemeLocal] = useState<string>("");
@@ -174,7 +174,8 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     });
 
     // Set the locale once at the beginning of your app.
-    locales.locale = getLocales()[0].languageCode ?? 'ru';
+    // locales.locale = getLocales()[0].languageCode ?? 'ru'; // TODO
+    locales.locale = 'ru';
 
     useEffect(() => {
         getToken();
@@ -200,16 +201,18 @@ export default function NevkaProvider({children}: PropsWithChildren) {
     }, [])
 
     return(
-        <NevkaContext.Provider value={{ locales,
-            token, setToken,
-            loggedUser, setLoggedUser,
-            messageCounter, setMessageCounter,
-            isNameSet, setIsNameSet,
-            pushToken, setPushToken,
-            theme, setTheme
-            }}>
-            {children}
-        </NevkaContext.Provider>
+        // <NavigationContent>
+            <NevkaContext.Provider value={{ locales,
+                token, setToken,
+                loggedUser, setLoggedUser,
+                messageCounter, setMessageCounter,
+                isNameSet, setIsNameSet,
+                pushToken, setPushToken,
+                theme, setTheme
+                }}>
+                {children}
+            </NevkaContext.Provider>
+        // </NavigationContent>
     );
 };
 
