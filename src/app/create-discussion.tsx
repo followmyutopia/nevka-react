@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.0
+ * Nevka Mobile v1.2
  * 2025 Avicus Delacroix
  */
 
@@ -10,7 +10,7 @@ import { useNevkaProvider } from "../providers/nevkaProvider";
 import { Redirect, router } from "expo-router";
 import { useState } from "react";
 import Colors from "../constants/Colors";
-import { useHeaderHeight } from "@react-navigation/elements"
+import { useHeaderHeight } from "@react-navigation/elements";
 
 export default function settings () {
     const { token, setToken }: any = useNevkaProvider();
