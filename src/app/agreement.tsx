@@ -33,10 +33,12 @@ export default function agreement() {
                 <Text style={[styles.text, { color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }]}>
                     Для регистрации и использования Невки, необходимо подтвердить, что любые персональные данные, которые Вы укажете в Вашем профиле, указаны добровольно.
                 </Text>
-                <View style={{ flexDirection: 'row', marginVertical: 20, width: '90%', justifyContent: 'space-between', marginBottom: 48 }}>
+                <View style={{ flexDirection: 'row', marginVertical: 20, width: '90%', justifyContent: 'space-between', marginBottom: 64 }}>
                     <Pressable
                         style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                        onPress={() => { router.navigate('/') }}>
+                        onPress={() => {
+                            router.back();
+                        }}>
                         <Text numberOfLines={1} style={{ fontSize: 20, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>Не согласен</Text>
                     </Pressable>
                     <Pressable
@@ -61,13 +63,13 @@ const styles = StyleSheet.create({
         paddingTop: '5%'
     },
     title: {
-        fontSize: 28,
+        fontSize: 32,
         marginVertical: '7%',
         marginHorizontal: '5%',
         textAlign: 'center'
     },
     text: {
-        fontSize: 16,
+        fontSize: 18,
         width: '90%',
         textAlign: 'left',
         marginVertical: 5
