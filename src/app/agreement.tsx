@@ -35,14 +35,14 @@ export default function agreement() {
                 </Text>
                 <View style={{ flexDirection: 'row', marginVertical: 20, width: '90%', justifyContent: 'space-between', marginBottom: 64 }}>
                     <Pressable
-                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? '#660000' : '#990000' }]}
                         onPress={() => {
                             router.back();
                         }}>
                         <Text numberOfLines={1} style={{ fontSize: 20, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>Не согласен</Text>
                     </Pressable>
                     <Pressable
-                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? '#206040' : '#2d8659' }]}
                         onPress={() => {
                             router.back();
                             router.navigate('/signup');
