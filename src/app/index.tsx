@@ -100,7 +100,7 @@ export default function index () {
 
             <Pressable
                 style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                onPress={() => {router.navigate('/signup')}}>
+                onPress={() => {router.navigate('/agreement')}}>
                 <Text style={styles.buttonText}>Зарегистрироваться</Text>
             </Pressable>
             <Text style={styles.console}>{consoleMessage}</Text>
