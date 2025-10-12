@@ -66,6 +66,7 @@ function RootLayoutNav() {
             <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="create-discussion" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="create-wall" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="agreement" options={{ presentation: 'modal', headerShown: false }} />
           </Stack>
         </GestureHandlerRootView>
       </NevkaProvider>
