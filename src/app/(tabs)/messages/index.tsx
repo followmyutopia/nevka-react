@@ -54,7 +54,6 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                             <Text style={{ fontSize: 16, flex: 1, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>{user.lastTextAuthor == loggedUser ? "Вы: " : ""}{user.encrypted ? <FontAwesome
                                 name={'lock'}
                                 size={16}
-                                color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
                             /> : null}{user.encrypted ? " " : null}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
                             {user.isUnread == '1' && user.lastTextAuthor != loggedUser ? <FontAwesome
                                 name="circle"
