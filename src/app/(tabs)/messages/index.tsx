@@ -25,16 +25,10 @@ type ChatsData = {
 
 type ChatsListItemProps = {
     user: ChatsData,
-    loggedUser: string,
-    decodeHandler: (hash: string) => string
+    loggedUser: string
 }
 
-const ChatsListItem = ({ user, loggedUser, decodeHandler }: ChatsListItemProps) => {
-    if (user.lastText.startsWith("NE2[") && user.lastText.endsWith("]")) {
-        user.lastText = decodeHandler(user.lastText.slice(4, -1));
-        user.encrypted = true;
-    }
-
+const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
     return (
         <Link href={{
             pathname: '/(tabs)/messages/chat',
@@ -111,8 +105,12 @@ export default function messages () {
                 console.log(json.error);
             } else if (json.result == "success") {
                 json.chats.pop();
-                json.messages.forEach((obj: ChatsData) => {
-                    obj.encrypted = false;
+                json.chats.forEach((obj: ChatsData) => {
+                    console.log("test: "+obj.lastText);
+                    if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
+                        obj.lastText = decode(obj.lastText.slice(4, -1));
+                        obj.encrypted = true;
+                    } else obj.encrypted = false;
                 });
                 setChatsData(json.chats);
                 let newMessageCounter = json.chats.filter((item: ChatsData) => item.isUnread == '1' && item.lastTextAuthor != loggedUser).length;
@@ -169,7 +167,7 @@ export default function messages () {
             {loading ? <ActivityIndicator /> : <FlatList
                 style={{flex: 1, width: '100%'}}
                 data={chatsData}
-                renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser} decodeHandler={decode}/>}
+                renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Чатов нет. Перейдите в раздел "Люди" для выбора собеседника.</Text>}
             />}
         </View>
