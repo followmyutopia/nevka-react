@@ -431,7 +431,7 @@ export default function settings() {
                         <Switch value={encryptionSwitch} onValueChange={toggleEncryption} />
                     </View>
                     <Text style={{ fontSize: 16, textAlign: 'center', marginHorizontal: 10, marginVertical: -5 }}>Внимание! При включенном шифровании, сообщения шифруются на вашем устройстве при отправке, и их невозможно будет прочитать с веб-версии.</Text>
-                    <Text style={{ fontSize: 24, marginTop: '5%' }}>Смена пароля</Text>
+                    <Text style={{ fontSize: 24, marginTop: '5%', marginBottom: '2%' }}>Смена пароля</Text>
                     <Text style={styles.label}>Старый пароль:</Text>
                     <TextInput style={inputStyle}
                         value={oldPassword}
