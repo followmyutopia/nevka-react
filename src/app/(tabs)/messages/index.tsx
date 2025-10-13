@@ -33,39 +33,40 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
         <Link href={{
             pathname: '/(tabs)/messages/chat',
             params: { id: user.id, name: user.firstname + " " + user.lastname }
-          }} asChild>
+        }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
-                <View style={{flexDirection: 'row', height: 70 }}>
+                <View style={{ flexDirection: 'row', height: 70 }}>
                     <Image style={{
                         height: '100%',
                         aspectRatio: 1,
                         borderRadius: 15,
                         borderWidth: 1,
-                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
-                        source={{uri: user.avatar}}></Image>
+                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                    }}
+                        source={{ uri: user.avatar }}></Image>
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row' }}>
                             <Text style={{ fontSize: 18, flex: 1 }} numberOfLines={1}>{user.firstname + " " + user.lastname}</Text>
-                            {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
-                            {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.online}</Text>}
+                            {user.online === 'online' && <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen' }} numberOfLines={1}>{'Онлайн'}</Text>}
+                            {user.online !== 'online' && <Text style={{ fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>{user.online}</Text>}
                         </View>
-                        <View style={{flexDirection: 'row'}}>
-                            <Text style={{fontSize: 16, flex: 1, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor == loggedUser ? "Вы: " : ""}{user.encrypted ? <FontAwesome
-                            name={'lock'}
-                            size={16}
-                            color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                        /> : null}{user.encrypted ? " " : null}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
-                            { user.isUnread == '1' && user.lastTextAuthor != loggedUser ? <FontAwesome
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 16, flex: 1, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>{user.lastTextAuthor == loggedUser ? "Вы: " : ""}{user.encrypted ? <FontAwesome
+                                name={'lock'}
+                                size={16}
+                                color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                            /> : null}{user.encrypted ? " " : null}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
+                            {user.isUnread == '1' && user.lastTextAuthor != loggedUser ? <FontAwesome
                                 name="circle"
                                 size={16}
                                 color='orange'
                                 style={{ marginLeft: '3%' }}
-                                /> : user.isUnread == '1' && user.lastTextAuthor == loggedUser ? <FontAwesome
+                            /> : user.isUnread == '1' && user.lastTextAuthor == loggedUser ? <FontAwesome
                                 name="circle"
                                 size={16}
                                 color='lightslategray'
                                 style={{ marginLeft: '3%' }}
-                                /> : null}
+                            /> : null}
                         </View>
                     </View>
                 </View>
@@ -74,9 +75,9 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
     );
 }
 
-export default function messages () {
+export default function messages() {
     const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet, decode }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> };
+    if (token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
     const colorScheme = useColorScheme();
@@ -106,7 +107,7 @@ export default function messages () {
             } else if (json.result == "success") {
                 json.chats.pop();
                 json.chats.forEach((obj: ChatsData) => {
-                    console.log("test: "+obj.lastText);
+                    console.log("test: " + obj.lastText);
                     if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
                         obj.lastText = decode(obj.lastText.slice(4, -1));
                         obj.encrypted = true;
@@ -132,12 +133,18 @@ export default function messages () {
         const ws = new WebSocket('ws://nevka.site:7190');
 
         ws.onopen = () => {
-            ws.send(JSON.stringify({token: token, subscribeToChatList: true}));
+            ws.send(JSON.stringify({ token: token, subscribeToChatList: true }));
             console.log("WebSocket connection opened (Chat list)");
         };
 
         ws.onmessage = (e) => {
             const data = JSON.parse(e.data);
+            data.forEach((obj: ChatsData) => {
+                if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
+                    obj.lastText = decode(obj.lastText.slice(4, -1));
+                    obj.encrypted = true;
+                } else obj.encrypted = false;
+            });
             setChatsData(data);
             setLoading(false);
             let newMessageCounter = data.filter((item: ChatsData) => item.isUnread == '1' && item.lastTextAuthor != loggedUser).length;
@@ -153,7 +160,7 @@ export default function messages () {
                 // if websocket is not available or terminated, get messages via API
                 getChats(token);
                 console.log("Updated: Chats via API");
-                setTimeout(() => setUpdate(update+1), 5000);
+                setTimeout(() => setUpdate(update + 1), 5000);
             }
         };
 
@@ -165,10 +172,10 @@ export default function messages () {
     return (
         <View style={styles.container}>
             {loading ? <ActivityIndicator /> : <FlatList
-                style={{flex: 1, width: '100%'}}
+                style={{ flex: 1, width: '100%' }}
                 data={chatsData}
-                renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser}/>}
-                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Чатов нет. Перейдите в раздел "Люди" для выбора собеседника.</Text>}
+                renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser} />}
+                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Чатов нет. Перейдите в раздел "Люди" для выбора собеседника.</Text>}
             />}
         </View>
     );
