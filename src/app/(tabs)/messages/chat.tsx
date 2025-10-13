@@ -24,48 +24,55 @@ type MessageData = {
     timestamp: string,
     formattedTime: string,
     isUnread: string,
-    reply: string
+    reply: string,
+    encrypted: boolean
 };
 
 type MessageItemProps = {
     item: MessageData,
-    replyHandler: (id: any) => void
+    replyHandler: (id: any) => void,
+    decodeHandler: (hash: string) => string
 }
 
-const MessageItem = ({ item, replyHandler }: MessageItemProps) => {
+const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) => {
+    if (item.text.startsWith("NE1[") && item.text.endsWith("]")) {
+        item.text = decodeHandler(item.text.slice(4, -1));
+        item.encrypted = true;
+    }
+
     const renderRightActions = () => {
         return (
-            <View style={{width: 1}}></View>
+            <View style={{ width: 1 }}></View>
         );
     };
 
     return (
         <Swipeable
-            hitSlop={{left: -60}}
-            renderRightActions={() => renderRightActions() }
+            hitSlop={{ left: -60 }}
+            renderRightActions={() => renderRightActions()}
             onSwipeableWillOpen={() => replyHandler(item.id)}
             ref={(ref) => ref?.close()}
-            >
-        <View style={{
-            backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-            borderWidth: 1,
-            alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
-            borderRadius: 10,
-            maxWidth: '84%',
-            marginHorizontal: '3%',
-            marginVertical: '1%'
+        >
+            <View style={{
+                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
+                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
+                borderWidth: 1,
+                alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
+                borderRadius: 10,
+                maxWidth: '84%',
+                marginHorizontal: '3%',
+                marginVertical: '1%'
             }}>
-            {item.reply != "" ? <View style={{
-                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
-                flexDirection: 'row',
-                borderBottomWidth: 1,
-                borderBottomColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                {item.reply != "" ? <View style={{
+                    backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
+                    flexDirection: 'row',
+                    borderBottomWidth: 1,
+                    borderBottomColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
                 }}><FontAwesome
-                    name="reply"
-                    size={16}
-                    color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                    style={{ marginTop: 5, marginLeft: 7 }}/>
+                        name="reply"
+                        size={16}
+                        color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                        style={{ marginTop: 5, marginLeft: 7 }} />
                     <Text
                         numberOfLines={1}
                         style={{
@@ -74,45 +81,54 @@ const MessageItem = ({ item, replyHandler }: MessageItemProps) => {
                             marginHorizontal: 7,
                             marginRight: 28,
                             color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
-                    }}>{item.reply}</Text></View> : null}
-            { item.text != "" ? <Text style={{
-                fontSize: 17,
-                paddingHorizontal: 7,
-                paddingTop: 5,
-                paddingBottom: item.image != "" ? 2 : 0
-            }}>{item.text}</Text> : null}
-            { item.image != "" ? <FullWidthImage style={{
-                minWidth: '100%',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
-            }} source={{uri: item.image}}>
-            </FullWidthImage> : null}
-            <View style={{
-                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
-                flexDirection: 'row', justifyContent: 'space-between'
+                        }}>{item.reply}</Text></View> : null}
+                {item.text != "" ? <Text style={{
+                    fontSize: 17,
+                    paddingHorizontal: 7,
+                    paddingTop: 5,
+                    paddingBottom: item.image != "" ? 2 : 0
+                }}>{item.text}</Text> : null}
+                {item.image != "" ? <FullWidthImage style={{
+                    minWidth: '100%',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                }} source={{ uri: item.image }}>
+                </FullWidthImage> : null}
+                <View style={{
+                    backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
+                    flexDirection: 'row', justifyContent: 'space-between'
                 }}>
-                <FontAwesome
-                    name={item.isUnread == '1' ? 'circle' : 'check-circle'}
-                    size={14}
-                    color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                    style={{ marginTop: 3, marginLeft: 7 }}
-                    />
-                <Text style={{
-                    fontSize: 14,
-                    marginVertical: 2,
-                    marginHorizontal: 7,
-                    color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
-                }}>{item.formattedTime}</Text>
+                    <View style={{
+                        backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
+                        flexDirection: 'row'
+                    }}><FontAwesome
+                            name={item.isUnread == '1' ? 'circle' : 'check-circle'}
+                            size={14}
+                            color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                            style={{ marginTop: 3, marginLeft: 7 }}
+                        />
+                        {item.encrypted ? <FontAwesome
+                            name={'lock'}
+                            size={14}
+                            color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                            style={{ marginTop: 3.5, marginLeft: 7 }}
+                        /> : null}</View>
+                    <Text style={{
+                        fontSize: 14,
+                        marginVertical: 2,
+                        marginHorizontal: 7,
+                        color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
+                    }}>{item.formattedTime}</Text>
+                </View>
             </View>
-        </View>
         </Swipeable>
     );
 }
 
-export default function chat () {
-    const { token, setToken }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> };
+export default function chat() {
+    const { token, setToken, encryptionType, encode, decode }: any = useNevkaProvider();
+    if (token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
     const isFocused = useIsFocused();
@@ -150,6 +166,9 @@ export default function chat () {
                 setMessagesData([]);
             } else if (json.result == "success") {
                 json.messages.pop();
+                json.messages.forEach((obj: MessageData) => {
+                    obj.encrypted = false;
+                });
                 setMessagesData(json.messages);
             }
         } catch (error) {
@@ -167,7 +186,7 @@ export default function chat () {
                 //   aspect: [4, 3],
                 //   quality: 1,
             });
-        
+
             if (!result.canceled) {
                 setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
                 setStatus("Выбран файл: " + result.assets[0].fileName);
@@ -189,6 +208,10 @@ export default function chat () {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
+            if (encryptionType == "NE1") {
+                text = "NE1[" + encode(text) + "]";
+            }
+
             const formData = new FormData();
             formData.append("token", token);
             formData.append("chat", id);
@@ -205,7 +228,8 @@ export default function chat () {
                 timestamp: Math.floor(Date.now() / 1000).toString(),
                 formattedTime: "Отправка...",
                 isUnread: "1",
-                reply: ""
+                reply: "",
+                encrypted: encryptionType == "" ? false : true
             };
 
             if (replyTo !== "") {
@@ -258,7 +282,7 @@ export default function chat () {
             const ws = new WebSocket('ws://nevka.site:7190');
 
             ws.onopen = () => {
-                ws.send(JSON.stringify({token: token, subscribeToChat: id}));
+                ws.send(JSON.stringify({ token: token, subscribeToChat: id }));
                 console.log("WebSocket connection opened (Chat)");
             };
 
@@ -276,7 +300,7 @@ export default function chat () {
                     // if websocket is not available or terminated, get messages via API
                     getMessages(token, id);
                     console.log("Updated: Messages via API for: " + id);
-                    setTimeout(() => setUpdate(update+1), 500);
+                    setTimeout(() => setUpdate(update + 1), 500);
                 }
             };
 
@@ -289,40 +313,40 @@ export default function chat () {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: name }} />
-            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
+            {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 inverted
                 initialNumToRender={1000}
-                style={{flex: 1, width: '100%'}}
+                style={{ flex: 1, width: '100%' }}
                 data={messagesData}
                 contentContainerStyle={{ flexDirection: 'column-reverse' }}
-                renderItem={({ item }) => <MessageItem item={item} replyHandler={reply}/>}
-                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Сообщений нет</Text>}
+                renderItem={({ item }) => <MessageItem item={item} replyHandler={reply} decodeHandler={decode} />}
+                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Сообщений нет</Text>}
             />}
-            {replyTo === "" ? null : <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                <View style={{justifyContent: 'center', alignItems: 'center', margin: '3%', marginBottom: 0}}>
+            {replyTo === "" ? null : <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', margin: '3%', marginBottom: 0 }}>
                     <FontAwesome
                         name="reply"
                         size={27}
                         color={Colors[colorScheme ?? 'light'].text}
-                        />
-                    </View>
-                    <Text numberOfLines={2}
-                        style={{
-                            color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
-                            fontSize: 17,
-                            margin: '1%',
-                            marginBottom: -1,
-                            flex: 1,
-                            justifyContent: 'center'
-                }}>Ответ на: {textToReply}</Text>
-                <Pressable style={{justifyContent: 'center', alignItems: 'center', margin: '3%', paddingHorizontal: 4}}
-                onPress={() => setReplyTo("")}>
+                    />
+                </View>
+                <Text numberOfLines={2}
+                    style={{
+                        color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
+                        fontSize: 17,
+                        margin: '1%',
+                        marginBottom: -1,
+                        flex: 1,
+                        justifyContent: 'center'
+                    }}>Ответ на: {textToReply}</Text>
+                <Pressable style={{ justifyContent: 'center', alignItems: 'center', margin: '3%', paddingHorizontal: 4 }}
+                    onPress={() => setReplyTo("")}>
                     {({ pressed }) => (
                         <FontAwesome
-                        name="times"
-                        size={27}
-                        color={Colors[colorScheme ?? 'light'].text}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
+                            name="times"
+                            size={27}
+                            color={Colors[colorScheme ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}
                 </Pressable>
@@ -335,28 +359,28 @@ export default function chat () {
                 textAlign: 'center'
             }}>{status}</Text>}
             <KeyboardAvoidingView
-                style={{flexDirection: 'row'}}
+                style={{ flexDirection: 'row' }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}
-                >
-                {image === "" ? <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}
-                onPress={pickImage}>
+            >
+                {image === "" ? <Pressable style={{ justifyContent: 'center', alignItems: 'flex-start', margin: '3%' }}
+                    onPress={pickImage}>
                     {({ pressed }) => (
                         <FontAwesome
-                        name="picture-o"
-                        size={27}
-                        color={Colors[useColorScheme() ?? 'light'].text}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
+                            name="picture-o"
+                            size={27}
+                            color={Colors[useColorScheme() ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}
-                </Pressable> : <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%', paddingHorizontal: 1}}
-                onPress={resetImage}>
+                </Pressable> : <Pressable style={{ justifyContent: 'center', alignItems: 'flex-start', margin: '3%', paddingHorizontal: 1 }}
+                    onPress={resetImage}>
                     {({ pressed }) => (
                         <FontAwesome
-                        name="window-close-o"
-                        size={27}
-                        color={Colors[useColorScheme() ?? 'light'].text}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
+                            name="window-close-o"
+                            size={27}
+                            color={Colors[useColorScheme() ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}
                 </Pressable>}
@@ -370,14 +394,14 @@ export default function chat () {
                     submitBehavior='submit'
                     onSubmitEditing={sendMessage}
                 ></TextInput>
-                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', margin: '3%'}}
-                onPress={sendMessage}>
+                <Pressable style={{ justifyContent: 'center', alignItems: 'flex-end', margin: '3%' }}
+                    onPress={sendMessage}>
                     {({ pressed }) => (
                         <FontAwesome
-                        name="paper-plane-o"
-                        size={27}
-                        color={Colors[useColorScheme() ?? 'light'].text}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
+                            name="paper-plane-o"
+                            size={27}
+                            color={Colors[useColorScheme() ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}
                 </Pressable>

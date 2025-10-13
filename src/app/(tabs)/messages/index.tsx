@@ -19,15 +19,22 @@ type ChatsData = {
     isUnread: string,
     online: string,
     avatar: string,
-    lastTextAuthor: string
+    lastTextAuthor: string,
+    encrypted: boolean
 };
 
 type ChatsListItemProps = {
     user: ChatsData,
-    loggedUser: string
+    loggedUser: string,
+    decodeHandler: (hash: string) => string
 }
 
-const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
+const ChatsListItem = ({ user, loggedUser, decodeHandler }: ChatsListItemProps) => {
+    if (user.lastText.startsWith("NE1[") && user.lastText.endsWith("]")) {
+        user.lastText = decodeHandler(user.lastText.slice(4, -1));
+        user.encrypted = true;
+    }
+
     return (
         <Link href={{
             pathname: '/(tabs)/messages/chat',
@@ -49,7 +56,11 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                             {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.online}</Text>}
                         </View>
                         <View style={{flexDirection: 'row'}}>
-                            <Text style={{fontSize: 16, flex: 1, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor === loggedUser ? "Вы: " : ""}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
+                            <Text style={{fontSize: 16, flex: 1, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{user.lastTextAuthor == loggedUser ? "Вы: " : ""}{user.encrypted ? <FontAwesome
+                            name={'lock'}
+                            size={16}
+                            color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
+                        /> : null}{user.encrypted ? " " : null}{user.lastText != "" ? user.lastText : "(изображение)"}</Text>
                             { user.isUnread == '1' && user.lastTextAuthor != loggedUser ? <FontAwesome
                                 name="circle"
                                 size={16}
@@ -70,7 +81,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages () {
-    const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet, decode }: any = useNevkaProvider();
     if ( token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
@@ -100,6 +111,9 @@ export default function messages () {
                 console.log(json.error);
             } else if (json.result == "success") {
                 json.chats.pop();
+                json.messages.forEach((obj: ChatsData) => {
+                    obj.encrypted = false;
+                });
                 setChatsData(json.chats);
                 let newMessageCounter = json.chats.filter((item: ChatsData) => item.isUnread == '1' && item.lastTextAuthor != loggedUser).length;
                 setMessageCounter(newMessageCounter);
@@ -155,7 +169,7 @@ export default function messages () {
             {loading ? <ActivityIndicator /> : <FlatList
                 style={{flex: 1, width: '100%'}}
                 data={chatsData}
-                renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser}/>}
+                renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser} decodeHandler={decode}/>}
                 ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Чатов нет. Перейдите в раздел "Люди" для выбора собеседника.</Text>}
             />}
         </View>
