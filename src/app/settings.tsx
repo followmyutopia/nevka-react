@@ -81,7 +81,7 @@ export default function settings() {
 
     const checkEncryptionState = () => {
         console.log("Encryption: " + encryptionType)
-        if (encryptionType == "") setEncryptionSwitch(false);
+        if (encryptionType == "NE2") setEncryptionSwitch(true);
         else setEncryptionSwitch(true);
     }
 
