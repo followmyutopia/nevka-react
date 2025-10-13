@@ -20,7 +20,7 @@ type ChatsData = {
     online: string,
     avatar: string,
     lastTextAuthor: string,
-    encrypted: boolean
+    encrypted?: boolean
 };
 
 type ChatsListItemProps = {
@@ -30,7 +30,7 @@ type ChatsListItemProps = {
 }
 
 const ChatsListItem = ({ user, loggedUser, decodeHandler }: ChatsListItemProps) => {
-    if (user.lastText.startsWith("NE1[") && user.lastText.endsWith("]")) {
+    if (user.lastText.startsWith("NE2[") && user.lastText.endsWith("]")) {
         user.lastText = decodeHandler(user.lastText.slice(4, -1));
         user.encrypted = true;
     }

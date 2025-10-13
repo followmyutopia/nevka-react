@@ -25,7 +25,7 @@ type MessageData = {
     formattedTime: string,
     isUnread: string,
     reply: string,
-    encrypted: boolean
+    encrypted?: boolean
 };
 
 type MessageItemProps = {
@@ -35,7 +35,7 @@ type MessageItemProps = {
 }
 
 const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) => {
-    if (item.text.startsWith("NE1[") && item.text.endsWith("]")) {
+    if (item.text.startsWith("NE2[") && item.text.endsWith("]")) {
         item.text = decodeHandler(item.text.slice(4, -1));
         item.encrypted = true;
     }
@@ -208,8 +208,8 @@ export default function chat() {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
-            if (encryptionType == "NE1") {
-                text = "NE1[" + encode(text) + "]";
+            if (encryptionType == "NE2") {
+                text = "NE2[" + encode(text) + "]";
             }
 
             const formData = new FormData();

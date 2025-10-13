@@ -74,7 +74,7 @@ export default function settings() {
             setEncryptionType('');
             setEncryptionSwitch(false);
         } else {
-            setEncryptionType('NE1');
+            setEncryptionType('NE2');
             setEncryptionSwitch(true);
         }
     }

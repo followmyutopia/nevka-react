@@ -201,12 +201,19 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     function buildAlphabet(): string[] {
         const chars: string[] = [];
         for (let i = 0x20; i <= 0x10FFFF; i++) {
-            if (
-                i === 0x22 ||  // "
-                i === 0x5C ||  // \
-                i === 0x2028 || // line separator
-                i === 0x2029   // paragraph separator
-            ) continue;
+
+            if (i >= 0x00 && i <= 0x1F) continue;
+            if (i >= 0x7F && i <= 0x9F) continue;
+
+            // 2. Surrogate halves
+            if (i >= 0xD800 && i <= 0xDFFF) continue;
+
+            // 3. Quotes, backslash, line/paragraph separators
+            if (i === 0x22 || i === 0x5C || i === 0x2028 || i === 0x2029) continue;
+
+            // 4. Other invisible whitespace (optional)
+            if (i === 0x00A0) continue; // non-breaking space
+
             try {
                 chars.push(String.fromCodePoint(i));
             } catch {
@@ -219,9 +226,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const ALPHABET: string[] = buildAlphabet();
     const BASE: number = ALPHABET.length;
 
-    function encode(text: string): string {
+    function encode(text: string, key: string): string {
         const textArr: string[] = Array.from(text);
-        const keyArr: string[] = Array.from("nobbam-Fuctyc-zerba3");
+        const keyArr: string[] = Array.from(key);
         const result: string[] = [];
 
         for (let i = 0; i < textArr.length; i++) {
@@ -235,9 +242,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         return result.join("");
     }
 
-    function decode(encoded: string): string {
+    function decode(encoded: string, key: string): string {
         const textArr: string[] = Array.from(encoded);
-        const keyArr: string[] = Array.from("nobbam-Fuctyc-zerba3");
+        const keyArr: string[] = Array.from(key);
         const result: string[] = [];
 
         for (let i = 0; i < textArr.length; i++) {
@@ -272,6 +279,12 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                 router.navigate(data.url, { withAnchor: true })
             }
         });
+
+        var orig = "Привет)) 🌍 Hello!"
+        console.log("orig: " + orig);
+        var encryp = encode(orig, "nobbam-Fuctyc-zerba3");
+        console.log("enco: " + encryp);
+        console.log("deco: " + decode(encryp, "nobbam-Fuctyc-zerba3"))
 
         return () => {
             notificationListener.remove();
