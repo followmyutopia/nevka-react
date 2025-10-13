@@ -3,7 +3,7 @@
  * 2025 Avicus Delacroix
  */
 
-import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme, Switch } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleSheet, TextInput, useColorScheme, Switch, Linking } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -28,9 +28,9 @@ type UserData = {
     push_token: string
 };
 
-export default function settings () {
-    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> }
+export default function settings() {
+    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType }: any = useNevkaProvider();
+    if (token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
     const [firstname, setFirstname] = useState("");
@@ -46,6 +46,7 @@ export default function settings () {
     const [image, setImage] = useState("");
     const [currentAvatar, setCurrentAvatar] = useState("");
     const [latestVersion, setLatestVersion] = useState("");
+    const [expoGoLink, setExpoGoLink] = useState("");
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -56,6 +57,7 @@ export default function settings () {
 
     const [themeSwitch, setThemeSwitch] = useState(false);
     const [notificationSwitch, setNotificationSwitch] = useState(false);
+    const [encryptionSwitch, setEncryptionSwitch] = useState(false);
 
     const toggleTheme = () => {
         if (themeSwitch) {
@@ -65,6 +67,22 @@ export default function settings () {
             setTheme('dark');
             setThemeSwitch(true);
         }
+    }
+
+    const toggleEncryption = () => {
+        if (encryptionSwitch) {
+            setEncryptionType('');
+            setEncryptionSwitch(false);
+        } else {
+            setEncryptionType('NE1');
+            setEncryptionSwitch(true);
+        }
+    }
+
+    const checkEncryptionState = () => {
+        console.log("Encryption: " + encryptionType)
+        if (encryptionType == "") setEncryptionSwitch(false);
+        else setEncryptionSwitch(true);
     }
 
     const toggleNotifications = () => {
@@ -191,7 +209,7 @@ export default function settings () {
                 allowsEditing: true,
                 aspect: [1, 1]
             });
-        
+
             if (!result.canceled) {
                 setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
                 // need to delete the file from the cache, wtf
@@ -289,158 +307,171 @@ export default function settings () {
             const response = await fetch('https://nevka.site/api/checkUpdate.php');
             const json = await response.json();
             setLatestVersion(json.latestVersion);
+            setExpoGoLink(json.expoGo);
         } catch (error) {
             console.log("Ошибка запроса последней версии, проблемы с соединением?\n" + error);
         }
     }
 
+    const getNewVersion = () => {
+        const url = Platform.OS === 'ios' ? expoGoLink : 'https://nevka.site/android';
+        Linking.openURL(url);
+    }
+
     useEffect(() => {
         getUserData(loggedUser);
         checkUpdate();
-        // i may not need it anymore if guys with Android have no issues.
-        // if (pushToken != undefined && pushToken != "") savePushToken(pushToken);
+        checkEncryptionState();
 
         if (colorScheme === 'dark') setThemeSwitch(true);
     }, [pushToken]);
-    
+
     return (
         <View style={styles.container}>
-        <KeyboardAvoidingView style={{backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background, width: '100%'}}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={headerHeight}
+            <KeyboardAvoidingView style={{ backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background, width: '100%' }}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={headerHeight}
             >
-            <StatusBar style="light" />
-            <ScrollView style={{width: '100%'}}>
-                <Text style={{fontSize: 32, marginVertical: '7%', textAlign: 'center'}}>{locales.t('settings')}</Text>
-                <Text style={{fontSize: 26, marginBottom: '5%' }}>{locales.t('personal')}</Text>
+                <StatusBar style="light" />
+                <ScrollView style={{ width: '100%' }}>
+                    <Text style={{ fontSize: 32, marginVertical: '7%', textAlign: 'center' }}>{locales.t('settings')}</Text>
+                    <Text style={{ fontSize: 26, marginBottom: '5%' }}>{locales.t('personal')}</Text>
 
-                <Text style={styles.label}>{locales.t('firstname')}:</Text>
-                <TextInput style={inputStyle}
-                    value={firstname}
-                    onChangeText={setFirstname}
-                    maxLength={63}
+                    <Text style={styles.label}>{locales.t('firstname')}:</Text>
+                    <TextInput style={inputStyle}
+                        value={firstname}
+                        onChangeText={setFirstname}
+                        maxLength={63}
                     ></TextInput>
-                <Text style={styles.label}>{locales.t('lastname')}:</Text>
-                <TextInput style={inputStyle}
-                    value={lasttname}
-                    onChangeText={setLastname}
-                    maxLength={63}
+                    <Text style={styles.label}>{locales.t('lastname')}:</Text>
+                    <TextInput style={inputStyle}
+                        value={lasttname}
+                        onChangeText={setLastname}
+                        maxLength={63}
                     ></TextInput>
-                <Text style={styles.label}>{locales.t('city')}:</Text>
-                <TextInput style={inputStyle}
-                    value={city}
-                    onChangeText={setCity}
-                    maxLength={63}
+                    <Text style={styles.label}>{locales.t('city')}:</Text>
+                    <TextInput style={inputStyle}
+                        value={city}
+                        onChangeText={setCity}
+                        maxLength={63}
                     ></TextInput>
-                <Text style={styles.label}>{locales.t('bio')}:</Text>
-                <TextInput style={inputStyle}
-                    multiline
-                    enterKeyHint='done'
-                    submitBehavior='submit'
-                    value={bio}
-                    onChangeText={setBio}
-                    maxLength={255}
+                    <Text style={styles.label}>{locales.t('bio')}:</Text>
+                    <TextInput style={inputStyle}
+                        multiline
+                        enterKeyHint='done'
+                        submitBehavior='submit'
+                        value={bio}
+                        onChangeText={setBio}
+                        maxLength={255}
                     ></TextInput>
-                <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={setUserData}
-                    disabled={settingUserData}>
-                    <Text style={styles.buttonText}>{settingUserData ? locales.t('setting') : locales.t('setinfo')}</Text>
-                </Pressable>
-                <Text style={styles.console}>{infoStatus}</Text>
+                    <Pressable
+                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                        onPress={setUserData}
+                        disabled={settingUserData}>
+                        <Text style={styles.buttonText}>{settingUserData ? locales.t('setting') : locales.t('setinfo')}</Text>
+                    </Pressable>
+                    <Text style={styles.console}>{infoStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>{locales.t('avatar')}</Text>
-                <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10}}>
-                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>{locales.t('now')}:</Text>
-                    <Text style={{width: '40%', fontSize: 22, textAlign: 'center'}}>{locales.t('willbe')}:</Text>
-                </View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                    {currentAvatar == "" ? <Text style={{
-                        width: '40%',
-                        fontSize: 20,
-                        alignSelf: 'center',
-                        textAlign: 'center'
-                    }}>Загрузка...</Text> : <Image style={{
-                        width: '40%',
-                        aspectRatio: 1,
-                        borderRadius: 15,
-                        borderWidth: 1,
-                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
-                        source={{uri: currentAvatar}}
+                    <Text style={{ fontSize: 26, marginVertical: '5%' }}>{locales.t('avatar')}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10 }}>
+                        <Text style={{ width: '40%', fontSize: 22, textAlign: 'center' }}>{locales.t('now')}:</Text>
+                        <Text style={{ width: '40%', fontSize: 22, textAlign: 'center' }}>{locales.t('willbe')}:</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                        {currentAvatar == "" ? <Text style={{
+                            width: '40%',
+                            fontSize: 20,
+                            alignSelf: 'center',
+                            textAlign: 'center'
+                        }}>Загрузка...</Text> : <Image style={{
+                            width: '40%',
+                            aspectRatio: 1,
+                            borderRadius: 15,
+                            borderWidth: 1,
+                            borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                        }}
+                            source={{ uri: currentAvatar }}
                         ></Image>}
-                    {image == "" ? <Text style={{
-                        width: '40%',
-                        fontSize: 20,
-                        alignSelf: 'center',
-                        textAlign: 'center'
-                    }}>{locales.t('notselected')}</Text> : <Image style={{
-                        width: '40%',
-                        aspectRatio: 1,
-                        borderRadius: 15,
-                        borderWidth: 1,
-                        borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
-                        source={{uri: image}}
+                        {image == "" ? <Text style={{
+                            width: '40%',
+                            fontSize: 20,
+                            alignSelf: 'center',
+                            textAlign: 'center'
+                        }}>{locales.t('notselected')}</Text> : <Image style={{
+                            width: '40%',
+                            aspectRatio: 1,
+                            borderRadius: 15,
+                            borderWidth: 1,
+                            borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                        }}
+                            source={{ uri: image }}
                         ></Image>}
-                </View>
-                <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={image == "" ? pickImage : setAvatar}
-                    disabled={settingAvatar}>
-                    <Text style={styles.buttonText}>{image == "" ? locales.t('choosefile') : settingAvatar ? locales.t('setting') : locales.t('setavatar')}</Text>
-                </Pressable>
-                <Text style={styles.console}>{avatarStatus}</Text>
+                    </View>
+                    <Pressable
+                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                        onPress={image == "" ? pickImage : setAvatar}
+                        disabled={settingAvatar}>
+                        <Text style={styles.buttonText}>{image == "" ? locales.t('choosefile') : settingAvatar ? locales.t('setting') : locales.t('setavatar')}</Text>
+                    </Pressable>
+                    <Text style={styles.console}>{avatarStatus}</Text>
 
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>Приложение</Text>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
-                    <Text style={{fontSize: 20}}>Push-уведомления</Text>
-                    <Switch value={notificationSwitch} onValueChange={toggleNotifications}/>
-                </View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
-                    <Text style={{fontSize: 20}}>Тёмная тема</Text>
-                    <Switch value={themeSwitch} onValueChange={toggleTheme}/>
-                </View>
+                    <Text style={{ fontSize: 26, marginVertical: '5%' }}>Приложение</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <Text style={{ fontSize: 20 }}>Push-уведомления</Text>
+                        <Switch value={notificationSwitch} onValueChange={toggleNotifications} />
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <Text style={{ fontSize: 20 }}>Тёмная тема</Text>
+                        <Switch value={themeSwitch} onValueChange={toggleTheme} />
+                    </View>
 
-                <Text style={{fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
-                <Text style={styles.label}>Старый пароль:</Text>
-                <TextInput style={inputStyle}
-                    value={oldPassword}
-                    onChangeText={setOldPassword}
-                    maxLength={63}
-                    secureTextEntry={true}
+                    <Text style={{ fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <Text style={{ fontSize: 20 }}>Шифрование сообщений</Text>
+                        <Switch value={encryptionSwitch} onValueChange={toggleEncryption} />
+                    </View>
+                    <Text style={{ fontSize: 16, textAlign: 'center', marginHorizontal: 10, marginVertical: -5 }}>Внимание! При включенном шифровании, сообщения шифруются на вашем устройстве при отправке, и их невозможно будет прочитать с веб-версии.</Text>
+                    <Text style={{ fontSize: 24, marginTop: '5%' }}>Смена пароля</Text>
+                    <Text style={styles.label}>Старый пароль:</Text>
+                    <TextInput style={inputStyle}
+                        value={oldPassword}
+                        onChangeText={setOldPassword}
+                        maxLength={63}
+                        secureTextEntry={true}
                     ></TextInput>
-                <Text style={styles.label}>Новый пароль:</Text>
-                <TextInput style={inputStyle}
-                    value={newPassword}
-                    onChangeText={setNewPassword}
-                    maxLength={63}
-                    secureTextEntry={true}
+                    <Text style={styles.label}>Новый пароль:</Text>
+                    <TextInput style={inputStyle}
+                        value={newPassword}
+                        onChangeText={setNewPassword}
+                        maxLength={63}
+                        secureTextEntry={true}
                     ></TextInput>
-                <Text style={styles.label}>Повторите новый пароль:</Text>
-                <TextInput style={inputStyle}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    maxLength={63}
-                    secureTextEntry={true}
+                    <Text style={styles.label}>Повторите новый пароль:</Text>
+                    <TextInput style={inputStyle}
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        maxLength={63}
+                        secureTextEntry={true}
                     ></TextInput>
-                <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={changePassword}>
-                    <Text style={styles.buttonText}>{changingPassword ? "Подождите..." : "Сменить пароль"}</Text>
-                </Pressable>
-                <Text style={styles.console}>{passwordStatus}</Text>
+                    <Pressable
+                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                        onPress={changePassword}>
+                        <Text style={styles.buttonText}>{changingPassword ? "Подождите..." : "Сменить пароль"}</Text>
+                    </Pressable>
+                    <Text style={styles.console}>{passwordStatus}</Text>
 
-                <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={() => setToken("")}>
-                    <Text style={styles.buttonText}>Выйти из аккаунта</Text>
-                </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                        onPress={() => setToken("")}>
+                        <Text style={styles.buttonText}>Выйти из аккаунта</Text>
+                    </Pressable>
 
-                <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Nevka Mobile v{AppConfig.expo.version}</Text>
-                <Text style={{fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Авикус Делакруа</Text>
+                    <Text style={{ fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Nevka Mobile v{AppConfig.expo.version}</Text>
+                    <Text style={{ fontSize: 18, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Авикус Делакруа</Text>
 
-                {latestVersion != "" ? <Text style={{fontSize: 15, marginTop: 16, marginBottom: 48, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})`}</Text> : null}
-            </ScrollView>
-        </KeyboardAvoidingView>
+                    {latestVersion != "" ? <Text style={{ fontSize: 15, marginTop: 16, marginBottom: 48, alignSelf: 'center', color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray', textAlign: 'center' }} onPress={getNewVersion}>{latestVersion == AppConfig.expo.version ? "(актуальная версия)" : `(доступна версия v${latestVersion})\nНажмите здесь, чтобы обновить`}</Text> : null}
+                </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     );
 }

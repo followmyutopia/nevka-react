@@ -25,6 +25,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [isNameSet, setIsNameSet] = useState<boolean>(false);
     const [pushToken, setPushTokenLocal] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
+    const [encryptionType, setEncryptionTypeLocal] = useState<string>("");
 
     const setMessageCounter = async (value: number) => {
         setMessageCounterLocal(value);
@@ -64,6 +65,26 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         if (value == 'dark') Appearance.setColorScheme('dark');
         try {
             await AsyncStorage.setItem('theme', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const setEncryptionType = async (value: string) => {
+        setEncryptionTypeLocal(value);
+        try {
+            await AsyncStorage.setItem('encryption', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const getEncryptionType = async () => {
+        try {
+            const value = await AsyncStorage.getItem('encryption');
+            if (value !== null) {
+                setEncryptionTypeLocal(value);
+            }
         } catch (e) {
             console.log("AsyncStorage error: " + e);
         }
@@ -117,10 +138,10 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
-          shouldPlaySound: true,
-          shouldSetBadge: true,
-          shouldShowBanner: true,
-          shouldShowList: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+            shouldShowBanner: true,
+            shouldShowList: true,
         }),
     });
 
@@ -177,11 +198,69 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     // locales.locale = getLocales()[0].languageCode ?? 'ru';
     locales.locale = 'ru';
 
+    function buildAlphabet(): string[] {
+        const chars: string[] = [];
+        for (let i = 0x20; i <= 0x10FFFF; i++) {
+            if (
+                i === 0x22 ||  // "
+                i === 0x5C ||  // \
+                i === 0x2028 || // line separator
+                i === 0x2029   // paragraph separator
+            ) continue;
+            try {
+                chars.push(String.fromCodePoint(i));
+            } catch {
+                // skip invalid surrogate code points
+            }
+        }
+        return chars;
+    }
+
+    const ALPHABET: string[] = buildAlphabet();
+    const BASE: number = ALPHABET.length;
+
+    function encode(text: string): string {
+        const textArr: string[] = Array.from(text);
+        const keyArr: string[] = Array.from("nobbam-Fuctyc-zerba3");
+        const result: string[] = [];
+
+        for (let i = 0; i < textArr.length; i++) {
+            const charCode: number = textArr[i].codePointAt(0)!;
+            const keyCode: number = keyArr[i % keyArr.length].codePointAt(0)!;
+
+            const idx: number = (charCode + keyCode) % BASE;
+            result.push(ALPHABET[idx]);
+        }
+
+        return result.join("");
+    }
+
+    function decode(encoded: string): string {
+        const textArr: string[] = Array.from(encoded);
+        const keyArr: string[] = Array.from("nobbam-Fuctyc-zerba3");
+        const result: string[] = [];
+
+        for (let i = 0; i < textArr.length; i++) {
+            const idx: number = ALPHABET.indexOf(textArr[i]);
+            if (idx === -1) {
+                throw new Error(`Invalid character '${textArr[i]}' in encoded string`);
+            }
+
+            const keyCode: number = keyArr[i % keyArr.length].codePointAt(0)!;
+            const newCode: number = (idx - keyCode + BASE) % BASE;
+
+            result.push(String.fromCodePoint(newCode));
+        }
+
+        return result.join("");
+    }
+
     useEffect(() => {
         getToken();
         getLoggedUser();
         getTheme();
         getPushToken();
+        getEncryptionType();
 
         const notificationListener = Notifications.addNotificationReceivedListener(notif => {
             setNotification(notif);
@@ -190,7 +269,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
             const data: PushDataObject = response.notification.request.content.data;
             if (data.url) {
-                router.navigate(data.url, {withAnchor: true})
+                router.navigate(data.url, { withAnchor: true })
             }
         });
 
@@ -200,19 +279,20 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         };
     }, [])
 
-    return(
-        // <NavigationContent>
-            <NevkaContext.Provider value={{ locales,
-                token, setToken,
-                loggedUser, setLoggedUser,
-                messageCounter, setMessageCounter,
-                isNameSet, setIsNameSet,
-                pushToken, setPushToken,
-                theme, setTheme
-                }}>
-                {children}
-            </NevkaContext.Provider>
-        // </NavigationContent>
+    return (
+        <NevkaContext.Provider value={{
+            locales,
+            token, setToken,
+            loggedUser, setLoggedUser,
+            messageCounter, setMessageCounter,
+            isNameSet, setIsNameSet,
+            pushToken, setPushToken,
+            theme, setTheme,
+            encryptionType, setEncryptionType,
+            encode, decode
+        }}>
+            {children}
+        </NevkaContext.Provider>
     );
 };
 
