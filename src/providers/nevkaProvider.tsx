@@ -226,9 +226,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const ALPHABET: string[] = buildAlphabet();
     const BASE: number = ALPHABET.length;
 
-    function encode(text: string, key: string): string {
+    function encode(text: string): string {
         const textArr: string[] = Array.from(text);
-        const keyArr: string[] = Array.from(key);
+        const keyArr: string[] = Array.from("nobbam-Fuctyc-zerba3");
         const result: string[] = [];
 
         for (let i = 0; i < textArr.length; i++) {
@@ -242,9 +242,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         return result.join("");
     }
 
-    function decode(encoded: string, key: string): string {
+    function decode(encoded: string): string {
         const textArr: string[] = Array.from(encoded);
-        const keyArr: string[] = Array.from(key);
+        const keyArr: string[] = Array.from("nobbam-Fuctyc-zerba3");
         const result: string[] = [];
 
         for (let i = 0; i < textArr.length; i++) {
@@ -280,11 +280,11 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             }
         });
 
-        var orig = "Привет)) 🌍 Hello!"
-        console.log("orig: " + orig);
-        var encryp = encode(orig, "nobbam-Fuctyc-zerba3");
-        console.log("enco: " + encryp);
-        console.log("deco: " + decode(encryp, "nobbam-Fuctyc-zerba3"))
+        // var orig = "Привет)) 🌍 Hello!"
+        // console.log("orig: " + orig);
+        // var encryp = encode(orig, "nobbam-Fuctyc-zerba3");
+        // console.log("enco: " + encryp);
+        // console.log("deco: " + decode(encryp, "nobbam-Fuctyc-zerba3"))
 
         return () => {
             notificationListener.remove();
