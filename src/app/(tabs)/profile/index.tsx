@@ -14,7 +14,6 @@ import Dialog from "react-native-dialog";
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Colors from "@/src/constants/Colors";
-import HeaderBar from "@/src/components/headerBar";
 
 type UserData = {
     id: string,
