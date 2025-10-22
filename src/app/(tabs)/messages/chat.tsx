@@ -42,9 +42,17 @@ const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: Messa
         item.encrypted = true;
     }
 
+    if (item.reply.startsWith("NE2[") && item.reply.endsWith("]")) {
+        item.reply = decodeHandler(item.reply.slice(4, -1), "nobbam-Fuctyc-zerba3");
+    }
+
     if (item.text.startsWith("NE3[") && item.text.endsWith("]")) {
         item.text = decodeHandler(item.text.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
         item.encrypted = true;
+    }
+
+    if (item.reply.startsWith("NE3[") && item.reply.endsWith("]")) {
+        item.reply = decodeHandler(item.reply.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
     }
 
     const renderRightActions = () => {
@@ -210,8 +218,8 @@ export default function chat() {
         }
     };
 
-    const sendMessage = async () => {
-        let text = message.trim();
+    const sendMessage = async (textToSend: string) => {
+        let text = textToSend.trim();
 
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
@@ -406,10 +414,10 @@ export default function chat() {
                     onChangeText={setMessage}
                     maxLength={1023}
                     submitBehavior='submit'
-                    onSubmitEditing={sendMessage}
+                    onSubmitEditing={() => sendMessage(message)}
                 ></TextInput>
                 <Pressable style={{ justifyContent: 'center', alignItems: 'flex-end', margin: '3%' }}
-                    onPress={sendMessage}>
+                    onPress={() => sendMessage(message)}>
                     {({ pressed }) => (
                         <FontAwesome
                             name="paper-plane-o"
