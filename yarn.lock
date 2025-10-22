@@ -3152,6 +3152,11 @@ expo-font@~14.0.8:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-glass-effect@~0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/expo-glass-effect/-/expo-glass-effect-0.1.4.tgz#c7a7278ab06dee2488b2239e185a8b56158adbc6"
+  integrity sha512-RW7lf2SWNVSvpJqBxQUlC/VVzeeHFrJeoKoIlNIFfKTFj3HyF7xQKq6/h/bpO8M0ssy0v5KEKw4GggkjTwx7Fw==
+
 expo-image-loader@~6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-6.0.0.tgz#15230442cbb90e101c080a4c81e37d974e43e072"
@@ -3178,6 +3183,11 @@ expo-keep-awake@~15.0.7:
   version "15.0.7"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-15.0.7.tgz#4eada556e1cca6c9c2e5aa39478fd01816cd0bc9"
   integrity sha512-CgBNcWVPnrIVII5G54QDqoE125l+zmqR4HR8q+MQaCfHet+dYpS5vX5zii/RMayzGN4jPgA4XYIQ28ePKFjHoA==
+
+expo-linear-gradient@~15.0.7:
+  version "15.0.7"
+  resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-15.0.7.tgz#d1ebbda5ecc58afb58398f5a06affd0e83894149"
+  integrity sha512-yF+y+9Shpr/OQFfy/wglB/0bykFMbwHBTuMRa5Of/r2P1wbkcacx8rg0JsUWkXH/rn2i2iWdubyqlxSJa3ggZA==
 
 expo-linking@~8.0.8:
   version "8.0.8"

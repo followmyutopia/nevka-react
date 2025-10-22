@@ -4,13 +4,16 @@
  */
 
 import React from 'react';
+import { useColorScheme } from '@/src/components/useColorScheme';
+import { useNevkaProvider } from '@/src/providers/nevkaProvider';
+import { NativeTabs, Icon, Label, Badge } from 'expo-router/unstable-native-tabs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Platform, Pressable } from 'react-native';
 import Colors from '@/src/constants/Colors';
-import { useColorScheme } from '@/src/components/useColorScheme';
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
-import { useNevkaProvider } from '@/src/providers/nevkaProvider';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -24,84 +27,112 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { messageCounter, locales }: any = useNevkaProvider();
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: locales.t('profile'),
-          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
-          headerRight: () => (
-            <Link href="/settings" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="cog"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+  if (isLiquidGlassAvailable()) {
+    return (
+      <NativeTabs backgroundColor={colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs}>
+        <NativeTabs.Trigger name="profile">
+          <Label>Профиль</Label>
+          <Icon sf={{ default: 'person', selected: 'person.fill' }} drawable="stat_sys_download" />
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="people">
+          <Label>Люди</Label>
+          <Icon sf={{ default: 'person.3', selected: 'person.3.fill' }} drawable="stat_sys_headset" />
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="messages">
+          <Label>Сообщения</Label>
+          <Icon sf={{ default: 'message', selected: 'message.fill' }} drawable="stat_sys_warning" />
+          {messageCounter != 0 ? <Badge>{messageCounter}</Badge> : null}
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="discussions">
+          <Icon sf={{ default: 'bubble.left.and.text.bubble.right', selected: 'bubble.left.and.text.bubble.right.fill' }} drawable="custom_home_drawable" />
+          <Label>Обсуждения</Label>
+        </NativeTabs.Trigger>
+      </NativeTabs>
+    );
+  } else {
+    return (
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          // Disable the static render of the header on web
+          // to prevent a hydration error in React Navigation v6.
+          headerShown: useClientOnlyValue(false, true),
+          tabBarBackground: () => (
+            <LinearGradient
+              colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+              colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={{ flex: 1 }}
+            />
           ),
-          headerStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          },
           tabBarStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            backgroundColor: 'transparent',
+            borderTopWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0
           }
-        }}
-      />
-      <Tabs.Screen
-        name="people"
-        options={{
-          title: locales.t('people'),
-          tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
-          headerStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          },
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          }
-        }}
-      />
-      <Tabs.Screen
-        name="messages"
-        options={{
-          title: locales.t('messages'),
-          tabBarBadge: messageCounter == 0 ? null : messageCounter,
-          tabBarIcon: ({ color }) => <TabBarIcon name="paper-plane" color={color} />,
-          headerStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          },
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          }
-        }}
-      />
-      <Tabs.Screen
-        name="discussions"
-        options={{
-          title: locales.t('discussions'),
-          tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
-          headerStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          },
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-          }
-        }}
-      />
-    </Tabs>
-  );
+        }}>
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: locales.t('profile'),
+            tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
+            headerStyle: {
+              backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            },
+            headerShown: false,
+            // tabBarStyle: {
+            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            // }
+          }}
+        />
+        <Tabs.Screen
+          name="people"
+          options={{
+            title: locales.t('people'),
+            tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
+            headerStyle: {
+              backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            },
+            headerShown: false,
+            // tabBarStyle: {
+            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            // }
+          }}
+        />
+        <Tabs.Screen
+          name="messages"
+          options={{
+            title: locales.t('messages'),
+            tabBarBadge: messageCounter == 0 ? null : messageCounter,
+            tabBarIcon: ({ color }) => <TabBarIcon name="paper-plane" color={color} />,
+            headerStyle: {
+              backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            },
+            headerShown: false,
+            // tabBarStyle: {
+            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            // }
+          }}
+        />
+        <Tabs.Screen
+          name="discussions"
+          options={{
+            title: locales.t('discussions'),
+            tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
+            headerStyle: {
+              backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            },
+            headerShown: false,
+            // tabBarStyle: {
+            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            // }
+          }}
+        />
+      </Tabs>
+    );
+  }
+
+
 }

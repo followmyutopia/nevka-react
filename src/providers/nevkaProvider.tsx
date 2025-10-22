@@ -22,7 +22,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [loggedUser, setLoggedUserLocal] = useState<string>("");
     const [theme, setThemeLocal] = useState<string>("");
     const [messageCounter, setMessageCounterLocal] = useState<number>(0);
-    const [isNameSet, setIsNameSet] = useState<boolean>(false);
+    const [isNameSet, setIsNameSet] = useState<boolean>(true);
     const [pushToken, setPushTokenLocal] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const [encryptionType, setEncryptionTypeLocal] = useState<string>("");

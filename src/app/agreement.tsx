@@ -75,23 +75,23 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         width: '48%',
         // margin: '5%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         width: '48%',
         // margin: '5%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     }
 });

@@ -216,44 +216,44 @@ const styles = StyleSheet.create({
     darkInput: {
         // width: '90%',
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         marginVertical: '2%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightInput: {
         // width: '90%',
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         marginVertical: '2%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         // width: '90%',
         marginVertical: '2%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         // width: '90%',
         marginVertical: '2%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     },
     buttonText: {
         fontSize: 20
