@@ -10,6 +10,7 @@ import { Link, Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as Notifications from "expo-notifications";
+import Colors from "@/src/constants/Colors";
 
 type ChatsData = {
     id: string,
@@ -39,9 +40,9 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
                     <Image style={{
                         height: '100%',
                         aspectRatio: 1,
-                        borderRadius: 15,
+                        borderRadius: 25,
                         borderWidth: 1,
-                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                        borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                     }}
                         source={{ uri: user.avatar }}></Image>
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>

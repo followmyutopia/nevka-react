@@ -54,9 +54,9 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
-                    borderRadius: 15,
+                    borderRadius: 25,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                     source={{uri: user.avatar}}></Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%' }}>
                     <Text style={{ fontSize: 32 }}>{user.firstname}</Text>
@@ -72,8 +72,8 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                 paddingHorizontal: '4%'
             }}>{user.status}</Text> : null}
             { user.city != "" || user.bio != "" ? <View style={{
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-                borderRadius: 15,
+                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
+                borderRadius: 25,
                 borderWidth: 1,
                 padding: 15,
                 marginBottom: '4%',
@@ -100,8 +100,8 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
         <View style={{
             width: '94%',
             margin: '3%',
-            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-            borderRadius: 15,
+            borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
+            borderRadius: 25,
             borderWidth: 1,
             padding: 15,
             }}>
@@ -113,7 +113,7 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
                 aspectRatio: 1,
                 borderRadius: 10,
                 borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                 source={{uri: user.avatar}}>
             </Image>
             <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
@@ -128,7 +128,7 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
                 borderRadius: 10,
                 marginTop: 10,
                 borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                 source={{uri: item.image}}>
             </FullWidthImage> : null}
             <View style={{flexDirection: 'row',
@@ -138,8 +138,8 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
             }}>
                     <Pressable style={{
                         flexDirection: 'row',
-                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-                        borderRadius: 15,
+                        borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
+                        borderRadius: 25,
                         borderWidth: 1,
                         padding: '3%',
                     }}
@@ -270,7 +270,7 @@ export default function person () {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: name }} />
-            {loading ? <ActivityIndicator /> : <FlatList
+            {loading ? <ActivityIndicator style={{ flex: 1 }}/> : <FlatList
                 ListHeaderComponent={<UserInfoScreen user={userData!}/>}
                 style={{flex: 1, width: '100%'}}
                 data={wallData || <ActivityIndicator /> }
@@ -286,25 +286,25 @@ const styles = StyleSheet.create({
         flex: 1
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         // width: '90%',
         // margin: '2%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)',
+        borderColor: Colors.dark.borders,
         // marginVertical: '3%'
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         // width: '90%',
         // margin: '2%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)',
+        borderColor: Colors.light.borders,
         // marginVertical: '3%'
     },
     buttonText: {

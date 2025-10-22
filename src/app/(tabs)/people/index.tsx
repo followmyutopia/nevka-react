@@ -36,9 +36,9 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
                     <Image style={{
                         height: '100%',
                         aspectRatio: 1,
-                        borderRadius: 15,
+                        borderRadius: 25,
                         borderWidth: 1,
-                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                        borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                         source={{uri: user.avatar}}></Image>
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
                         <Text style={{ fontSize: 18 }}>{user.firstname + " " + user.lastname}</Text>
@@ -143,23 +143,23 @@ const styles = StyleSheet.create({
     darkInput: {
         width: '94%',
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         margin: '3%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightInput: {
         width: '94%',
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         margin: '3%',
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     },
 });

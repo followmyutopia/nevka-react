@@ -15,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
 
 type MessageData = {
     id: string,
@@ -54,11 +55,11 @@ const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) =>
             ref={(ref) => ref?.close()}
         >
             <View style={{
-                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
+                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.04)',
+                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
                 borderWidth: 1,
                 alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
-                borderRadius: 10,
+                borderRadius: 16,
                 maxWidth: '84%',
                 marginHorizontal: '3%',
                 marginVertical: '1%'
@@ -67,24 +68,24 @@ const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) =>
                     backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
                     flexDirection: 'row',
                     borderBottomWidth: 1,
-                    borderBottomColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                    borderBottomColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }}><FontAwesome
                         name="reply"
                         size={16}
                         color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                        style={{ marginTop: 5, marginLeft: 7 }} />
+                        style={{ marginTop: 7, marginLeft: 10 }} />
                     <Text
                         numberOfLines={1}
                         style={{
                             fontSize: 16,
-                            marginVertical: 4,
-                            marginHorizontal: 7,
+                            marginVertical: 5,
+                            marginHorizontal: 10,
                             marginRight: 28,
                             color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
                         }}>{item.reply}</Text></View> : null}
                 {item.text != "" ? <Text style={{
                     fontSize: 17,
-                    paddingHorizontal: 7,
+                    paddingHorizontal: 10,
                     paddingTop: 5,
                     paddingBottom: item.image != "" ? 2 : 0
                 }}>{item.text}</Text> : null}
@@ -92,7 +93,7 @@ const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) =>
                     minWidth: '100%',
                     borderRadius: 10,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }} source={{ uri: item.image }}>
                 </FullWidthImage> : null}
                 <View style={{
@@ -106,18 +107,18 @@ const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) =>
                             name={item.isUnread == '1' ? 'circle' : 'check-circle'}
                             size={14}
                             color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                            style={{ marginTop: 3, marginLeft: 7 }}
+                            style={{ marginTop: 7, marginLeft: 10 }}
                         />
                         {item.encrypted ? <FontAwesome
                             name={'lock'}
                             size={14}
                             color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                            style={{ marginTop: 3.5, marginLeft: 7 }}
+                            style={{ marginTop: 7.5, marginLeft: 7 }}
                         /> : null}</View>
                     <Text style={{
                         fontSize: 14,
-                        marginVertical: 2,
-                        marginHorizontal: 7,
+                        marginVertical: 5,
+                        marginHorizontal: 10,
                         color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
                     }}>{item.formattedTime}</Text>
                 </View>
@@ -359,7 +360,7 @@ export default function chat() {
                 textAlign: 'center'
             }}>{status}</Text>}
             <KeyboardAvoidingView
-                style={{ flexDirection: 'row' }}
+                style={{ flexDirection: 'row', marginBottom: isLiquidGlassAvailable() ? 80 : null }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}
             >
@@ -420,24 +421,24 @@ const styles = StyleSheet.create({
         flex: 1,
         maxHeight: 80,
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         marginVertical: '3%',
         fontSize: 17,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightInput: {
         flex: 1,
         maxHeight: 80,
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         marginVertical: '3%',
         fontSize: 17,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     },
 });

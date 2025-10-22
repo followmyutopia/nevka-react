@@ -8,12 +8,13 @@ import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect, router } from "expo-router";
+import { Redirect, router, Stack } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import Dialog from "react-native-dialog";
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Colors from "@/src/constants/Colors";
+import HeaderBar from "@/src/components/headerBar";
 
 type UserData = {
     id: string,
@@ -57,9 +58,9 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
-                    borderRadius: 15,
+                    borderRadius: 25,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                     source={{uri: user.avatar}}></Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%' }}>
                     <Text style={{ fontSize: 32 }}>{user.firstname}</Text>
@@ -80,8 +81,8 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 marginBottom: '4%'
             }}>Установить статус</Text></Pressable>
             { user.city != "" || user.bio != "" ? <View style={{
-                borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-                borderRadius: 15,
+                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
+                borderRadius: 25,
                 borderWidth: 1,
                 padding: 15,
                 marginBottom: '4%',
@@ -133,8 +134,8 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
         <View style={{
             width: '94%',
             margin: '3%',
-            borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-            borderRadius: 15,
+            borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
+            borderRadius: 25,
             borderWidth: 1,
             padding: 15,
             }}>
@@ -146,7 +147,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
                     aspectRatio: 1,
                     borderRadius: 10,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                     source={{uri: user.avatar}}>
                 </Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
@@ -161,7 +162,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
                     borderRadius: 10,
                     marginTop: 10,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'}}
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
                     source={{uri: item.image}}>
                 </FullWidthImage> : null}
             </View>
@@ -172,8 +173,8 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
             }}>
                     <Pressable style={{
                         flexDirection: 'row',
-                        borderColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)',
-                        borderRadius: 15,
+                        borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
+                        borderRadius: 25,
                         borderWidth: 1,
                         padding: '3%',
                     }}
@@ -235,12 +236,11 @@ export default function profile () {
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
                 setLoading(false);
-                if (json.firstname == "" || json.lastname == "") {
-                    router.navigate("/settings");
-                } else {
-                    setIsNameSet(true);
-                }
                 setUserData(json);
+                if (json.firstname == "" || json.lastname == "") {
+                    setIsNameSet(false);
+                    router.navigate("/settings");
+                }
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
@@ -400,25 +400,25 @@ const styles = StyleSheet.create({
         flex: 1
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         // width: '90%',
         // margin: '2%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)',
+        borderColor: Colors.dark.borders,
         // marginVertical: '3%'
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         // width: '90%',
         // margin: '2%',, paddingVertical: '3%'
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)',
+        borderColor: Colors.light.borders,
         // marginVertical: '3%'
     },
     buttonText: {

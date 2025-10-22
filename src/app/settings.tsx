@@ -386,9 +386,9 @@ export default function settings() {
                         }}>Загрузка...</Text> : <Image style={{
                             width: '40%',
                             aspectRatio: 1,
-                            borderRadius: 15,
+                            borderRadius: 25,
                             borderWidth: 1,
-                            borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                            borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.04)'
                         }}
                             source={{ uri: currentAvatar }}
                         ></Image>}
@@ -400,9 +400,9 @@ export default function settings() {
                         }}>{locales.t('notselected')}</Text> : <Image style={{
                             width: '40%',
                             aspectRatio: 1,
-                            borderRadius: 15,
+                            borderRadius: 25,
                             borderWidth: 1,
-                            borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.07)' : 'rgba(255, 255, 255, 0.07)'
+                            borderColor: colorScheme === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.04)'
                         }}
                             source={{ uri: image }}
                         ></Image>}
@@ -503,42 +503,42 @@ const styles = StyleSheet.create({
     darkInput: {
         width: '100%',
         color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightInput: {
         width: '100%',
         color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         padding: '3%',
-        borderRadius: 15,
+        borderRadius: 25,
         fontSize: 20,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     },
     darkButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.07)',
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
         width: '100%',
         marginVertical: '4%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.07)'
+        borderColor: Colors.dark.borders
     },
     lightButton: {
-        backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         width: '100%',
         marginVertical: '4%',
-        borderRadius: 15,
+        borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.07)'
+        borderColor: Colors.light.borders
     },
     buttonText: {
         fontSize: 20
