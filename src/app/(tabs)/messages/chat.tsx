@@ -7,7 +7,7 @@ import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable,
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
@@ -46,6 +46,10 @@ const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: Messa
         item.reply = decodeHandler(item.reply.slice(4, -1), "nobbam-Fuctyc-zerba3");
     }
 
+    if (item.reply.startsWith("Вы: NE2[") && item.reply.endsWith("]")) {
+        item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "nobbam-Fuctyc-zerba3");
+    }
+
     if (item.text.startsWith("NE3[") && item.text.endsWith("]")) {
         item.text = decodeHandler(item.text.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
         item.encrypted = true;
@@ -53,6 +57,10 @@ const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: Messa
 
     if (item.reply.startsWith("NE3[") && item.reply.endsWith("]")) {
         item.reply = decodeHandler(item.reply.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
+    }
+
+    if (item.reply.startsWith("Вы: NE3[") && item.reply.endsWith("]")) {
+        item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
     }
 
     const renderRightActions = () => {
@@ -160,6 +168,7 @@ export default function chat() {
     const [replyTo, setReplyTo] = useState("");
     const [textToReply, setTextToReply] = useState("");
     const [keyIdentifier, setKeyIdentifier] = useState("");
+    const latestMessage = useRef('');
 
     const getMessages = async (token: string, chat: string) => {
         const formData = new FormData();
@@ -218,8 +227,8 @@ export default function chat() {
         }
     };
 
-    const sendMessage = async (textToSend: string) => {
-        let text = textToSend.trim();
+    const sendMessage = async () => {
+        let text = latestMessage.current.trim();
 
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
@@ -277,7 +286,7 @@ export default function chat() {
                     setStatus(json.error);
                     setMessage(text);
                 } else if (json.result == "success") {
-                    // setStatus(""); moved it before sending
+                    latestMessage.current = '';
                 }
             } catch (error) {
                 console.log("Ошибка отправки сообщения " + id + ", проблемы с соединением?\n" + error);
@@ -411,13 +420,16 @@ export default function chat() {
                     enterKeyHint='send'
                     style={inputStyle}
                     value={message}
-                    onChangeText={setMessage}
+                    onChangeText={(text) => {
+                        setMessage(text);
+                        latestMessage.current = text;
+                    }}
                     maxLength={1023}
                     submitBehavior='submit'
-                    onSubmitEditing={() => sendMessage(message)}
+                    onSubmitEditing={sendMessage}
                 ></TextInput>
                 <Pressable style={{ justifyContent: 'center', alignItems: 'flex-end', margin: '3%' }}
-                    onPress={() => sendMessage(message)}>
+                    onPress={sendMessage}>
                     {({ pressed }) => (
                         <FontAwesome
                             name="paper-plane-o"
