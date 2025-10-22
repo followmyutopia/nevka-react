@@ -32,12 +32,18 @@ type MessageData = {
 type MessageItemProps = {
     item: MessageData,
     replyHandler: (id: any) => void,
-    decodeHandler: (hash: string) => string
+    decodeHandler: (hash: string, key: string) => string,
+    keyIdentifier: string
 }
 
-const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) => {
+const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: MessageItemProps) => {
     if (item.text.startsWith("NE2[") && item.text.endsWith("]")) {
-        item.text = decodeHandler(item.text.slice(4, -1));
+        item.text = decodeHandler(item.text.slice(4, -1), "nobbam-Fuctyc-zerba3");
+        item.encrypted = true;
+    }
+
+    if (item.text.startsWith("NE3[") && item.text.endsWith("]")) {
+        item.text = decodeHandler(item.text.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
         item.encrypted = true;
     }
 
@@ -128,7 +134,7 @@ const MessageItem = ({ item, replyHandler, decodeHandler }: MessageItemProps) =>
 }
 
 export default function chat() {
-    const { token, setToken, encryptionType, encode, decode }: any = useNevkaProvider();
+    const { loggedUser, token, setToken, encryptionType, encode, decode }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
@@ -145,6 +151,7 @@ export default function chat() {
     const [sending, setSending] = useState(false);
     const [replyTo, setReplyTo] = useState("");
     const [textToReply, setTextToReply] = useState("");
+    const [keyIdentifier, setKeyIdentifier] = useState("");
 
     const getMessages = async (token: string, chat: string) => {
         const formData = new FormData();
@@ -209,8 +216,8 @@ export default function chat() {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
-            if (encryptionType == "NE2") {
-                text = "NE2[" + encode(text) + "]";
+            if (encryptionType == "NE3") {
+                text = "NE3[" + encode(text, "xaxdeb-7tazwi-cerjAm" + keyIdentifier) + "]";
             }
 
             const formData = new FormData();
@@ -280,6 +287,12 @@ export default function chat() {
 
     useEffect(() => {
         if (isFocused) {
+            if (loggedUser <= id) {
+                setKeyIdentifier("-chat-" + loggedUser + "-" + id);
+            } else {
+                setKeyIdentifier("-chat-" + id + "-" + loggedUser);
+            }
+
             const ws = new WebSocket('ws://nevka.site:7190');
 
             ws.onopen = () => {
@@ -320,7 +333,7 @@ export default function chat() {
                 style={{ flex: 1, width: '100%' }}
                 data={messagesData}
                 contentContainerStyle={{ flexDirection: 'column-reverse' }}
-                renderItem={({ item }) => <MessageItem item={item} replyHandler={reply} decodeHandler={decode} />}
+                renderItem={({ item }) => <MessageItem item={item} replyHandler={reply} decodeHandler={decode} keyIdentifier={keyIdentifier} />}
                 ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Сообщений нет</Text>}
             />}
             {replyTo === "" ? null : <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

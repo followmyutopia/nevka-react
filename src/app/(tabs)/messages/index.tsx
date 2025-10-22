@@ -107,9 +107,17 @@ export default function messages() {
             } else if (json.result == "success") {
                 json.chats.pop();
                 json.chats.forEach((obj: ChatsData) => {
-                    console.log("test: " + obj.lastText);
                     if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
-                        obj.lastText = decode(obj.lastText.slice(4, -1));
+                        obj.lastText = decode(obj.lastText.slice(4, -1), "nobbam-Fuctyc-zerba3");
+                        obj.encrypted = true;
+                    } else if (obj.lastText.startsWith("NE3[") && obj.lastText.endsWith("]")) {
+                        var keyIdentifier = "";
+                        if (loggedUser <= obj.id) {
+                            keyIdentifier = "-chat-" + loggedUser + "-" + obj.id;
+                        } else {
+                            keyIdentifier = "-chat-" + obj.id + "-" + loggedUser;
+                        }
+                        obj.lastText = decode(obj.lastText.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
                         obj.encrypted = true;
                     } else obj.encrypted = false;
                 });
@@ -141,7 +149,16 @@ export default function messages() {
             const data = JSON.parse(e.data);
             data.forEach((obj: ChatsData) => {
                 if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
-                    obj.lastText = decode(obj.lastText.slice(4, -1));
+                    obj.lastText = decode(obj.lastText.slice(4, -1), "nobbam-Fuctyc-zerba3");
+                    obj.encrypted = true;
+                } else if (obj.lastText.startsWith("NE3[") && obj.lastText.endsWith("]")) {
+                    var keyIdentifier = "";
+                    if (loggedUser <= obj.id) {
+                        keyIdentifier = "-chat-" + loggedUser + "-" + obj.id;
+                    } else {
+                        keyIdentifier = "-chat-" + obj.id + "-" + loggedUser;
+                    }
+                    obj.lastText = decode(obj.lastText.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
                     obj.encrypted = true;
                 } else obj.encrypted = false;
             });

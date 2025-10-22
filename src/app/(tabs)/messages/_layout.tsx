@@ -15,10 +15,10 @@ export default function MenuStack() {
     const colorScheme = useColorScheme();
 
     const toggleEncryption = () => {
-        if (encryptionType == 'NE2') {
+        if (encryptionType == 'NE3') {
             setEncryptionType('');
         } else {
-            setEncryptionType('NE2');
+            setEncryptionType('NE3');
         }
     }
 
@@ -63,7 +63,7 @@ export default function MenuStack() {
                     <Pressable onPress={toggleEncryption}>
                         {({ pressed }) => (
                             <FontAwesome
-                                name={encryptionType == "NE2" ? "lock" : "unlock-alt"}
+                                name={encryptionType == "NE3" ? "lock" : "unlock-alt"}
                                 size={21}
                                 color={Colors[colorScheme ?? 'light'].text}
                                 style={{ marginTop: 1, marginLeft: 11, opacity: pressed ? 0.5 : 1 }}
