@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -50,28 +50,29 @@ type WallPostProps = {
 const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
     return (
         <View style={{ width: '100%', padding: '3%' }}>
-            <View style={{flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
+            <View style={{ flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
                     borderRadius: 25,
                     borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
-                    source={{uri: user.avatar}}></Image>
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
+                }}
+                    source={{ uri: user.avatar }}></Image>
                 <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%' }}>
                     <Text style={{ fontSize: 32 }}>{user.firstname}</Text>
                     <Text style={{ fontSize: 32, paddingBottom: 10 }}>{user.lastname}</Text>
-                    {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}}>{'\nОнлайн'}</Text>}
-                    {user.online !== 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}}>{'Был(а) в сети:\n' + user.online}</Text>}
+                    {user.online === 'online' && <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen' }}>{'\nОнлайн'}</Text>}
+                    {user.online !== 'online' && <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}>{'Был(а) в сети:\n' + user.online}</Text>}
                 </View>
             </View>
-            { user.status != "" ? <Text style={{
+            {user.status != "" ? <Text style={{
                 fontSize: 18,
                 textAlign: 'center',
                 paddingBottom: '4%',
                 paddingHorizontal: '4%'
             }}>{user.status}</Text> : null}
-            { user.city != "" || user.bio != "" ? <View style={{
+            {user.city != "" || user.bio != "" ? <View style={{
                 borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
                 borderRadius: 25,
                 borderWidth: 1,
@@ -79,13 +80,13 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                 marginBottom: '4%',
                 gap: 10
             }}>
-                { user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
-                { user.bio != "" ? <Text style={{ fontSize: 18 }}>Информация: {user.bio}</Text> : null}
+                {user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
+                {user.bio != "" ? <Text style={{ fontSize: 18 }}>Информация: {user.bio}</Text> : null}
             </View> : null}
             <Pressable
-                style={({pressed}) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
-                onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, {withAnchor: true})}
-                >
+                style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, { withAnchor: true })}
+            >
                 <Text style={styles.buttonText}>Отправить сообщение</Text>
             </Pressable>
         </View>
@@ -104,38 +105,42 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
             borderRadius: 25,
             borderWidth: 1,
             padding: 15,
-            }}>
+        }}>
 
-        <View style={{
-            flexDirection: 'row', height: 50, paddingBottom: '2%' }}>
-            <Image style={{
-                height: '100%',
-                aspectRatio: 1,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
-                source={{uri: user.avatar}}>
-            </Image>
-            <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
-                <Text style={{ fontSize: 18 }}>{user.firstname} {user.lastname}</Text>
-                <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}>{item.formattedTime}</Text>
-            </View>
-        </View>
-        <View style={{flexDirection: 'column'}}>
-            { item.text != "" ? <Text style={{ fontSize: 18 }}>{item.text}</Text> : null}
-            { item.image != "" ? <FullWidthImage style={{
-                width: '100%',
-                borderRadius: 10,
-                marginTop: 10,
-                borderWidth: 1,
-                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
-                source={{uri: item.image}}>
-            </FullWidthImage> : null}
-            <View style={{flexDirection: 'row',
-                marginTop: '3%',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
+            <View style={{
+                flexDirection: 'row', height: 50, paddingBottom: '2%'
             }}>
+                <Image style={{
+                    height: '100%',
+                    aspectRatio: 1,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
+                }}
+                    source={{ uri: user.avatar }}>
+                </Image>
+                <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', paddingLeft: '2%' }}>
+                    <Text style={{ fontSize: 18 }}>{user.firstname} {user.lastname}</Text>
+                    <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}>{item.formattedTime}</Text>
+                </View>
+            </View>
+            <View style={{ flexDirection: 'column' }}>
+                {item.text != "" ? <Text style={{ fontSize: 18 }}>{item.text}</Text> : null}
+                {item.image != "" ? <FullWidthImage style={{
+                    width: '100%',
+                    borderRadius: 10,
+                    marginTop: 10,
+                    borderWidth: 1,
+                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
+                }}
+                    source={{ uri: item.image }}>
+                </FullWidthImage> : null}
+                <View style={{
+                    flexDirection: 'row',
+                    marginTop: '3%',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                }}>
                     <Pressable style={{
                         flexDirection: 'row',
                         borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
@@ -143,32 +148,32 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
                         borderWidth: 1,
                         padding: '3%',
                     }}
-                onPress={() => likeHandler(item.id)}>
-                    {({ pressed }) => (
-                        <> 
-                        <FontAwesome
-                            name="heart"
-                            size={18}
-                            color={likesArray.includes(parseInt(me)) ? 'crimson' : Colors[colorScheme ?? 'light'].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }} />
-                        {likesArray.length != 0 ? <Text style={{
-                            fontSize: 15,
-                            marginLeft: 10
-                        }}>{likesArray.length}</Text> : null}
-                        </>
-                    )}
-                </Pressable>
-                <View style={{flex: 1}}></View>
+                        onPress={() => likeHandler(item.id)}>
+                        {({ pressed }) => (
+                            <>
+                                <FontAwesome
+                                    name="heart"
+                                    size={18}
+                                    color={likesArray.includes(parseInt(me)) ? 'crimson' : Colors[colorScheme ?? 'light'].text}
+                                    style={{ opacity: pressed ? 0.5 : 1 }} />
+                                {likesArray.length != 0 ? <Text style={{
+                                    fontSize: 15,
+                                    marginLeft: 10
+                                }}>{likesArray.length}</Text> : null}
+                            </>
+                        )}
+                    </Pressable>
+                    <View style={{ flex: 1 }}></View>
+                </View>
             </View>
-        </View>
 
         </View>
     );
 }
 
-export default function person () {
+export default function person() {
     const { token, setToken, loggedUser }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> };
+    if (token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
     const isFocused = useIsFocused();
@@ -259,7 +264,7 @@ export default function person () {
 
     useEffect(() => {
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 5000);
+            setTimeout(() => setUpdate(update + 1), 5000);
             getUserData(id);
             console.log("Updated: UserData for: " + id);
             getWall(id);
@@ -270,12 +275,12 @@ export default function person () {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: name }} />
-            {loading ? <ActivityIndicator style={{ flex: 1 }}/> : <FlatList
-                ListHeaderComponent={<UserInfoScreen user={userData!}/>}
-                style={{flex: 1, width: '100%'}}
-                data={wallData || <ActivityIndicator /> }
-                renderItem={({ item }) => <WallPost item={item} user={userData!} likeHandler={likePost} me={loggedUser}/>}
-                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Записей на стене нет</Text>}
+            {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
+                ListHeaderComponent={<UserInfoScreen user={userData!} />}
+                style={{ flex: 1, width: '100%' }}
+                data={wallData || <ActivityIndicator />}
+                renderItem={({ item }) => <WallPost item={item} user={userData!} likeHandler={likePost} me={loggedUser} />}
+                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Записей на стене нет</Text>}
             />}
         </View>
     );

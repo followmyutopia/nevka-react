@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -30,32 +30,33 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
         <Link href={{
             pathname: '/(tabs)/people/person',
             params: { id: user.id, name: user.firstname + " " + user.lastname }
-          }} asChild>
+        }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
-                <View style={{flexDirection: 'row', height: 70 }}>
+                <View style={{ flexDirection: 'row', height: 70 }}>
                     <Image style={{
                         height: '100%',
                         aspectRatio: 1,
                         borderRadius: 25,
                         borderWidth: 1,
-                        borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders}}
-                        source={{uri: user.avatar}}></Image>
+                        borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
+                    }}
+                        source={{ uri: user.avatar }}></Image>
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
                         <Text style={{ fontSize: 18 }}>{user.firstname + " " + user.lastname}</Text>
-                        {user.online === 'online' && <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen'}} numberOfLines={1}>{'Онлайн'}</Text>}
-                        {user.online !== 'online' && <Text style={{fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>{'Был(а): ' + user.online}</Text>}
+                        {user.online === 'online' && <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen' }} numberOfLines={1}>{'Онлайн'}</Text>}
+                        {user.online !== 'online' && <Text style={{ fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>{'Был(а): ' + user.online}</Text>}
                     </View>
                     <Link href={{
                         pathname: '/(tabs)/messages/chat',
                         params: { id: user.id, name: user.firstname + " " + user.lastname }
                     }} withAnchor asChild>
-                        <Pressable style={{height: '100%', justifyContent: 'center', marginRight: '3%'}}>
+                        <Pressable style={{ height: '100%', justifyContent: 'center', marginRight: '3%' }}>
                             {({ pressed }) => (
                                 <FontAwesome
-                                name="envelope-o"
-                                size={32}
-                                color={Colors[useColorScheme() ?? 'light'].text}
-                                style={{ opacity: pressed ? 0.5 : 1 }}
+                                    name="envelope-o"
+                                    size={32}
+                                    color={Colors[useColorScheme() ?? 'light'].text}
+                                    style={{ opacity: pressed ? 0.5 : 1 }}
                                 />
                             )}
                         </Pressable>
@@ -66,9 +67,9 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
     );
 }
 
-export default function people () {
+export default function people() {
     const { token, loggedUser, isNameSet }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> };
+    if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
     const [update, setUpdate] = useState(0);
@@ -105,18 +106,18 @@ export default function people () {
             setLoading(false);
         }
     }
-    
+
     useEffect(() => {
         if (!isNameSet) {
             router.navigate("/settings");
         }
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update + 1), 10000);
             getPeople(query);
-        console.log("Updated: People");
+            console.log("Updated: People");
         }
     }, [update, isFocused, query]);
-    
+
     return (
         <View style={styles.container}>
             <TextInput style={inputStyle}
@@ -125,11 +126,11 @@ export default function people () {
                 maxLength={63}
                 spellCheck={false}
             ></TextInput>
-            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
-                style={{flex: 1, width: '100%'}}
+            {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
+                style={{ flex: 1, width: '100%' }}
                 data={peopleData}
-                renderItem={({ item }) => <PeopleListItem user={item}/>}
-                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Никого не найдено</Text>}
+                renderItem={({ item }) => <PeopleListItem user={item} />}
+                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Никого не найдено</Text>}
             />}
         </View>
     );

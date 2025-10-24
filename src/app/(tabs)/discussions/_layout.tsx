@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -18,45 +18,45 @@ export default function MenuStack() {
                 title: 'Обсуждения',
                 headerRight: () => (
                     <Link href="/create-discussion" asChild>
-                      <Pressable>
-                        {({ pressed }) => (
-                          <FontAwesome
-                            name="plus"
-                            size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
-                            style={{ marginTop: 2, marginLeft: 8, opacity: pressed ? 0.5 : 1 }}
-                          />
-                        )}
-                      </Pressable>
+                        <Pressable>
+                            {({ pressed }) => (
+                                <FontAwesome
+                                    name="plus"
+                                    size={25}
+                                    color={Colors[colorScheme ?? 'light'].text}
+                                    style={{ marginTop: 2, marginLeft: 8, opacity: pressed ? 0.5 : 1 }}
+                                />
+                            )}
+                        </Pressable>
                     </Link>
                 ),
                 headerStyle: {
-                                    backgroundColor: 'transparent',
-                                },
-                                headerBackground: () => (
-                                    <LinearGradient
-                                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-                                            colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
-                                        style={{ flex: 1 }}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 0, y: 1 }}
-                                    />
-                                )
+                    backgroundColor: 'transparent',
+                },
+                headerBackground: () => (
+                    <LinearGradient
+                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+                        colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
+                        style={{ flex: 1 }}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                    />
+                )
             }} />
             <Stack.Screen name="topic" options={{
                 title: 'Тема',
                 headerStyle: {
-                                    backgroundColor: 'transparent',
-                                },
-                                headerBackground: () => (
-                                    <LinearGradient
-                                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-                                            colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
-                                        style={{ flex: 1 }}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 0, y: 1 }}
-                                    />
-                                )
+                    backgroundColor: 'transparent',
+                },
+                headerBackground: () => (
+                    <LinearGradient
+                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+                        colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
+                        style={{ flex: 1 }}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                    />
+                )
             }} />
         </Stack>
     );

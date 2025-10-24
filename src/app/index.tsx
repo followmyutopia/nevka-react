@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -11,9 +11,9 @@ import { useNevkaProvider } from "../providers/nevkaProvider";
 import { useEffect, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements"
 
-export default function index () {
+export default function index() {
     const { token, setToken, loggedUser, setLoggedUser }: any = useNevkaProvider();
-    if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
+    if (token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
@@ -28,7 +28,7 @@ export default function index () {
 
     const isValidEmail = () => {
         const atLocation = login.lastIndexOf("@");
-        const dotLocation = login.lastIndexOf("."); 
+        const dotLocation = login.lastIndexOf(".");
         return (
             atLocation > 0 &&
             dotLocation > atLocation + 1 &&
@@ -67,10 +67,10 @@ export default function index () {
         }
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
 
     return (
-        <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
+        <KeyboardAvoidingView style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={headerHeight}>
             <Text style={styles.logo}>Невка</Text>
@@ -81,7 +81,7 @@ export default function index () {
                 onChangeText={setLogin}
                 maxLength={63}
                 spellCheck={false}
-                ></TextInput>
+            ></TextInput>
 
             <Text style={styles.label}>Пароль:</Text>
             <TextInput style={inputStyle}
@@ -89,23 +89,23 @@ export default function index () {
                 onChangeText={setPassword}
                 maxLength={63}
                 secureTextEntry={true}
-                ></TextInput>
+            ></TextInput>
 
             <Pressable
-                style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                 onPress={signIn}
                 disabled={loading}>
                 <Text style={styles.buttonText}>{loading ? 'Выполняется вход...' : 'Войти'}</Text>
             </Pressable>
 
             <Pressable
-                style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                onPress={() => {router.navigate('/agreement')}}>
+                style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                onPress={() => { router.navigate('/agreement') }}>
                 <Text style={styles.buttonText}>Зарегистрироваться</Text>
             </Pressable>
             <Text style={styles.console}>{consoleMessage}</Text>
 
-            <Pressable onPress={() => {router.navigate('/passwordReset')}}><Text style={{
+            <Pressable onPress={() => { router.navigate('/passwordReset') }}><Text style={{
                 fontSize: 20,
                 color: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'
             }}>Забыли пароль?</Text></Pressable>

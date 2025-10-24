@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -41,26 +41,26 @@ const TopicHeader = ({ header, author, message, time }: TopicHeaderProps) => {
             borderRadius: 25,
             borderWidth: 1,
             padding: 15,
-            }}>
-            <Text style={{fontSize: 32, marginBottom: 10}}>{header}</Text>
-            <Text style={{fontSize: 17, marginBottom: 10, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}}>{author} ({time})</Text>
-            <Text style={{fontSize: 17}}>{message}</Text>
+        }}>
+            <Text style={{ fontSize: 32, marginBottom: 10 }}>{header}</Text>
+            <Text style={{ fontSize: 17, marginBottom: 10, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}>{author} ({time})</Text>
+            <Text style={{ fontSize: 17 }}>{message}</Text>
         </View>
     );
 };
 
 const TopicMessage = ({ item }: TopicMessageProps) => {
     return (
-        <View style={{ padding: '3%', paddingTop: 0}}>
-            <Text style={{fontSize: 17, marginBottom: 5, textDecorationLine: 'underline'}}>{item.name}:<Text style={{fontSize: 17, textDecorationLine: 'none', color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}}> ({item.formattedTime})</Text></Text>
-            <Text style={{fontSize: 17}}>{item.text}</Text>
+        <View style={{ padding: '3%', paddingTop: 0 }}>
+            <Text style={{ fontSize: 17, marginBottom: 5, textDecorationLine: 'underline' }}>{item.name}:<Text style={{ fontSize: 17, textDecorationLine: 'none', color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }}> ({item.formattedTime})</Text></Text>
+            <Text style={{ fontSize: 17 }}>{item.text}</Text>
         </View>
     );
 };
 
-export default function topic () {
+export default function topic() {
     const { token, setToken }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> };
+    if (token == "") { return <Redirect href={'/'} /> };
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const colorScheme = useColorScheme();
@@ -151,18 +151,18 @@ export default function topic () {
 
     useEffect(() => {
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 1000);
+            setTimeout(() => setUpdate(update + 1), 1000);
             getTopic(id);
             console.log("Updated: Topic with ID: " + id);
         }
     }, [update, isFocused]);
-    
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: header || "Загрузка..." }} />
-            {loading ? null : <TopicHeader header={header!} author={author!} message={message!} time={time!}/>}
+            {loading ? null : <TopicHeader header={header!} author={author!} message={message!} time={time!} />}
             {loading ? null : <KeyboardAvoidingView
-                style={{flexDirection: 'row', padding: '3%', paddingHorizontal: '6%'}}
+                style={{ flexDirection: 'row', padding: '3%', paddingHorizontal: '6%' }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}>
                 <TextInput
@@ -175,23 +175,23 @@ export default function topic () {
                     submitBehavior='submit'
                     onSubmitEditing={sendTopicReply}
                 ></TextInput>
-                <Pressable style={{justifyContent: 'center', alignItems: 'flex-end', marginLeft: '3%', marginBottom: '3%'}}
-                onPress={sendTopicReply}>
+                <Pressable style={{ justifyContent: 'center', alignItems: 'flex-end', marginLeft: '3%', marginBottom: '3%' }}
+                    onPress={sendTopicReply}>
                     {({ pressed }) => (
                         <FontAwesome
-                        name="arrow-circle-o-down"
-                        size={27}
-                        color={Colors[useColorScheme() ?? 'light'].text}
-                        style={{ opacity: pressed ? 0.5 : 1 }}
+                            name="arrow-circle-o-down"
+                            size={27}
+                            color={Colors[useColorScheme() ?? 'light'].text}
+                            style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}
                 </Pressable>
             </KeyboardAvoidingView>}
-            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
-                style={{flex: 1, width: '100%'}}
+            {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
+                style={{ flex: 1, width: '100%' }}
                 data={topicMessages}
-                renderItem={({ item }) => <TopicMessage item={item}/>}
-                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Ответов нет</Text>}
+                renderItem={({ item }) => <TopicMessage item={item} />}
+                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Ответов нет</Text>}
             />}
         </View>
     );

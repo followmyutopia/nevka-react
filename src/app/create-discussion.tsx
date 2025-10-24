@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -12,9 +12,9 @@ import { useState } from "react";
 import Colors from "../constants/Colors";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-export default function settings () {
+export default function settings() {
     const { token, setToken }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> }
+    if (token == "") { return <Redirect href={'/'} /> }
 
     const [title, setTitle] = useState("");
     const [message, setMessage] = useState("");
@@ -66,40 +66,40 @@ export default function settings () {
             }
         }
     }
-    
+
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={headerHeight}
+            <KeyboardAvoidingView style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={headerHeight}
             >
                 <StatusBar style="light" />
-                <Text style={{fontSize: 32, marginVertical: '7%'}}>Создание темы</Text>
+                <Text style={{ fontSize: 32, marginVertical: '7%' }}>Создание темы</Text>
                 <Text style={styles.label}>Тема:</Text>
                 <TextInput style={inputStyle}
                     value={title}
                     onChangeText={setTitle}
                     maxLength={127}
-                    ></TextInput>
+                ></TextInput>
                 <Text style={styles.label}>Сообщение:</Text>
                 <TextInput
                     multiline
                     enterKeyHint='send'
-                    style={[inputStyle, {height: '15%'}]}
+                    style={[inputStyle, { height: '15%' }]}
                     value={message}
                     onChangeText={setMessage}
                     maxLength={1023}
                     submitBehavior='submit'
                 ></TextInput>
                 <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                    style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={createTopic}
                     disabled={sending}>
                     <Text style={styles.buttonText}>{sending ? 'Создание...' : 'Создать тему'}</Text>
                 </Pressable>
                 <Text style={styles.console}>{status}</Text>
             </KeyboardAvoidingView>
-            <View style={{flex: 0.25}}></View>
+            <View style={{ flex: 0.25 }}></View>
         </View>
     );
 }

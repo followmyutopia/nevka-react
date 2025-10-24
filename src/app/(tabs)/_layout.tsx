@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -81,10 +81,7 @@ export default function TabLayout() {
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
-            headerShown: false,
-            // tabBarStyle: {
-            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-            // }
+            headerShown: false
           }}
         />
         <Tabs.Screen
@@ -95,10 +92,7 @@ export default function TabLayout() {
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
-            headerShown: false,
-            // tabBarStyle: {
-            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-            // }
+            headerShown: false
           }}
         />
         <Tabs.Screen
@@ -110,10 +104,7 @@ export default function TabLayout() {
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
-            headerShown: false,
-            // tabBarStyle: {
-            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-            // }
+            headerShown: false
           }}
         />
         <Tabs.Screen
@@ -124,10 +115,7 @@ export default function TabLayout() {
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
-            headerShown: false,
-            // tabBarStyle: {
-            //   backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-            // }
+            headerShown: false
           }}
         />
       </Tabs>
