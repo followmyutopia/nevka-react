@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -30,9 +30,9 @@ const DiscListItem = ({ item }: DiscListItemProps) => {
         <Link href={{
             pathname: '/(tabs)/discussions/topic',
             params: { id: item.id }
-            }} asChild>
+        }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
-                <View style={{flexDirection: 'row', height: 70 }}>
+                <View style={{ flexDirection: 'row', height: 70 }}>
                     <FontAwesome
                         name="comments-o"
                         size={50}
@@ -40,8 +40,8 @@ const DiscListItem = ({ item }: DiscListItemProps) => {
                         style={{ height: '100%', width: 70, padding: 10 }}
                     />
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
-                        <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>Тема: <Text style={{ fontSize: 18 }}>{item.topic}</Text></Text>
-                        <Text style={{fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}} numberOfLines={1}>Автор: {item.name}</Text>
+                        <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>Тема: <Text style={{ fontSize: 18 }}>{item.topic}</Text></Text>
+                        <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>Автор: {item.name}</Text>
                     </View>
                 </View>
             </Pressable>
@@ -49,9 +49,9 @@ const DiscListItem = ({ item }: DiscListItemProps) => {
     );
 }
 
-export default function discussions () {
+export default function discussions() {
     const { token, isNameSet }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> };
+    if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
     const [update, setUpdate] = useState(0);
@@ -93,7 +93,7 @@ export default function discussions () {
             router.navigate("/settings");
         }
         if (isFocused) {
-            setTimeout(() => setUpdate(update+1), 10000);
+            setTimeout(() => setUpdate(update + 1), 10000);
             getDiscussions(query);
             console.log("Updated: Discussions");
         }
@@ -107,11 +107,11 @@ export default function discussions () {
                 maxLength={63}
                 spellCheck={false}
             ></TextInput>
-            {loading ? <ActivityIndicator style={{flex: 1}}/> : <FlatList
-                style={{flex: 1, width: '100%'}}
+            {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
+                style={{ flex: 1, width: '100%' }}
                 data={discData}
-                renderItem={({ item }) => <DiscListItem item={item}/>}
-                ListEmptyComponent={<Text style={{fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray'}}>Обсуждений не найдено</Text>}
+                renderItem={({ item }) => <DiscListItem item={item} />}
+                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Обсуждений не найдено</Text>}
             />}
         </View>
     );

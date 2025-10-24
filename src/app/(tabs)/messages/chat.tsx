@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -63,6 +63,8 @@ const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: Messa
         item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
     }
 
+    const swipeableRef = useRef<any>(null);
+
     const renderRightActions = () => {
         return (
             <View style={{ width: 1 }}></View>
@@ -73,8 +75,11 @@ const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: Messa
         <Swipeable
             hitSlop={{ left: -60 }}
             renderRightActions={() => renderRightActions()}
-            onSwipeableWillOpen={() => replyHandler(item.id)}
-            ref={(ref) => ref?.close()}
+            onSwipeableWillOpen={() => {
+                swipeableRef.current?.close();
+                replyHandler(item.id);
+            }}
+            ref={swipeableRef}
         >
             <View style={{
                 backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.04)',

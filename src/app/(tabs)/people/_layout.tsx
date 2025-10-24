@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -16,32 +16,32 @@ export default function MenuStack() {
             <Stack.Screen name="index" options={{
                 title: 'Люди',
                 headerStyle: {
-                                    backgroundColor: 'transparent',
-                                },
-                                headerBackground: () => (
-                                    <LinearGradient
-                                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-                                            colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
-                                        style={{ flex: 1 }}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 0, y: 1 }}
-                                    />
-                                )
+                    backgroundColor: 'transparent',
+                },
+                headerBackground: () => (
+                    <LinearGradient
+                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+                        colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
+                        style={{ flex: 1 }}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                    />
+                )
             }} />
             <Stack.Screen name="person" options={{
                 title: 'Пользователь',
                 headerStyle: {
-                                    backgroundColor: 'transparent',
-                                },
-                                headerBackground: () => (
-                                    <LinearGradient
-                                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-                                            colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
-                                        style={{ flex: 1 }}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 0, y: 1 }}
-                                    />
-                                )
+                    backgroundColor: 'transparent',
+                },
+                headerBackground: () => (
+                    <LinearGradient
+                        colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+                        colorScheme === 'light' ? Colors.light.background : Colors.dark.background]}
+                        style={{ flex: 1 }}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                    />
+                )
             }} />
         </Stack>
     );

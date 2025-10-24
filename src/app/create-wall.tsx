@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -14,9 +14,9 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from 'expo-image-picker';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-export default function settings () {
+export default function settings() {
     const { token, setToken }: any = useNevkaProvider();
-    if ( token == "") { return <Redirect href={'/'} /> }
+    if (token == "") { return <Redirect href={'/'} /> }
 
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState("");
@@ -37,7 +37,7 @@ export default function settings () {
                 //   aspect: [4, 3],
                 //   quality: 1,
             });
-        
+
             if (!result.canceled) {
                 setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
                 setImageStatus("Выбран файл: " + result.assets[0].fileName);
@@ -45,7 +45,7 @@ export default function settings () {
             }
         }
     };
-    
+
     const resetImage = () => {
         if (!sending) {
             setImage("");
@@ -93,15 +93,15 @@ export default function settings () {
             }
         }
     }
-    
+
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
-            <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={headerHeight}
+            <KeyboardAvoidingView style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={headerHeight}
             >
-                <Text style={{fontSize: 32, marginVertical: '7%'}}>Написать на стене</Text>
+                <Text style={{ fontSize: 32, marginVertical: '7%' }}>Написать на стене</Text>
                 <Text style={styles.label}>Пост:</Text>
                 <TextInput
                     multiline
@@ -111,27 +111,27 @@ export default function settings () {
                     onChangeText={setMessage}
                     maxLength={1023}
                     submitBehavior='submit'
-                    // onSubmitEditing={sendTopicReply}
+                // onSubmitEditing={sendTopicReply}
                 ></TextInput>
-                <View style={{flexDirection: 'row', marginHorizontal: '3%'}}>
-                    {image === "" ? <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%'}}
-                    onPress={pickImage}>
+                <View style={{ flexDirection: 'row', marginHorizontal: '3%' }}>
+                    {image === "" ? <Pressable style={{ justifyContent: 'center', alignItems: 'flex-start', margin: '3%' }}
+                        onPress={pickImage}>
                         {({ pressed }) => (
                             <FontAwesome
-                            name="picture-o"
-                            size={27}
-                            color={Colors[useColorScheme() ?? 'light'].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }}
+                                name="picture-o"
+                                size={27}
+                                color={Colors[useColorScheme() ?? 'light'].text}
+                                style={{ opacity: pressed ? 0.5 : 1 }}
                             />
                         )}
-                    </Pressable> : <Pressable style={{justifyContent: 'center', alignItems: 'flex-start', margin: '3%', paddingHorizontal: 1}}
-                    onPress={resetImage}>
+                    </Pressable> : <Pressable style={{ justifyContent: 'center', alignItems: 'flex-start', margin: '3%', paddingHorizontal: 1 }}
+                        onPress={resetImage}>
                         {({ pressed }) => (
                             <FontAwesome
-                            name="window-close-o"
-                            size={27}
-                            color={Colors[useColorScheme() ?? 'light'].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }}
+                                name="window-close-o"
+                                size={27}
+                                color={Colors[useColorScheme() ?? 'light'].text}
+                                style={{ opacity: pressed ? 0.5 : 1 }}
                             />
                         )}
                     </Pressable>}
@@ -145,14 +145,14 @@ export default function settings () {
                     }}>{imageStatus}</Text>
                 </View>
                 <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                    style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
                     onPress={postWall}
                     disabled={sending}>
                     <Text style={styles.buttonText}>{sending ? 'Публикация...' : 'Опубликовать'}</Text>
                 </Pressable>
                 <Text style={styles.console}>{status}</Text>
             </KeyboardAvoidingView>
-            <View style={{flex: 0.25}}></View>
+            <View style={{ flex: 0.25 }}></View>
         </View>
     );
 }

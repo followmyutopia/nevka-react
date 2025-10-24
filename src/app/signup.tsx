@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.2
+ * Nevka Mobile v1.4
  * 2025 Avicus Delacroix
  */
 
@@ -12,7 +12,7 @@ import { useHeaderHeight } from "@react-navigation/elements"
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 
-export default function signup () {
+export default function signup() {
     const colorScheme = useColorScheme();
     const headerHeight = useHeaderHeight();
     const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
@@ -29,7 +29,7 @@ export default function signup () {
     const [emailEditable, setEmailEditable] = useState(true);
 
     const { token, setToken, setLoggedUser }: any = useNevkaProvider();
-    if ( token != "") { return <Redirect href={'/(tabs)/profile'} /> }
+    if (token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const sendConfirmation = async () => {
         let trimmedEmail = email.trim();
@@ -133,13 +133,13 @@ export default function signup () {
     };
 
     return (
-        <KeyboardAvoidingView style={[styles.container, {backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background}]}
+        <KeyboardAvoidingView style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={headerHeight}>
-        
+
             <StatusBar style="light" />
-            <ScrollView style={{width: '90%'}}>
-                <Text style={{fontSize: 32, marginVertical: '7%', textAlign: 'center'}}>Регистрация</Text>
+            <ScrollView style={{ width: '90%' }}>
+                <Text style={{ fontSize: 32, marginVertical: '7%', textAlign: 'center' }}>Регистрация</Text>
 
                 <Text style={styles.label}>Электронная почта:</Text>
                 <TextInput style={inputStyle}
@@ -148,7 +148,7 @@ export default function signup () {
                     maxLength={63}
                     spellCheck={false}
                     editable={emailEditable}
-                    ></TextInput>
+                ></TextInput>
                 <Text style={styles.label}>Код подтверждения:</Text>
                 <TextInput style={inputStyle}
                     value={confirmationCode}
@@ -156,7 +156,7 @@ export default function signup () {
                     maxLength={63}
                     spellCheck={false}
                     editable={codeSent}
-                    ></TextInput>
+                ></TextInput>
                 <Text style={styles.label}>Новый пароль:</Text>
                 <TextInput style={inputStyle}
                     value={newPassword}
@@ -165,7 +165,7 @@ export default function signup () {
                     spellCheck={false}
                     editable={codeSent}
                     secureTextEntry={true}
-                    ></TextInput>
+                ></TextInput>
                 <Text style={styles.label}>Повторите пароль:</Text>
                 <TextInput style={inputStyle}
                     value={confirmPassword}
@@ -174,14 +174,14 @@ export default function signup () {
                     spellCheck={false}
                     editable={codeSent}
                     secureTextEntry={true}
-                    ></TextInput>
+                ></TextInput>
 
                 <Pressable
-                    style={({pressed}) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
-                    onPress={codeSent? signUp : sendConfirmation}
+                    style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
+                    onPress={codeSent ? signUp : sendConfirmation}
                     disabled={buttonInactive}
-                    >
-                    <Text style={styles.buttonText}>{codeSent? "Зарегистрироваться" : "Выслать код подтверждения"}</Text>
+                >
+                    <Text style={styles.buttonText}>{codeSent ? "Зарегистрироваться" : "Выслать код подтверждения"}</Text>
                 </Pressable>
                 <Text style={styles.console}>{emailStatus}</Text>
                 <Text style={{
