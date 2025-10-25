@@ -23,7 +23,8 @@ type UserData = {
     timestamp: number,
     avatar: string,
     online: string,
-    push_token: string
+    push_token: string,
+    vox_username: string
 };
 
 type WallData = {
@@ -48,13 +49,14 @@ type WallPostProps = {
 }
 
 const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
+    const colorScheme = useColorScheme();
     return (
         <View style={{ width: '100%', padding: '3%' }}>
             <View style={{ flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
-                    borderRadius: 25,
+                    borderRadius: '25%',
                     borderWidth: 1,
                     borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }}
@@ -77,18 +79,39 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                 borderRadius: 25,
                 borderWidth: 1,
                 padding: 15,
-                marginBottom: '4%',
-                gap: 10
+                marginBottom: '6%',
             }}>
                 {user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
                 {user.bio != "" ? <Text style={{ fontSize: 18 }}>Информация: {user.bio}</Text> : null}
             </View> : null}
-            <Pressable
-                style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
-                onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, { withAnchor: true })}
-            >
-                <Text style={styles.buttonText}>Отправить сообщение</Text>
-            </Pressable>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <Pressable
+                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                    onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, { withAnchor: true })}
+                >
+                    <FontAwesome
+                        name="envelope-o"
+                        size={25}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{ margin: 0 }}
+                    />
+                </Pressable>
+                <Pressable
+                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                    onPress={() => {
+                        // encode whole user object and navigate
+                        const payload = encodeURIComponent(JSON.stringify(user));
+                        router.push(`/call?user=${payload}` as any);
+                    }}
+                >
+                    <FontAwesome
+                        name="phone"
+                        size={25}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{ margin: 0 }}
+                    />
+                </Pressable>
+            </View>
         </View>
     );
 }
@@ -308,6 +331,32 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: Colors.light.borders,
+        // marginVertical: '3%'
+    },
+    darkRoundButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        width: 60,
+        height: 60,
+        // margin: '2%',
+        borderRadius: '50%',
+        // padding: '3%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.dark.borders,
+        // marginVertical: '3%'
+    },
+    lightRoundButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        width: 60,
+        height: 60,
+        // margin: '2%',
+        borderRadius: '50%',
+        // padding: '3%',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderWidth: 1,
         borderColor: Colors.light.borders,
         // marginVertical: '3%'
