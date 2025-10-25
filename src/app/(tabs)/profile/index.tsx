@@ -57,7 +57,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
-                    borderRadius: 25,
+                    borderRadius: '25%',
                     borderWidth: 1,
                     borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }}
