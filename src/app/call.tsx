@@ -45,7 +45,7 @@ export default function Call() {
             }}
                 source={{ uri: userObj.avatar }}></Image>
             <Pressable
-                style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? "rgba(110, 0, 0, 1)" : "rgba(140, 0, 0, 1)" }]}
+                style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? "rgba(128, 0, 0, 1)" : "rgba(192, 0, 0, 1)" }]}
                 onPress={() => router.back()}
             >
                 <FontAwesome
