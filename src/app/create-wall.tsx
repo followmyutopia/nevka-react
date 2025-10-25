@@ -41,6 +41,7 @@ export default function settings() {
             if (!result.canceled) {
                 setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
                 setImageStatus("Выбран файл: " + result.assets[0].fileName);
+                if (result.assets[0].mimeType == "image/heic") setStatus(`Формат HEIC пока что не поддерживается. Можно использовать только JPG/PNG.\n\nПопробуйте отредактировать фотографию или сделать скриншот фотографии.`);
                 // need to delete the file from the cache, wtf
             }
         }
@@ -168,7 +169,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'orange',
         marginVertical: '2.5%',
-        textAlign: 'center'
+        textAlign: 'center',
+        width: '90%'
     },
     label: {
         fontSize: 20,
