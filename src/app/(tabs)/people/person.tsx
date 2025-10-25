@@ -50,6 +50,7 @@ type WallPostProps = {
 
 const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
     const colorScheme = useColorScheme();
+    const [callStarted, setCallStarted] = useState(false);
     return (
         <View style={{ width: '100%', padding: '3%' }}>
             <View style={{ flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
@@ -99,9 +100,12 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                 <Pressable
                     style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                     onPress={() => {
-                        // encode whole user object and navigate
-                        const payload = encodeURIComponent(JSON.stringify(user));
-                        router.push(`/call?user=${payload}` as any);
+                        if (!callStarted) {
+                            setCallStarted(true);
+                            const payload = encodeURIComponent(JSON.stringify(user));
+                            router.push(`/call?user=${payload}` as any);
+                            setTimeout(() => setCallStarted(false), 3000);
+                        }
                     }}
                 >
                     <FontAwesome
