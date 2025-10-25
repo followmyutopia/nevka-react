@@ -51,6 +51,7 @@ export default function settings() {
         if (!sending) {
             setImage("");
             setImageStatus("Файл откреплён!");
+            setStatus("");
         }
     };
 
