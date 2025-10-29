@@ -29,7 +29,7 @@ type UserData = {
 };
 
 export default function settings() {
-    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType, setIsNameSet }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -161,6 +161,7 @@ export default function settings() {
                     }
                     console.log("setUserData error: " + json.error)
                 } else if (json.result == "success") {
+                    setIsNameSet(true);
                     setInfoStatus("Успешно обновлено!");
                 }
             } catch (error) {
