@@ -34,7 +34,7 @@ export default function Call() {
                 color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text,
                 textAlign: 'center',
                 marginBottom: 20
-            }}>Выполняется вызов...</Text>
+            }}>Вызов невозможен{`\n\n`}Звонки находятся в разработке, будут доступны начиная с версии 1.5</Text>
             <Image style={{
                 width: '90%',
                 aspectRatio: 1,
