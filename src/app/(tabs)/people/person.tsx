@@ -304,6 +304,7 @@ export default function person() {
             <Stack.Screen options={{ title: name }} />
             {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 ListHeaderComponent={<UserInfoScreen user={userData!} />}
+                ListFooterComponent={<View style={{height: 80}}></View>}
                 style={{ flex: 1, width: '100%' }}
                 data={wallData || <ActivityIndicator />}
                 renderItem={({ item }) => <WallPost item={item} user={userData!} likeHandler={likePost} me={loggedUser} />}

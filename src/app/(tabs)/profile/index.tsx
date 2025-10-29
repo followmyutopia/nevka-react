@@ -397,6 +397,7 @@ export default function profile() {
         <View style={styles.container}>
             {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 ListHeaderComponent={<MyInfoScreen user={userData!} onStatusChange={() => setShowStatusEditor(true)} />}
+                ListFooterComponent={<View style={{height: 80}}></View>}
                 style={{ flex: 1, width: '100%' }}
                 data={wallData || <ActivityIndicator />}
                 renderItem={({ item }) => <WallPost item={item} user={userData!} deleteHandler={showDeleteDialog} likeHandler={likePost} />}
