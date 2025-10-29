@@ -94,7 +94,7 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                         name="envelope-o"
                         size={25}
                         color={Colors[colorScheme ?? 'light'].text}
-                        style={{ margin: 0 }}
+                        style={{ marginLeft: 0.5, marginBottom: 2 }}
                     />
                 </Pressable>
                 <Pressable

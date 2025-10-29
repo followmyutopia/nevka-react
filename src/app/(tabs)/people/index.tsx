@@ -26,13 +26,14 @@ type PeopleListItemProps = {
 }
 
 const PeopleListItem = ({ user }: PeopleListItemProps) => {
+    const colorScheme = useColorScheme();
     return (
         <Link href={{
             pathname: '/(tabs)/people/person',
             params: { id: user.id, name: user.firstname + " " + user.lastname }
         }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>
-                <View style={{ flexDirection: 'row', height: 70 }}>
+                <View style={{ flexDirection: 'row', height: 70, alignItems: 'center' }}>
                     <Image style={{
                         height: '100%',
                         aspectRatio: 1,
@@ -46,21 +47,17 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
                         {user.online === 'online' && <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen' }} numberOfLines={1}>{'Онлайн'}</Text>}
                         {user.online !== 'online' && <Text style={{ fontSize: 16, color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray' }} numberOfLines={1}>{'Был(а): ' + user.online}</Text>}
                     </View>
-                    <Link href={{
-                        pathname: '/(tabs)/messages/chat',
-                        params: { id: user.id, name: user.firstname + " " + user.lastname }
-                    }} withAnchor asChild>
-                        <Pressable style={{ height: '100%', justifyContent: 'center', marginRight: '3%' }}>
-                            {({ pressed }) => (
-                                <FontAwesome
-                                    name="envelope-o"
-                                    size={32}
-                                    color={Colors[useColorScheme() ?? 'light'].text}
-                                    style={{ opacity: pressed ? 0.5 : 1 }}
-                                />
-                            )}
-                        </Pressable>
-                    </Link>
+                    <Pressable
+                        style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                        onPress={() => router.navigate(`/(tabs)/messages/chat?id=${user.id}&name=${user.firstname + " " + user.lastname}`, { withAnchor: true })}
+                    >
+                        <FontAwesome
+                            name="envelope-o"
+                            size={25}
+                            color={Colors[colorScheme ?? 'light'].text}
+                            style={{ marginLeft: 1, marginBottom: 2 }}
+                        />
+                    </Pressable>
                 </View>
             </Pressable>
         </Link>
@@ -163,4 +160,52 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.light.borders
     },
+    darkRoundButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        width: 60,
+        height: 60,
+        // margin: '2%',
+        borderRadius: '50%',
+        // padding: '3%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.dark.borders,
+        // marginVertical: '3%'
+    },
+    lightRoundButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        width: 60,
+        height: 60,
+        // margin: '2%',
+        borderRadius: '50%',
+        // padding: '3%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.light.borders,
+        // marginVertical: '3%'
+    },
+    darkButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        // width: '90%',
+        // margin: '2%',
+        borderRadius: 25,
+        padding: '3%',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: Colors.dark.borders,
+        // marginVertical: '3%'
+    },
+    lightButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        // width: '90%',
+        // margin: '2%',, paddingVertical: '3%'
+        borderRadius: 25,
+        padding: '3%',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: Colors.light.borders,
+        // marginVertical: '3%'
+    }
 });

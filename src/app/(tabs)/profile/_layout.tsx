@@ -19,20 +19,20 @@ export default function MenuStack() {
                 headerStyle: {
                     backgroundColor: 'transparent',
                 },
-                headerRight: () => (
-                    <Link href="/settings" asChild>
-                        <Pressable>
-                            {({ pressed }) => (
-                                <FontAwesome
-                                    name="cog"
-                                    size={25}
-                                    color={Colors[colorScheme ?? 'light'].text}
-                                    style={{ marginTop: 0, marginLeft: 7.5, opacity: pressed ? 0.5 : 1 }}
-                                />
-                            )}
-                        </Pressable>
-                    </Link>
-                ),
+                // headerRight: () => (
+                //     <Link href="/settings" asChild>
+                //         <Pressable>
+                //             {({ pressed }) => (
+                //                 <FontAwesome
+                //                     name="cog"
+                //                     size={25}
+                //                     color={Colors[colorScheme ?? 'light'].text}
+                //                     style={{ marginTop: 0, marginLeft: 7.5, opacity: pressed ? 0.5 : 1 }}
+                //                 />
+                //             )}
+                //         </Pressable>
+                //     </Link>
+                // ),
                 headerBackground: () => (
                     <LinearGradient
                         colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
