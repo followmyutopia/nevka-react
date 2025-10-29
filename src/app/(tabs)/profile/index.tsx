@@ -51,6 +51,7 @@ type WallPostProps = {
 }
 
 const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
+    const colorScheme = useColorScheme();
     return (
         <View style={{ width: '100%', padding: '3%' }}>
             <View style={{ flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
@@ -85,18 +86,36 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 borderRadius: 25,
                 borderWidth: 1,
                 padding: 15,
-                marginBottom: '4%',
+                marginBottom: '6%',
                 gap: 10
             }}>
                 {user.city != "" ? <Text style={{ fontSize: 18, }}>Город: {user.city}</Text> : null}
                 {user.bio != "" ? <Text style={{ fontSize: 18 }}>Информация: {user.bio}</Text> : null}
             </View> : null}
-            <Pressable
-                style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
-                onPress={() => router.navigate('/create-wall')}
-            >
-                <Text style={styles.buttonText}>Написать на стене</Text>
-            </Pressable>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <Pressable
+                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                    onPress={() => router.navigate('/create-wall')}
+                >
+                    <FontAwesome
+                        name="pencil-square-o"
+                        size={25}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{ marginLeft: 4 }}
+                    />
+                </Pressable>
+                <Pressable
+                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                    onPress={() => router.navigate('/settings')}
+                >
+                    <FontAwesome
+                        name="cog"
+                        size={25}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{ margin: 0 }}
+                    />
+                </Pressable>
+            </View>
         </View>
     );
 }
@@ -428,5 +447,31 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 20
+    },
+    darkRoundButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        width: 60,
+        height: 60,
+        // margin: '2%',
+        borderRadius: '50%',
+        // padding: '3%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.dark.borders,
+        // marginVertical: '3%'
+    },
+    lightRoundButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        width: 60,
+        height: 60,
+        // margin: '2%',
+        borderRadius: '50%',
+        // padding: '3%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.light.borders,
+        // marginVertical: '3%'
     }
 });
