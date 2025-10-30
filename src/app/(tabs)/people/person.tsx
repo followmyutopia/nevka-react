@@ -64,7 +64,7 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                     borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }}
                     source={{ uri: user.avatar }}></Image>
-                <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%' }}>
+                <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '80%', paddingLeft: '4%' }}>
                     <Text style={{ fontSize: 32 }}>{user.firstname}</Text>
                     <Text style={{ fontSize: 32, paddingBottom: 10 }}>{user.lastname}</Text>
                     {user.online === 'online' && <Text style={{ fontSize: 18, color: useColorScheme() === 'light' ? 'darkgreen' : 'lightgreen' }}>{'\nОнлайн'}</Text>}
