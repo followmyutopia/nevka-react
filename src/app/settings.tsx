@@ -7,13 +7,14 @@ import { KeyboardAvoidingView, Platform, Pressable, Image, ScrollView, StyleShee
 import { View, Text } from "@/src/components/Themed";
 import { StatusBar } from "expo-status-bar";
 import { useNevkaProvider } from "../providers/nevkaProvider";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import Colors from "../constants/Colors";
 import { useEffect, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as AppConfig from "../../app.json";
 import { registerForNotifications } from "../providers/expoNotifications";
 import * as ImagePicker from 'expo-image-picker';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type UserData = {
     id: string,
@@ -335,7 +336,19 @@ export default function settings() {
             >
                 <StatusBar style="light" />
                 <ScrollView style={{ width: '100%' }}>
-                    <Text style={{ fontSize: 32, marginVertical: '7%', textAlign: 'center' }}>{locales.t('settings')}</Text>
+                    <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={{ fontSize: 32, marginVertical: '7%', textAlign: 'center', flex: 1 }}>{locales.t('settings')}</Text>
+                        <Pressable
+                            style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                            onPress={() => router.back()}>
+                            <FontAwesome
+                                name="times"
+                                size={25}
+                                color={Colors[colorScheme ?? 'light'].text}
+                                style={{ marginBottom: 2 }}
+                            />
+                        </Pressable>
+                    </View>
                     <Text style={{ fontSize: 26, marginBottom: '5%' }}>{locales.t('personal')}</Text>
 
                     <Text style={styles.label}>{locales.t('firstname')}:</Text>
@@ -543,5 +556,25 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 20
+    },
+    darkRoundButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.dark.borders
+    },
+    lightRoundButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.light.borders
     }
 });

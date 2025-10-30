@@ -75,8 +75,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
-        borderColor: Colors.dark.borders,
-        // marginVertical: '3%'
+        borderColor: Colors.dark.borders
     },
     lightRoundButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
@@ -86,8 +85,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
-        borderColor: Colors.light.borders,
-        // marginVertical: '3%'
+        borderColor: Colors.light.borders
     },
 
 
