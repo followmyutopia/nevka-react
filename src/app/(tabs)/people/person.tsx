@@ -12,6 +12,7 @@ import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Colors from "@/src/constants/Colors";
+import Dialog from "react-native-dialog";
 
 type UserData = {
     id: string,
@@ -51,13 +52,14 @@ type WallPostProps = {
 const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
     const colorScheme = useColorScheme();
     const [callStarted, setCallStarted] = useState(false);
+    const [showPlaceholder, setShowPlaceholder] = useState(false);
     return (
         <View style={{ width: '100%', padding: '3%' }}>
             <View style={{ flexDirection: 'row', height: 150, paddingBottom: '4%' }}>
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
-                    borderRadius: '25%',
+                    borderRadius: 40,
                     borderWidth: 1,
                     borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }}
@@ -97,7 +99,7 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                         style={{ marginLeft: 0.5, marginBottom: 2 }}
                     />
                 </Pressable>
-                <Pressable
+                {/* <Pressable
                     style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                     onPress={() => {
                         if (!callStarted) {
@@ -114,7 +116,26 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                         color={Colors[colorScheme ?? 'light'].text}
                         style={{ margin: 0 }}
                     />
+                </Pressable> */}
+                {/* Заглушка, потом убрать */}
+                <Pressable
+                    style={[useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { opacity: 0.5 }]}
+                    onPress={() => {
+                        setShowPlaceholder(true);
+                    }}
+                >
+                    <FontAwesome
+                        name="phone"
+                        size={25}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{ margin: 0, opacity: 0.5 }}
+                    />
                 </Pressable>
+                <Dialog.Container visible={showPlaceholder}>
+                    <Dialog.Title>Звонки в разработке</Dialog.Title>
+                    <Dialog.Description style={{marginTop: 10}}>По запросам пользователей, в будущих версиях приложения появится функционал звонков.{`\n\n`}За выходом новой версии можно следить в самом низу экрана настроек.</Dialog.Description>
+                    <Dialog.Button label="Понятно" onPress={() => setShowPlaceholder(false)} />
+                </Dialog.Container>
             </View>
         </View>
     );
@@ -304,7 +325,7 @@ export default function person() {
             <Stack.Screen options={{ title: name }} />
             {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 ListHeaderComponent={<UserInfoScreen user={userData!} />}
-                ListFooterComponent={<View style={{height: 80}}></View>}
+                ListFooterComponent={<View style={{ height: 80 }}></View>}
                 style={{ flex: 1, width: '100%' }}
                 data={wallData || <ActivityIndicator />}
                 renderItem={({ item }) => <WallPost item={item} user={userData!} likeHandler={likePost} me={loggedUser} />}
@@ -345,7 +366,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         // margin: '2%',
-        borderRadius: '50%',
+        borderRadius: 30,
         // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -358,7 +379,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         // margin: '2%',
-        borderRadius: '50%',
+        borderRadius: 30,
         // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',

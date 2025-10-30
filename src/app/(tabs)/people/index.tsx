@@ -128,6 +128,7 @@ export default function people() {
                 data={peopleData}
                 renderItem={({ item }) => <PeopleListItem user={item} />}
                 ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Никого не найдено</Text>}
+                ListFooterComponent={<View style={{height: 80}}></View>}
             />}
         </View>
     );
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         // margin: '2%',
-        borderRadius: '50%',
+        borderRadius: 30,
         // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         // margin: '2%',
-        borderRadius: '50%',
+        borderRadius: 30,
         // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',
