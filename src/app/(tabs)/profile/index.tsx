@@ -58,7 +58,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
-                    borderRadius: '25%',
+                    borderRadius: 40,
                     borderWidth: 1,
                     borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
                 }}
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         // margin: '2%',
-        borderRadius: '50%',
+        borderRadius: 30,
         // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         // margin: '2%',
-        borderRadius: '50%',
+        borderRadius: 30,
         // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',

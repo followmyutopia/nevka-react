@@ -38,7 +38,7 @@ export default function Call() {
             <Image style={{
                 width: '90%',
                 aspectRatio: 1,
-                borderRadius: '25%',
+                borderRadius: 50,
                 borderWidth: 1,
                 marginBottom: 20,
                 borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
         width: 75,
         height: 75,
-        borderRadius: '50%',
+        borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
         width: 75,
         height: 75,
-        borderRadius: '50%',
+        borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
