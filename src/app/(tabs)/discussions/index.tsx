@@ -112,6 +112,7 @@ export default function discussions() {
                 data={discData}
                 renderItem={({ item }) => <DiscListItem item={item} />}
                 ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Обсуждений не найдено</Text>}
+                ListFooterComponent={<View style={{height: 80}}></View>}
             />}
         </View>
     );

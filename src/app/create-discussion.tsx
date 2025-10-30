@@ -92,7 +92,7 @@ export default function settings() {
                 <TextInput style={inputStyle}
                     value={title}
                     onChangeText={setTitle}
-                    maxLength={127}
+                    maxLength={64}
                 ></TextInput>
                 <Text style={styles.label}>Сообщение:</Text>
                 <TextInput
@@ -101,7 +101,7 @@ export default function settings() {
                     style={[inputStyle, { height: '15%' }]}
                     value={message}
                     onChangeText={setMessage}
-                    maxLength={1023}
+                    maxLength={256}
                     submitBehavior='submit'
                 ></TextInput>
                 <Pressable
