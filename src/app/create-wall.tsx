@@ -33,9 +33,6 @@ export default function settings() {
         if (!sending) {
             let result = await ImagePicker.launchImageLibraryAsync({
                 base64: true
-                //   allowsEditing: true,
-                //   aspect: [4, 3],
-                //   quality: 1,
             });
 
             if (!result.canceled) {
@@ -103,7 +100,19 @@ export default function settings() {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={headerHeight}
             >
-                <Text style={{ fontSize: 32, marginVertical: '7%' }}>Написать на стене</Text>
+                <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ fontSize: 32, marginVertical: '7%', flex: 1, textAlign: 'center' }}>Написать на стене</Text>
+                    <Pressable
+                        style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                        onPress={() => router.back()}>
+                        <FontAwesome
+                            name="times"
+                            size={25}
+                            color={Colors[colorScheme ?? 'light'].text}
+                            style={{ marginBottom: 2 }}
+                        />
+                    </Pressable>
+                </View>
                 <Text style={styles.label}>Пост:</Text>
                 <TextInput
                     multiline
@@ -224,5 +233,25 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 20
+    },
+    darkRoundButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.dark.borders
+    },
+    lightRoundButton: {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: Colors.light.borders
     }
 });

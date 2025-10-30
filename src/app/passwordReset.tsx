@@ -169,12 +169,10 @@ export default function signup() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        // justifyContent: 'center'
+        alignItems: 'center'
     },
     label: {
         fontSize: 20,
-        // width: '90%',
         textAlign: 'left'
     },
     console: {
@@ -184,7 +182,6 @@ const styles = StyleSheet.create({
         marginTop: '2.5%'
     },
     darkInput: {
-        // width: '90%',
         color: Colors.dark.text,
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
         padding: '3%',
@@ -195,7 +192,6 @@ const styles = StyleSheet.create({
         borderColor: Colors.dark.borders
     },
     lightInput: {
-        // width: '90%',
         color: Colors.light.text,
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
         padding: '3%',
@@ -207,7 +203,6 @@ const styles = StyleSheet.create({
     },
     darkButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
-        // width: '90%',
         marginVertical: '2%',
         borderRadius: 25,
         padding: '3%',
@@ -217,7 +212,6 @@ const styles = StyleSheet.create({
     },
     lightButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
-        // width: '90%',
         marginVertical: '2%',
         borderRadius: 25,
         padding: '3%',

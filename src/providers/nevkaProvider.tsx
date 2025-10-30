@@ -204,20 +204,14 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
             if (i >= 0x00 && i <= 0x1F) continue;
             if (i >= 0x7F && i <= 0x9F) continue;
-
-            // 2. Surrogate halves
             if (i >= 0xD800 && i <= 0xDFFF) continue;
-
-            // 3. Quotes, backslash, line/paragraph separators
             if (i === 0x22 || i === 0x5C || i === 0x2028 || i === 0x2029) continue;
-
-            // 4. Other invisible whitespace (optional)
-            if (i === 0x00A0) continue; // non-breaking space
+            if (i === 0x00A0) continue;
 
             try {
                 chars.push(String.fromCodePoint(i));
             } catch {
-                // skip invalid surrogate code points
+                console.log("Encryption alphabet build error: " + i);
             }
         }
         return chars;

@@ -212,9 +212,6 @@ export default function chat() {
         if (!sending) {
             let result = await ImagePicker.launchImageLibraryAsync({
                 base64: true
-                //   allowsEditing: true,
-                //   aspect: [4, 3],
-                //   quality: 1,
             });
 
             if (!result.canceled) {

@@ -426,25 +426,19 @@ const styles = StyleSheet.create({
     },
     darkButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
-        // width: '90%',
-        // margin: '2%',
         borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: Colors.dark.borders,
-        // marginVertical: '3%'
+        borderColor: Colors.dark.borders
     },
     lightButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
-        // width: '90%',
-        // margin: '2%',, paddingVertical: '3%'
         borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
         borderWidth: 1,
         borderColor: Colors.light.borders,
-        // marginVertical: '3%'
     },
     buttonText: {
         fontSize: 20
@@ -453,26 +447,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
         width: 60,
         height: 60,
-        // margin: '2%',
         borderRadius: 30,
-        // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
         borderColor: Colors.dark.borders,
-        // marginVertical: '3%'
     },
     lightRoundButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
         width: 60,
         height: 60,
-        // margin: '2%',
         borderRadius: 30,
-        // padding: '3%',
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
         borderColor: Colors.light.borders,
-        // marginVertical: '3%'
     }
 });

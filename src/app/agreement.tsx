@@ -57,7 +57,6 @@ export default function agreement() {
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: '5%'
@@ -77,7 +76,6 @@ const styles = StyleSheet.create({
     darkButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
         width: '48%',
-        // margin: '5%',
         borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
@@ -87,7 +85,6 @@ const styles = StyleSheet.create({
     lightButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
         width: '48%',
-        // margin: '5%',
         borderRadius: 25,
         padding: '3%',
         alignItems: 'center',
