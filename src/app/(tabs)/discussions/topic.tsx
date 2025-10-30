@@ -192,6 +192,7 @@ export default function topic() {
                 data={topicMessages}
                 renderItem={({ item }) => <TopicMessage item={item} />}
                 ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Ответов нет</Text>}
+                ListFooterComponent={<View style={{height: 80}}></View>}
             />}
         </View>
     );
