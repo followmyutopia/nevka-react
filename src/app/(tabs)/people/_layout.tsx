@@ -15,6 +15,7 @@ export default function MenuStack() {
         <Stack>
             <Stack.Screen name="index" options={{
                 title: 'Люди',
+                headerTitleAlign: 'center',
                 headerStyle: {
                     backgroundColor: 'transparent',
                 },
@@ -30,6 +31,7 @@ export default function MenuStack() {
             }} />
             <Stack.Screen name="person" options={{
                 title: 'Пользователь',
+                headerTitleAlign: 'center',
                 headerStyle: {
                     backgroundColor: 'transparent',
                 },
