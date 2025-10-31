@@ -214,7 +214,7 @@ export default function feed() {
                     getFeed(nextPage);
                     console.log("Requested: Feed, pages: " + nextPage);
                 }}
-                onEndReachedThreshold={2}
+                onEndReachedThreshold={page}
             />
         </View>
     );
