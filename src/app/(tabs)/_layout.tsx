@@ -34,6 +34,10 @@ export default function TabLayout() {
           <Icon sf={{ default: 'newspaper', selected: 'newspaper.fill' }} drawable="custom_home_drawable" />
           <Label>Лента</Label>
         </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="profile">
+          <Label>Профиль</Label>
+          <Icon sf={{ default: 'person', selected: 'person.fill' }} drawable="stat_sys_download" />
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="people">
           <Label>Люди</Label>
           <Icon sf={{ default: 'person.3', selected: 'person.3.fill' }} drawable="stat_sys_headset" />
@@ -42,10 +46,6 @@ export default function TabLayout() {
           <Label>Сообщения</Label>
           <Icon sf={{ default: 'message', selected: 'message.fill' }} drawable="stat_sys_warning" />
           {messageCounter != 0 ? <Badge>{messageCounter}</Badge> : null}
-        </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="profile">
-          <Label>Профиль</Label>
-          <Icon sf={{ default: 'person', selected: 'person.fill' }} drawable="stat_sys_download" />
         </NativeTabs.Trigger>
       </NativeTabs>
     );
@@ -85,6 +85,17 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          name="profile"
+          options={{
+            title: locales.t('profile'),
+            tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
+            headerStyle: {
+              backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
+            },
+            headerShown: false
+          }}
+        />
+        <Tabs.Screen
           name="people"
           options={{
             title: locales.t('people'),
@@ -101,17 +112,6 @@ export default function TabLayout() {
             title: locales.t('messages'),
             tabBarBadge: messageCounter == 0 ? null : messageCounter,
             tabBarIcon: ({ color }) => <TabBarIcon name="paper-plane" color={color} />,
-            headerStyle: {
-              backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
-            },
-            headerShown: false
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: locales.t('profile'),
-            tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
