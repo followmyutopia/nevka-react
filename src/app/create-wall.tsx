@@ -101,7 +101,7 @@ export default function settings() {
                 keyboardVerticalOffset={headerHeight}
             >
                 <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 32, marginVertical: '7%', flex: 1, textAlign: 'center' }}>Написать на стене</Text>
+                    <Text style={{ fontSize: 32, marginVertical: '7%', flex: 1, textAlign: 'center' }}>Написать пост</Text>
                     <Pressable
                         style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                         onPress={() => router.back()}>
