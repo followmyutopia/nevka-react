@@ -28,7 +28,7 @@ type DiscListItemProps = {
 const DiscListItem = ({ item }: DiscListItemProps) => {
     return (
         <Link href={{
-            pathname: '/(tabs)/discussions/topic',
+            pathname: '/(tabs)/messages/topic',
             params: { id: item.id }
         }} asChild>
             <Pressable style={{ width: '100%', paddingHorizontal: '3%', paddingVertical: '2%' }}>

@@ -16,6 +16,7 @@ export default function MenuStack() {
         <Stack>
             <Stack.Screen name="index" options={{
                 title: 'Профиль',
+                headerTitleAlign: 'center',
                 headerStyle: {
                     backgroundColor: 'transparent',
                 },

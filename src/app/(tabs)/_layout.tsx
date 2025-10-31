@@ -30,9 +30,9 @@ export default function TabLayout() {
   if (isLiquidGlassAvailable()) {
     return (
       <NativeTabs backgroundColor={colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs}>
-        <NativeTabs.Trigger name="profile">
-          <Label>Профиль</Label>
-          <Icon sf={{ default: 'person', selected: 'person.fill' }} drawable="stat_sys_download" />
+        <NativeTabs.Trigger name="feed">
+          <Icon sf={{ default: 'newspaper', selected: 'newspaper.fill' }} drawable="custom_home_drawable" />
+          <Label>Лента</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="people">
           <Label>Люди</Label>
@@ -43,9 +43,9 @@ export default function TabLayout() {
           <Icon sf={{ default: 'message', selected: 'message.fill' }} drawable="stat_sys_warning" />
           {messageCounter != 0 ? <Badge>{messageCounter}</Badge> : null}
         </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="discussions">
-          <Icon sf={{ default: 'bubble.left.and.text.bubble.right', selected: 'bubble.left.and.text.bubble.right.fill' }} drawable="custom_home_drawable" />
-          <Label>Обсуждения</Label>
+        <NativeTabs.Trigger name="profile">
+          <Label>Профиль</Label>
+          <Icon sf={{ default: 'person', selected: 'person.fill' }} drawable="stat_sys_download" />
         </NativeTabs.Trigger>
       </NativeTabs>
     );
@@ -74,10 +74,10 @@ export default function TabLayout() {
           }
         }}>
         <Tabs.Screen
-          name="profile"
+          name="feed"
           options={{
-            title: locales.t('profile'),
-            tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
+            title: "Лента",
+            tabBarIcon: ({ color }) => <TabBarIcon name="id-card" color={color} />,
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
@@ -108,10 +108,10 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="discussions"
+          name="profile"
           options={{
-            title: locales.t('discussions'),
-            tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
+            title: locales.t('profile'),
+            tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
             headerStyle: {
               backgroundColor: colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,
             },
