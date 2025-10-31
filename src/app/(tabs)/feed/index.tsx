@@ -2,7 +2,7 @@ import Colors from "@/src/constants/Colors";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { useColorScheme, View, Image, Text, Pressable, StyleSheet, ActivityIndicator, FlatList } from "react-native";
 import FullWidthImage from "react-native-fullwidth-image";
@@ -189,7 +189,7 @@ export default function feed() {
 
     useEffect(() => {
         if (isFocused) {
-            // setTimeout(() => setUpdate(update + 1), 5000);
+            setTimeout(() => setUpdate(update + 1), 10000);
             getFeed(page);
             console.log("Updated: Feed, pages: " + page);
         }
@@ -198,6 +198,12 @@ export default function feed() {
     return (
         <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}>
             <FlatList
+                ListHeaderComponent={<Pressable
+                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                    onPress={() => router.navigate('/create-wall')}
+                >
+                    <Text style={{ fontSize: 20, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>Написать пост</Text>
+                </Pressable>}
                 ListFooterComponent={feedLoading ? <ActivityIndicator style={{ marginTop: 20, marginBottom: 120 }} /> : <View style={{ height: 80 }}></View>}
                 style={{ flex: 1, width: '100%' }}
                 data={feedData || <ActivityIndicator />}
@@ -206,8 +212,9 @@ export default function feed() {
                     const nextPage = page + 1;
                     setPage(nextPage);
                     getFeed(nextPage);
+                    console.log("Requested: Feed, pages: " + nextPage);
                 }}
-                onEndReachedThreshold={3}
+                onEndReachedThreshold={2}
             />
         </View>
     );
@@ -224,6 +231,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: Colors.dark.borders,
+        margin: '3%'
     },
     lightButton: {
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
@@ -232,6 +240,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: Colors.light.borders,
+        margin: '3%'
     },
     darkRoundButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.04)',
