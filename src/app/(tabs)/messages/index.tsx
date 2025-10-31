@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as Notifications from "expo-notifications";
 import Colors from "@/src/constants/Colors";
+import Dialog from "react-native-dialog";
+import { registerForNotifications } from "../../../providers/expoNotifications";
+import { useIsFocused } from "@react-navigation/native";
 
 type ChatsData = {
     id: string,
@@ -76,13 +79,15 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages() {
-    const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet, decode }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet, decode, notificationStatus, setNotificationStatus, pushToken, setPushToken }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
     const colorScheme = useColorScheme();
     const [chatsData, setChatsData] = useState<ChatsData[]>();
     const [loading, setLoading] = useState(true);
+    const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
+    const isFocused = useIsFocused();
 
     const getChats = async (token: string) => {
         const formData = new FormData();
@@ -130,6 +135,37 @@ export default function messages() {
             console.log("Ошибка запроса чатов, проблемы с соединением?\n" + error);
         } finally {
             setLoading(false);
+        }
+    }
+
+    const savePushToken = async (value: string) => {
+        if (pushToken != undefined && value != "") {
+            const formData = new FormData();
+            formData.append("token", token);
+            formData.append("push_token", value);
+            formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+            try {
+                const response = await fetch('https://nevka.site/api/setPushToken.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                if (json.result == "failure") {
+                    if (json.error == "wrong_token") {
+                        setToken("");
+                    }
+                    console.log("setPushToken error: " + json.error)
+                } else if (json.result == "success") {
+                    // if (value === "null") {
+                    //     setNotificationSwitch(false);
+                    // } else {
+                    //     setNotificationSwitch(true);
+                    // }
+                }
+            } catch (error) {
+                console.log("Ошибка записи push-токена, проблемы с соединением?\n" + error);
+            }
         }
     }
 
@@ -186,6 +222,12 @@ export default function messages() {
         };
     }, [update]);
 
+    useEffect(() => {
+        if (isFocused) {
+            if (notificationStatus === "suggest") setShowNotificationPrompt(true);
+        }
+    }, [isFocused]);
+
     return (
         <View style={styles.container}>
             {loading ? <ActivityIndicator /> : <FlatList
@@ -194,6 +236,25 @@ export default function messages() {
                 renderItem={({ item }) => <ChatsListItem user={item} loggedUser={loggedUser} />}
                 ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Чатов нет. Перейдите в раздел "Люди" для выбора собеседника.</Text>}
             />}
+            <Dialog.Container visible={showNotificationPrompt}>
+                <Dialog.Title>Включить уведомления?</Dialog.Title>
+                <Dialog.Description>Только о входящих личных сообшениях</Dialog.Description>
+                <Dialog.Button label="Не нужно" onPress={() => {
+                    setShowNotificationPrompt(false);
+                    setNotificationStatus("prompted");
+                }} />
+                <Dialog.Button label="Включить" onPress={() => {
+                    setShowNotificationPrompt(false);
+                    setNotificationStatus("prompted");
+                    registerForNotifications()
+                        .then(async result => {
+                            setPushToken(result ?? '');
+                        }).then(() => {
+                            savePushToken(pushToken);
+                        })
+                        .catch((error: any) => console.log(`${error}`));
+                }} />
+            </Dialog.Container>
         </View>
     );
 }

@@ -225,7 +225,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
 }
 
 export default function profile() {
-    const { token, setToken, loggedUser, setIsNameSet }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -264,6 +264,9 @@ export default function profile() {
                 if (json.firstname == "" || json.lastname == "") {
                     setIsNameSet(false);
                     router.navigate("/settings");
+                }
+                if (json.push_token == "" && notificationStatus != "prompted") {
+                    setNotificationStatus("suggest");
                 }
             }
         } catch (error) {
