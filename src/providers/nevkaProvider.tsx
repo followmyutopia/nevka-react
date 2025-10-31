@@ -26,6 +26,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [pushToken, setPushTokenLocal] = useState<string>();
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const [encryptionType, setEncryptionTypeLocal] = useState<string>("");
+    const [notificationStatus, setNotificationStatusLocal] = useState<string>("");
 
     const setMessageCounter = async (value: number) => {
         setMessageCounterLocal(value);
@@ -74,6 +75,26 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         setEncryptionTypeLocal(value);
         try {
             await AsyncStorage.setItem('encryption', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const setNotificationStatus = async (value: string) => {
+        setNotificationStatusLocal(value);
+        try {
+            await AsyncStorage.setItem('notificationStatus', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const getNotificationStatus = async () => {
+        try {
+            const value = await AsyncStorage.getItem('notificationStatus');
+            if (value !== null) {
+                setNotificationStatusLocal(value);
+            }
         } catch (e) {
             console.log("AsyncStorage error: " + e);
         }
@@ -262,6 +283,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         getTheme();
         getPushToken();
         getEncryptionType();
+        getNotificationStatus();
 
         const notificationListener = Notifications.addNotificationReceivedListener(notif => {
             setNotification(notif);
@@ -290,7 +312,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             pushToken, setPushToken,
             theme, setTheme,
             encryptionType, setEncryptionType,
-            encode, decode
+            encode, decode,
+            notificationStatus, setNotificationStatus
         }}>
             {children}
         </NevkaContext.Provider>

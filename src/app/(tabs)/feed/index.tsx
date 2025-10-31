@@ -39,9 +39,11 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
             padding: 15,
         }}>
 
-            <View style={{
-                flexDirection: 'row', height: 50, paddingBottom: '2%'
-            }}>
+            <Pressable 
+                onPress={() => router.navigate(`/(tabs)/people/person?id=${item.author}&name=${item.authorName}`, { withAnchor: true })}
+                style={{
+                    flexDirection: 'row', height: 50, paddingBottom: '2%'
+                }}>
                 <Image style={{
                     height: '100%',
                     aspectRatio: 1,
@@ -55,7 +57,7 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
                     <Text style={{ fontSize: 18, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>{item.authorName}</Text>
                     <Text style={{ fontSize: 18, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>{item.formattedTime}</Text>
                 </View>
-            </View>
+            </Pressable>
             <View style={{ flexDirection: 'column' }}>
                 {item.text != "" ? <Text style={{ fontSize: 18, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>{item.text}</Text> : null}
                 {item.image != "" ? <FullWidthImage style={{
@@ -214,7 +216,7 @@ export default function feed() {
                     getFeed(nextPage);
                     console.log("Requested: Feed, pages: " + nextPage);
                 }}
-                onEndReachedThreshold={page}
+                onEndReachedThreshold={page < 5 ? page : 5}
             />
         </View>
     );
