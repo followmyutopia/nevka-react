@@ -37,30 +37,43 @@ type MessageItemProps = {
 }
 
 const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: MessageItemProps) => {
-    if (item.text.startsWith("NE2[") && item.text.endsWith("]")) {
-        item.text = decodeHandler(item.text.slice(4, -1), "nobbam-Fuctyc-zerba3");
+    if (item.text.startsWith("NE4[") && item.text.endsWith("]")) {
+        item.text = decodeHandler(item.text.slice(4, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
         item.encrypted = true;
     }
 
-    if (item.reply.startsWith("NE2[") && item.reply.endsWith("]")) {
-        item.reply = decodeHandler(item.reply.slice(4, -1), "nobbam-Fuctyc-zerba3");
+    if (item.reply.startsWith("NE4[") && item.reply.endsWith("]")) {
+        item.reply = decodeHandler(item.reply.slice(4, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
     }
 
-    if (item.reply.startsWith("Вы: NE2[") && item.reply.endsWith("]")) {
-        item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "nobbam-Fuctyc-zerba3");
+    if (item.reply.startsWith("Вы: NE4[") && item.reply.endsWith("]")) {
+        item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
     }
 
-    if (item.text.startsWith("NE3[") && item.text.endsWith("]")) {
-        item.text = decodeHandler(item.text.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
+    if ((/^NE[123]\[/.test(item.text)) && item.text.endsWith("]")) {
+        item.text = "[Устаревшее шифрование]";
         item.encrypted = true;
     }
 
-    if (item.reply.startsWith("NE3[") && item.reply.endsWith("]")) {
-        item.reply = decodeHandler(item.reply.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
+    if ((/^NE[123]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+        item.reply = "[Устаревшее шифрование]";
     }
 
-    if (item.reply.startsWith("Вы: NE3[") && item.reply.endsWith("]")) {
-        item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
+    if ((/^(Вы: )?NE[123]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+        item.reply = "[Устаревшее шифрование]";
+    }
+
+    if ((/^NE[567]\[/.test(item.text)) && item.text.endsWith("]")) {
+        item.text = "[Обновите приложение]";
+        item.encrypted = true;
+    }
+
+    if ((/^NE[567]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+        item.reply = "[Обновите приложение]";
+    }
+
+    if ((/^(Вы: )?NE[567]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+        item.reply = "[Обновите приложение]";
     }
 
     const swipeableRef = useRef<any>(null);
@@ -235,9 +248,9 @@ export default function chat() {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
-            // if (encryptionType == "NE3") {
-            //     text = "NE3[" + encode(text, "xaxdeb-7tazwi-cerjAm" + keyIdentifier) + "]";
-            // }
+            if (encryptionType == "NE4") {
+                text = "NE4[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
+            }
 
             const formData = new FormData();
             formData.append("token", token);
