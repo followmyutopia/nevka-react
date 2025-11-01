@@ -112,17 +112,20 @@ export default function messages() {
             } else if (json.result == "success") {
                 json.chats.pop();
                 json.chats.forEach((obj: ChatsData) => {
-                    if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
-                        obj.lastText = decode(obj.lastText.slice(4, -1), "nobbam-Fuctyc-zerba3");
+                    if ((/^NE[123]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                        obj.lastText = "[Устаревшее шифрование]";
                         obj.encrypted = true;
-                    } else if (obj.lastText.startsWith("NE3[") && obj.lastText.endsWith("]")) {
+                    } else if ((/^NE[567]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                        obj.lastText = "[Обновите приложение]";
+                        obj.encrypted = true;
+                    } else if (obj.lastText.startsWith("NE4[") && obj.lastText.endsWith("]")) {
                         var keyIdentifier = "";
                         if (loggedUser <= obj.id) {
                             keyIdentifier = "-chat-" + loggedUser + "-" + obj.id;
                         } else {
                             keyIdentifier = "-chat-" + obj.id + "-" + loggedUser;
                         }
-                        obj.lastText = decode(obj.lastText.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
+                        obj.lastText = decode(obj.lastText.slice(4, -1), "fugnip-daspYq-9bejca" + keyIdentifier);
                         obj.encrypted = true;
                     } else obj.encrypted = false;
                 });
@@ -184,17 +187,20 @@ export default function messages() {
         ws.onmessage = (e) => {
             const data = JSON.parse(e.data);
             data.forEach((obj: ChatsData) => {
-                if (obj.lastText.startsWith("NE2[") && obj.lastText.endsWith("]")) {
-                    obj.lastText = decode(obj.lastText.slice(4, -1), "nobbam-Fuctyc-zerba3");
+                if ((/^NE[123]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                    obj.lastText = "[Устаревшее шифрование]";
                     obj.encrypted = true;
-                } else if (obj.lastText.startsWith("NE3[") && obj.lastText.endsWith("]")) {
+                } else if ((/^NE[567]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                    obj.lastText = "[Обновите приложение]";
+                    obj.encrypted = true;
+                } else if (obj.lastText.startsWith("NE4[") && obj.lastText.endsWith("]")) {
                     var keyIdentifier = "";
                     if (loggedUser <= obj.id) {
                         keyIdentifier = "-chat-" + loggedUser + "-" + obj.id;
                     } else {
                         keyIdentifier = "-chat-" + obj.id + "-" + loggedUser;
                     }
-                    obj.lastText = decode(obj.lastText.slice(4, -1), "xaxdeb-7tazwi-cerjAm" + keyIdentifier);
+                    obj.lastText = decode(obj.lastText.slice(4, -1), "fugnip-daspYq-9bejca" + keyIdentifier);
                     obj.encrypted = true;
                 } else obj.encrypted = false;
             });

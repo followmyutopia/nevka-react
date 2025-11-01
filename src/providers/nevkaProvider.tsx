@@ -219,62 +219,66 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     // locales.locale = getLocales()[0].languageCode ?? 'ru';
     locales.locale = 'ru';
 
-    function buildAlphabet(): string[] {
-        const chars: string[] = [];
-        for (let i = 0x20; i <= 0x10FFFF; i++) {
-
-            if (i >= 0x00 && i <= 0x1F) continue;
-            if (i >= 0x7F && i <= 0x9F) continue;
-            if (i >= 0xD800 && i <= 0xDFFF) continue;
-            if (i === 0x22 || i === 0x5C || i === 0x2028 || i === 0x2029) continue;
-            if (i === 0x00A0) continue;
-
-            try {
-                chars.push(String.fromCodePoint(i));
-            } catch {
-                console.log("Encryption alphabet build error: " + i);
-            }
-        }
-        return chars;
+    // Helper: true modulo
+    function mod(n: number, m: number) {
+        return ((n % m) + m) % m;
     }
 
-    const ALPHABET: string[] = buildAlphabet();
-    const BASE: number = ALPHABET.length;
+    // Helper: hash the key to a number
+    function hashKey(key: string): number {
+        let hash = 0;
+        for (let i = 0; i < key.length; i++) {
+            hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+        }
+        return hash;
+    }
 
+    // Define valid Unicode ranges (skip surrogates and control chars)
+    const VALID_RANGES: [number, number][] = [
+        [0x0020, 0xD7FF],   // BMP printable excluding surrogates and control chars
+        [0xE000, 0x10FFFF]  // Supplementary planes
+    ];
+
+    // Total number of valid code points
+    const TOTAL_VALID = (0xD7FF - 0x0020 + 1) + (0x10FFFF - 0xE000 + 1);
+
+    // Map code point to index in valid set
+    function codePointToIndex(cp: number): number {
+        if (cp >= 0x0020 && cp <= 0xD7FF) return cp - 0x0020;
+        if (cp >= 0xE000 && cp <= 0x10FFFF) return (0xD7FF - 0x0020 + 1) + (cp - 0xE000);
+        throw new Error(`Invalid code point: ${cp}`);
+    }
+
+    // Map index back to code point
+    function indexToCodePoint(idx: number): number {
+        if (idx <= 0xD7FF - 0x0020) return 0x0020 + idx;
+        return 0xE000 + (idx - (0xD7FF - 0x0020 + 1));
+    }
+
+    // Encode string with key
     function encode(text: string, key: string): string {
-        const textArr: string[] = Array.from(text);
-        const keyArr: string[] = Array.from(key);
-        const result: string[] = [];
-
-        for (let i = 0; i < textArr.length; i++) {
-            const charCode: number = textArr[i].codePointAt(0)!;
-            const keyCode: number = keyArr[i % keyArr.length].codePointAt(0)!;
-
-            const idx: number = (charCode + keyCode) % BASE;
-            result.push(ALPHABET[idx]);
-        }
-
-        return result.join("");
+        const keyHash = hashKey(key);
+        return Array.from(text)
+            .map((ch, i) => {
+                const cp = ch.codePointAt(0)!;
+                const idx = codePointToIndex(cp);
+                const newIdx = (idx + keyHash + i * 37) % TOTAL_VALID;
+                return String.fromCodePoint(indexToCodePoint(newIdx));
+            })
+            .join("");
     }
 
-    function decode(encoded: string, key: string): string {
-        const textArr: string[] = Array.from(encoded);
-        const keyArr: string[] = Array.from(key);
-        const result: string[] = [];
-
-        for (let i = 0; i < textArr.length; i++) {
-            const idx: number = ALPHABET.indexOf(textArr[i]);
-            if (idx === -1) {
-                throw new Error(`Invalid character '${textArr[i]}' in encoded string`);
-            }
-
-            const keyCode: number = keyArr[i % keyArr.length].codePointAt(0)!;
-            const newCode: number = (idx - keyCode + BASE) % BASE;
-
-            result.push(String.fromCodePoint(newCode));
-        }
-
-        return result.join("");
+    // Decode string with key
+    function decode(text: string, key: string): string {
+        const keyHash = hashKey(key);
+        return Array.from(text)
+            .map((ch, i) => {
+                const cp = ch.codePointAt(0)!;
+                const idx = codePointToIndex(cp);
+                const origIdx = mod(idx - (keyHash + i * 37), TOTAL_VALID);
+                return String.fromCodePoint(indexToCodePoint(origIdx));
+            })
+            .join("");
     }
 
     useEffect(() => {
@@ -284,6 +288,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         getPushToken();
         getEncryptionType();
         getNotificationStatus();
+
+        // let test1 = "😎🎉🚀"; let test2 = encode(test1, "SecretKey"); let test3 = decode(test2, "SecretKey"); console.log("Original " + test1); console.log("Encoded: " + test2); console.log("Decoded: " + test3);
 
         const notificationListener = Notifications.addNotificationReceivedListener(notif => {
             setNotification(notif);
