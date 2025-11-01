@@ -235,9 +235,9 @@ export default function chat() {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
-            if (encryptionType == "NE3") {
-                text = "NE3[" + encode(text, "xaxdeb-7tazwi-cerjAm" + keyIdentifier) + "]";
-            }
+            // if (encryptionType == "NE3") {
+            //     text = "NE3[" + encode(text, "xaxdeb-7tazwi-cerjAm" + keyIdentifier) + "]";
+            // }
 
             const formData = new FormData();
             formData.append("token", token);
