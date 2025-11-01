@@ -149,7 +149,7 @@ export default function signup() {
                     spellCheck={false}
                     editable={emailEditable}
                 ></TextInput>
-                <Text style={styles.label}>Код подтверждения:</Text>
+                {codeSent ? <><Text style={styles.label}>Код подтверждения:</Text>
                 <TextInput style={inputStyle}
                     value={confirmationCode}
                     onChangeText={setConfirmationCode}
@@ -174,7 +174,7 @@ export default function signup() {
                     spellCheck={false}
                     editable={codeSent}
                     secureTextEntry={true}
-                ></TextInput>
+                ></TextInput></> : null}
 
                 <Pressable
                     style={({ pressed }) => [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }]}
