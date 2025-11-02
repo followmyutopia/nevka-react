@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.4
+ * Nevka Mobile v1.5
  * 2025 Avicus Delacroix
  */
 

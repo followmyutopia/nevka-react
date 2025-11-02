@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.4
+ * Nevka Mobile v1.5
  * 2025 Avicus Delacroix
  */
 
@@ -219,12 +219,11 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     // locales.locale = getLocales()[0].languageCode ?? 'ru';
     locales.locale = 'ru';
 
-    // Helper: true modulo
+    // Encryption functions
     function mod(n: number, m: number) {
         return ((n % m) + m) % m;
     }
 
-    // Helper: hash the key to a number
     function hashKey(key: string): number {
         let hash = 0;
         for (let i = 0; i < key.length; i++) {
@@ -233,34 +232,28 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         return hash;
     }
 
-    // Define valid Unicode ranges
     const VALID_RANGES: [number, number][] = [
-        [0x0020, 0xD7FF],   // BMP printable excluding surrogates and control chars
-        [0xE000, 0x10FFFF]  // Supplementary planes
+        [0x0020, 0xD7FF],
+        [0xE000, 0x10FFFF]
     ];
 
-    // Total number of valid code points
     const TOTAL_VALID =
         (0xD7FF - 0x0020 + 1) +
         (0x10FFFF - 0xE000 + 1);
 
-    // Safe fallback: map invalid chars to U+FFFD
     function codePointToIndex(cp: number): number {
         if (cp >= 0x0020 && cp <= 0xD7FF) return cp - 0x0020;
         if (cp >= 0xE000 && cp <= 0x10FFFF)
             return (0xD7FF - 0x0020 + 1) + (cp - 0xE000);
 
-        // fallback for control chars / surrogates / invalid
-        return codePointToIndex(0xFFFD); // replacement character
+        return codePointToIndex(0xFFFD);
     }
 
-    // Map index back to code point
     function indexToCodePoint(idx: number): number {
         if (idx <= 0xD7FF - 0x0020) return 0x0020 + idx;
         return 0xE000 + (idx - (0xD7FF - 0x0020 + 1));
     }
 
-    // ✅ Encode function stays exactly the same
     function encode(text: string, key: string): string {
         const keyHash = hashKey(key);
         return Array.from(text)
@@ -273,17 +266,15 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             .join("");
     }
 
-    // ✅ Safe code point iterator for decoding
     function* codePoints(str: string) {
         let i = 0;
         while (i < str.length) {
             const cp = str.codePointAt(i)!;
             yield cp;
-            i += cp > 0xffff ? 2 : 1; // skip surrogate pair
+            i += cp > 0xffff ? 2 : 1;
         }
     }
 
-    // ✅ Fixed decode function
     function decode(encoded: string, key: string): string {
         const keyHash = hashKey(key);
         const chars: number[] = Array.from(codePoints(encoded));
@@ -304,8 +295,6 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         getPushToken();
         getEncryptionType();
         getNotificationStatus();
-
-        // let test1 = "😎🎉🚀"; let test2 = encode(test1, "SecretKey"); let test3 = decode(test2, "SecretKey"); console.log("Original " + test1); console.log("Encoded: " + test2); console.log("Decoded: " + test3);
 
         const notificationListener = Notifications.addNotificationReceivedListener(notif => {
             setNotification(notif);
