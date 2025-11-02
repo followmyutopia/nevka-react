@@ -233,7 +233,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         return hash;
     }
 
-    // Define valid Unicode ranges (skip surrogates)
+    // Define valid Unicode ranges
     const VALID_RANGES: [number, number][] = [
         [0x0020, 0xD7FF],   // BMP printable excluding surrogates and control chars
         [0xE000, 0x10FFFF]  // Supplementary planes
@@ -244,7 +244,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         (0xD7FF - 0x0020 + 1) +
         (0x10FFFF - 0xE000 + 1);
 
-    // SAFE version — maps invalid chars to U+FFFD
+    // Safe fallback: map invalid chars to U+FFFD
     function codePointToIndex(cp: number): number {
         if (cp >= 0x0020 && cp <= 0xD7FF) return cp - 0x0020;
         if (cp >= 0xE000 && cp <= 0x10FFFF)
@@ -260,7 +260,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         return 0xE000 + (idx - (0xD7FF - 0x0020 + 1));
     }
 
-    // Encode string with key
+    // ✅ Encode function stays exactly the same
     function encode(text: string, key: string): string {
         const keyHash = hashKey(key);
         return Array.from(text)
@@ -273,12 +273,23 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             .join("");
     }
 
-    // Decode string with key
-    function decode(text: string, key: string): string {
+    // ✅ Safe code point iterator for decoding
+    function* codePoints(str: string) {
+        let i = 0;
+        while (i < str.length) {
+            const cp = str.codePointAt(i)!;
+            yield cp;
+            i += cp > 0xffff ? 2 : 1; // skip surrogate pair
+        }
+    }
+
+    // ✅ Fixed decode function
+    function decode(encoded: string, key: string): string {
         const keyHash = hashKey(key);
-        return Array.from(text)
-            .map((ch, i) => {
-                const cp = ch.codePointAt(0)!;
+        const chars: number[] = Array.from(codePoints(encoded));
+
+        return chars
+            .map((cp, i) => {
                 const idx = codePointToIndex(cp);
                 const origIdx = mod(idx - (keyHash + i * 37), TOTAL_VALID);
                 return String.fromCodePoint(indexToCodePoint(origIdx));
