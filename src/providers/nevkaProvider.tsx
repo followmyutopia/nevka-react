@@ -233,7 +233,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         return hash;
     }
 
-    // Define valid Unicode ranges (skip surrogates and control chars)
+    // Define valid Unicode ranges (skip surrogates)
     const VALID_RANGES: [number, number][] = [
         [0x0020, 0xD7FF],   // BMP printable excluding surrogates and control chars
         [0xE000, 0x10FFFF]  // Supplementary planes
@@ -244,12 +244,14 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         (0xD7FF - 0x0020 + 1) +
         (0x10FFFF - 0xE000 + 1);
 
+    // SAFE version — maps invalid chars to U+FFFD
     function codePointToIndex(cp: number): number {
         if (cp >= 0x0020 && cp <= 0xD7FF) return cp - 0x0020;
         if (cp >= 0xE000 && cp <= 0x10FFFF)
             return (0xD7FF - 0x0020 + 1) + (cp - 0xE000);
 
-        return 0; // map to 'space'
+        // fallback for control chars / surrogates / invalid
+        return codePointToIndex(0xFFFD); // replacement character
     }
 
     // Map index back to code point
