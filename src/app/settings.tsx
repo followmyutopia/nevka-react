@@ -75,14 +75,14 @@ export default function settings() {
             setEncryptionType('');
             setEncryptionSwitch(false);
         } else {
-            setEncryptionType('NE4');
+            setEncryptionType('NE5');
             setEncryptionSwitch(true);
         }
     }
 
     const checkEncryptionState = () => {
         console.log("Encryption: " + encryptionType)
-        if (encryptionType == "NE4") setEncryptionSwitch(true);
+        if (encryptionType == "NE5") setEncryptionSwitch(true);
         else setEncryptionSwitch(false);
     }
 

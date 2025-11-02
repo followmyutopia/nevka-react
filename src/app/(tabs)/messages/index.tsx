@@ -112,13 +112,13 @@ export default function messages() {
             } else if (json.result == "success") {
                 json.chats.pop();
                 json.chats.forEach((obj: ChatsData) => {
-                    if ((/^NE[123]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                    if ((/^NE[1234]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
                         obj.lastText = "[Устаревшее шифрование]";
                         obj.encrypted = true;
-                    } else if ((/^NE[567]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                    } else if ((/^NE[678]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
                         obj.lastText = "[Обновите приложение]";
                         obj.encrypted = true;
-                    } else if (obj.lastText.startsWith("NE4[") && obj.lastText.endsWith("]")) {
+                    } else if (obj.lastText.startsWith("NE5[") && obj.lastText.endsWith("]")) {
                         var keyIdentifier = "";
                         if (loggedUser <= obj.id) {
                             keyIdentifier = "-chat-" + loggedUser + "-" + obj.id;
@@ -187,13 +187,13 @@ export default function messages() {
         ws.onmessage = (e) => {
             const data = JSON.parse(e.data);
             data.forEach((obj: ChatsData) => {
-                if ((/^NE[123]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                if ((/^NE[1234]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
                     obj.lastText = "[Устаревшее шифрование]";
                     obj.encrypted = true;
-                } else if ((/^NE[567]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
+                } else if ((/^NE[678]\[/.test(obj.lastText)) && obj.lastText.endsWith("]")) {
                     obj.lastText = "[Обновите приложение]";
                     obj.encrypted = true;
-                } else if (obj.lastText.startsWith("NE4[") && obj.lastText.endsWith("]")) {
+                } else if (obj.lastText.startsWith("NE5[") && obj.lastText.endsWith("]")) {
                     var keyIdentifier = "";
                     if (loggedUser <= obj.id) {
                         keyIdentifier = "-chat-" + loggedUser + "-" + obj.id;
