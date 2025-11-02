@@ -240,13 +240,16 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     ];
 
     // Total number of valid code points
-    const TOTAL_VALID = (0xD7FF - 0x0020 + 1) + (0x10FFFF - 0xE000 + 1);
+    const TOTAL_VALID =
+        (0xD7FF - 0x0020 + 1) +
+        (0x10FFFF - 0xE000 + 1);
 
-    // Map code point to index in valid set
     function codePointToIndex(cp: number): number {
         if (cp >= 0x0020 && cp <= 0xD7FF) return cp - 0x0020;
-        if (cp >= 0xE000 && cp <= 0x10FFFF) return (0xD7FF - 0x0020 + 1) + (cp - 0xE000);
-        throw new Error(`Invalid code point: ${cp}`);
+        if (cp >= 0xE000 && cp <= 0x10FFFF)
+            return (0xD7FF - 0x0020 + 1) + (cp - 0xE000);
+
+        return 0; // map to 'space'
     }
 
     // Map index back to code point

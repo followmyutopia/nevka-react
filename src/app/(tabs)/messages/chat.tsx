@@ -37,42 +37,42 @@ type MessageItemProps = {
 }
 
 const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: MessageItemProps) => {
-    if (item.text.startsWith("NE4[") && item.text.endsWith("]")) {
+    if (item.text.startsWith("NE5[") && item.text.endsWith("]")) {
         item.text = decodeHandler(item.text.slice(4, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
         item.encrypted = true;
     }
 
-    if (item.reply.startsWith("NE4[") && item.reply.endsWith("]")) {
+    if (item.reply.startsWith("NE5[") && item.reply.endsWith("]")) {
         item.reply = decodeHandler(item.reply.slice(4, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
     }
 
-    if (item.reply.startsWith("Вы: NE4[") && item.reply.endsWith("]")) {
+    if (item.reply.startsWith("Вы: NE5[") && item.reply.endsWith("]")) {
         item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
     }
 
-    if ((/^NE[123]\[/.test(item.text)) && item.text.endsWith("]")) {
+    if ((/^NE[1234]\[/.test(item.text)) && item.text.endsWith("]")) {
         item.text = "[Устаревшее шифрование]";
         item.encrypted = true;
     }
 
-    if ((/^NE[123]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+    if ((/^NE[1234]\[/.test(item.reply)) && item.reply.endsWith("]")) {
         item.reply = "[Устаревшее шифрование]";
     }
 
-    if ((/^(Вы: )?NE[123]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+    if ((/^(Вы: )?NE[1234]\[/.test(item.reply)) && item.reply.endsWith("]")) {
         item.reply = "[Устаревшее шифрование]";
     }
 
-    if ((/^NE[567]\[/.test(item.text)) && item.text.endsWith("]")) {
+    if ((/^NE[678]\[/.test(item.text)) && item.text.endsWith("]")) {
         item.text = "[Обновите приложение]";
         item.encrypted = true;
     }
 
-    if ((/^NE[567]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+    if ((/^NE[678]\[/.test(item.reply)) && item.reply.endsWith("]")) {
         item.reply = "[Обновите приложение]";
     }
 
-    if ((/^(Вы: )?NE[567]\[/.test(item.reply)) && item.reply.endsWith("]")) {
+    if ((/^(Вы: )?NE[678]\[/.test(item.reply)) && item.reply.endsWith("]")) {
         item.reply = "[Обновите приложение]";
     }
 
@@ -248,8 +248,8 @@ export default function chat() {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
-            if (encryptionType == "NE4") {
-                text = "NE4[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
+            if (encryptionType == "NE5") {
+                text = "NE5[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
             }
 
             const formData = new FormData();
