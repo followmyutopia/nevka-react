@@ -215,12 +215,9 @@ export default function messages() {
         ws.onclose = (e) => {
             console.log("WebSocket connection closed (Chat list):", e.code);
 
-            if (e.code == 1006 || e.code == 1001) {
-                // if websocket is not available or terminated, get messages via API
-                getChats(token);
-                console.log("Updated: Chats via API");
-                setTimeout(() => setUpdate(update + 1), 5000);
-            }
+            getChats(token);
+            console.log("Updated: Chats via API");
+            setTimeout(() => setUpdate(update + 1), 5000);
         };
 
         return () => {
