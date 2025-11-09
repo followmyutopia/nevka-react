@@ -230,6 +230,10 @@ export default function chat() {
             if (!result.canceled) {
                 setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
                 setStatus("Выбран файл: " + result.assets[0].fileName);
+                if (result.assets[0].mimeType == "image/heic") {
+                    setStatus(`Формат HEIC пока не поддерживается. Используйте только JPG/PNG.`);
+                    setImage("");
+                }
                 // need to delete the file from the cache, wtf
             }
         }
