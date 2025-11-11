@@ -228,6 +228,7 @@ export default function messages() {
     useEffect(() => {
         if (isFocused) {
             if (notificationStatus === "suggest") setShowNotificationPrompt(true);
+            setUpdate(update + 1);
         }
     }, [isFocused]);
 
