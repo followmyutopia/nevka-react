@@ -14,6 +14,7 @@ import Dialog from "react-native-dialog";
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Colors from "@/src/constants/Colors";
+import { AppState } from "react-native";
 
 type UserData = {
     id: string,
@@ -226,7 +227,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
 }
 
 export default function profile() {
-    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin, voxUsername, setVoxUsername, voxLogged, setVoxLogged }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -239,10 +240,9 @@ export default function profile() {
     const [showStatusEditor, setShowStatusEditor] = useState(false);
     const [showDeletePostDialog, setShowDeletePostDialog] = useState(false);
     const [postToDelete, setPostToDelete] = useState("");
-    const [voxUsername, setVoxUsername] = useState("");
-    const [voxLogged, setVoxLogged] = useState(false);
 
     const colorScheme = useColorScheme();
+    const appState = useRef(AppState.currentState);
 
     const getUserData = async (id: string) => {
         const formData = new FormData();
@@ -268,7 +268,10 @@ export default function profile() {
                 } else {
                     setLoading(false);
                     setUserData(json);
-                    setVoxUsername(json.vox_username);
+                    if (!voxLogged) {
+                        voxLogin(json.vox_username);
+                        setVoxLogged(true);
+                    }
                 }
                 if (json.push_token == "" && notificationStatus != "prompted") {
                     setNotificationStatus("suggest");
@@ -399,11 +402,21 @@ export default function profile() {
             getWall(loggedUser);
             console.log("Updated: Wall for: " + loggedUser);
         }
-        if (voxUsername !== "" && !voxLogged) {
-            voxLogin(voxUsername);
-            setVoxLogged(true);
-        }
     }, [update, isFocused]);
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener("change", nextAppState => {
+            if (appState.current.match(/inactive|background/) && nextAppState === "active") {
+                setVoxLogged(false);
+                getUserData(loggedUser);
+            }
+            appState.current = nextAppState;
+        });
+
+        return () => {
+            subscription.remove();
+        };
+    }, [appState.current]);
 
     return (
         <View style={styles.container}>

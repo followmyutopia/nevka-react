@@ -12,7 +12,6 @@ import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { WebView } from 'react-native-webview';
 
-
 const NevkaContext = createContext({});
 
 type PushDataObject = {
@@ -31,6 +30,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [notificationStatus, setNotificationStatusLocal] = useState<string>("");
     const [callErrorMessage, setCallErrorMessage] = useState<string>("");
     const [callActive, setCallActive] = useState<boolean>(false);
+    const [voxUsername, setVoxUsername] = useState("");
+    const [voxLogged, setVoxLogged] = useState(false);
     const webviewRef = useRef<WebView>(null);
 
     const setMessageCounter = async (value: number) => {
@@ -294,6 +295,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     }
 
     const voxLogin = (username: string) => {
+        console.log("Voximplant: logging in as " + username);
         webviewRef.current?.injectJavaScript(`
             window.login('${username}'+'@nevka.avicus.n4.voximplant.com', 'tozmic-3wyXtu-sokhir');
             true;
@@ -348,8 +350,11 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
     return (
         <NevkaContext.Provider value={{
-            locales, webviewRef, callActive, callErrorMessage,
+            locales, webviewRef, callActive,
             voxLogin,
+            voxUsername, setVoxUsername,
+            voxLogged, setVoxLogged,
+            callErrorMessage, setCallErrorMessage,
             token, setToken,
             loggedUser, setLoggedUser,
             messageCounter, setMessageCounter,
@@ -393,14 +398,17 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                                 checkVoxUsername(data.username).then((id) => {
                                     router.navigate(`/call?id=${id}&direction=incoming` as any);
                                 });
-                            } else if (data.type === 'CallFailed' || data.type === 'CallDisconnected') {
-                                setCallActive(false);
-                                if (router.canGoBack()) router.back();
                             } else if (data.type === 'CallConnected') {
                                 setCallActive(true);
                             } else if (data.type === 'CallError') {
                                 setCallActive(false);
                                 setCallErrorMessage(data.message);
+                            } else if (data.type === 'SdkDisconnected' || data.type === 'ConnectionError') {
+                                console.log('Voximplant: SDK disconnected');
+                                voxLogin(voxUsername);
+                            } else if (data.type === 'CallFailed' || data.type === 'CallDisconnected') {
+                                setCallActive(false);
+                                if (router.canGoBack()) router.back();
                             } else {
                                 console.log('Voximplant: ', data);
                             }

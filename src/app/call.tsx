@@ -21,7 +21,7 @@ type UserData = {
 };
 
 export default function Call() {
-    const { token, setToken, loggedUser, webviewRef, callActive, callErrorMessage }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, webviewRef, callActive, callErrorMessage, setCallErrorMessage }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const { id, direction } = useLocalSearchParams<{ id: string; direction: string }>();
@@ -85,6 +85,7 @@ export default function Call() {
     };
 
     const makeCall = (username: string) => {
+        setCallErrorMessage("");
         webviewRef.current?.injectJavaScript(`
             window.startCall('${username}'+'@nevka.avicus.n4.voximplant.com');
             true;
@@ -242,6 +243,7 @@ export default function Call() {
                     <Pressable
                         style={({ pressed }) => [colorScheme === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? colorScheme === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : colorScheme === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                         onPress={() => {
+                            hangupCall();
                             router.back();
                         }}>
                         <FontAwesome
