@@ -3,13 +3,15 @@
  * 2025 Avicus Delacroix
  */
 
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Appearance } from "react-native";
+import { Appearance, StyleSheet, View } from "react-native";
 import { RelativePathString, router } from "expo-router";
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
+import { WebView } from 'react-native-webview';
+
 
 const NevkaContext = createContext({});
 
@@ -27,6 +29,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const [encryptionType, setEncryptionTypeLocal] = useState<string>("");
     const [notificationStatus, setNotificationStatusLocal] = useState<string>("");
+    const [voxUsername, setVoxUsername] = useState<string>("");
+    const [callActive, setCallActive] = useState<boolean>(false);
+    const webviewRef = useRef<WebView>(null);
 
     const setMessageCounter = async (value: number) => {
         setMessageCounterLocal(value);
@@ -288,6 +293,34 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             .join("");
     }
 
+    const voxLogin = (username: string) => {
+        webviewRef.current?.injectJavaScript(`
+            window.login('${username}'+'@nevka.avicus.n4.voximplant.com', 'PASTE_VOX_PASSWORD_HERE');
+            true;
+        `);
+    };
+
+    const checkVoxUsername = async (username: string) => {
+        const formData = new FormData();
+        formData.append("vox_username", username);
+        formData.append("api-key", "qonxod-Kicmad-4puvhy");
+
+        try {
+            const response = await fetch('https://nevka.site/api/checkVoxUsername.php', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await response.json();
+            if (json.result == "failure") {
+                console.log("checkVoxUsername error: " + json.error)
+            } else if (json.result == "success") {
+                return json.id;
+            }
+        } catch (error) {
+            console.log("Ошибка проверки пользователя Voximplant, проблемы с соединением?\n" + error);
+        }
+    }
+
     useEffect(() => {
         getToken();
         getLoggedUser();
@@ -315,7 +348,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
     return (
         <NevkaContext.Provider value={{
-            locales,
+            locales, webviewRef, voxLogin, callActive,
             token, setToken,
             loggedUser, setLoggedUser,
             messageCounter, setMessageCounter,
@@ -327,6 +360,50 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             notificationStatus, setNotificationStatus
         }}>
             {children}
+            <View
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: 1,
+                    height: 1,
+                    overflow: 'hidden',
+                }}>
+                <WebView
+                    ref={webviewRef}
+                    source={{ uri: 'https://nevka.site/api/vox.html' }}
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'transparent',
+                    }}
+                    javaScriptEnabled
+                    onMessage={(event) => {
+                        try {
+                            const data = JSON.parse(event.nativeEvent.data);
+                            if (data.type === 'console') {
+                                console.log(...data.log);
+                            } else if (data.type === 'warn') {
+                                console.warn(...data.log);
+                            } else if (data.type === 'error') {
+                                console.error(...data.log);
+                            } else if (data.type === 'incomingCall') {
+                                checkVoxUsername(data.username).then((id) => {
+                                    router.navigate(`/call?id=${id}&direction=incoming` as any);
+                                });
+                            } else if (data.type === 'incomingCallFailed' || data.type === 'incomingCallDisconnected') {
+                                setCallActive(false);
+                                if (router.canGoBack()) router.back();
+                            } else if (data.type === 'incomingCallConnected') {
+                                setCallActive(true);
+                            } else {
+                                console.log('Voximplant: ', data);
+                            }
+                        } catch (e) {
+                            console.log(event.nativeEvent.data);
+                        }
+                    }}
+                />
+            </View>
         </NevkaContext.Provider>
     );
 };
