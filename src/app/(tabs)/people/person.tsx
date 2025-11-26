@@ -104,7 +104,7 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                     onPress={() => {
                         if (!callStarted) {
                             setCallStarted(true);
-                            router.push(`/call?id=${user.id}&direction=outgoing` as any);
+                            router.navigate(`/call?id=${user.id}&direction=outgoing` as any);
                             setTimeout(() => setCallStarted(false), 3000);
                         }
                     }}

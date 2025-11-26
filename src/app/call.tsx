@@ -53,6 +53,9 @@ export default function Call() {
             } else if (json.result == "success") {
                 setUserData(json);
                 setLoading(false);
+                if (direction === "outgoing") {
+                    makeCall(json.vox_username);
+                }
             }
         } catch (error) {
             console.log("Ошибка запроса данных пользователя, проблемы с соединением?\n" + error);
@@ -80,12 +83,20 @@ export default function Call() {
         `);
     };
 
+    const makeCall = (username: string) => {
+        webviewRef.current?.injectJavaScript(`
+            window.startCall('${username}'+'@nevka.avicus.n4.voximplant.com');
+            true;
+        `);
+    };
+
     useEffect(() => {
         if (isFocused) {
             // perform all operations only if screen is focused
             getUserData(id).then(() => {
                 if (direction === "outgoing") {
                     setStatusString("Выполняется вызов...");
+                    setShowCallButtons(true);
                 } else {
                     setStatusString("Входящий вызов...");
                     setShowIncomingCallButtons(true);
@@ -102,7 +113,6 @@ export default function Call() {
 
     useEffect(() => {
         if (callActive) {
-            console.log("Call is active");
             let callTime = 0;
             setInterval(() => {
                 callTime++;
@@ -164,7 +174,6 @@ export default function Call() {
                         style={({ pressed }) => [colorScheme === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? "rgba(128, 0, 0, 1)" : "rgba(192, 0, 0, 1)" }]}
                         onPress={() => {
                             declineCall();
-                            router.back();
                         }}>
                         <FontAwesome
                             name="phone"
@@ -200,7 +209,6 @@ export default function Call() {
                         style={({ pressed }) => [colorScheme === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? "rgba(128, 0, 0, 1)" : "rgba(192, 0, 0, 1)" }]}
                         onPress={() => {
                             hangupCall();
-                            router.back();
                         }}>
                         <FontAwesome
                             name="phone"

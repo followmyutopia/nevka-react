@@ -348,7 +348,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
     return (
         <NevkaContext.Provider value={{
-            locales, webviewRef, voxLogin, callActive,
+            locales, webviewRef, callActive,
+            voxLogin,
             token, setToken,
             loggedUser, setLoggedUser,
             messageCounter, setMessageCounter,
@@ -377,6 +378,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                         backgroundColor: 'transparent',
                     }}
                     javaScriptEnabled
+                    mediaPlaybackRequiresUserAction={false}
+                    allowsInlineMediaPlayback
                     onMessage={(event) => {
                         try {
                             const data = JSON.parse(event.nativeEvent.data);
@@ -390,10 +393,10 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                                 checkVoxUsername(data.username).then((id) => {
                                     router.navigate(`/call?id=${id}&direction=incoming` as any);
                                 });
-                            } else if (data.type === 'incomingCallFailed' || data.type === 'incomingCallDisconnected') {
+                            } else if (data.type === 'CallFailed' || data.type === 'CallDisconnected') {
                                 setCallActive(false);
                                 if (router.canGoBack()) router.back();
-                            } else if (data.type === 'incomingCallConnected') {
+                            } else if (data.type === 'CallConnected') {
                                 setCallActive(true);
                             } else {
                                 console.log('Voximplant: ', data);
