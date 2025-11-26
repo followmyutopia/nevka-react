@@ -25,7 +25,8 @@ type UserData = {
     timestamp: number,
     avatar: string,
     online: string,
-    push_token: string
+    push_token: string,
+    vox_username: string
 };
 
 type WallData = {
@@ -225,7 +226,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
 }
 
 export default function profile() {
-    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -238,6 +239,8 @@ export default function profile() {
     const [showStatusEditor, setShowStatusEditor] = useState(false);
     const [showDeletePostDialog, setShowDeletePostDialog] = useState(false);
     const [postToDelete, setPostToDelete] = useState("");
+    const [voxUsername, setVoxUsername] = useState("");
+    const [voxLogged, setVoxLogged] = useState(false);
 
     const colorScheme = useColorScheme();
 
@@ -259,11 +262,13 @@ export default function profile() {
                 }
                 console.log("getUserData error: " + json.error)
             } else if (json.result == "success") {
-                setLoading(false);
-                setUserData(json);
                 if (json.firstname == "" || json.lastname == "") {
                     setIsNameSet(false);
                     router.navigate("/settings");
+                } else {
+                    setLoading(false);
+                    setUserData(json);
+                    setVoxUsername(json.vox_username);
                 }
                 if (json.push_token == "" && notificationStatus != "prompted") {
                     setNotificationStatus("suggest");
@@ -394,13 +399,17 @@ export default function profile() {
             getWall(loggedUser);
             console.log("Updated: Wall for: " + loggedUser);
         }
+        if (voxUsername !== "" && !voxLogged) {
+            voxLogin(voxUsername);
+            setVoxLogged(true);
+        }
     }, [update, isFocused]);
 
     return (
         <View style={styles.container}>
             {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 ListHeaderComponent={<MyInfoScreen user={userData!} onStatusChange={() => setShowStatusEditor(true)} />}
-                ListFooterComponent={<View style={{height: 80}}></View>}
+                ListFooterComponent={<View style={{ height: 80 }}></View>}
                 style={{ flex: 1, width: '100%' }}
                 data={wallData || <ActivityIndicator />}
                 renderItem={({ item }) => <WallPost item={item} user={userData!} deleteHandler={showDeleteDialog} likeHandler={likePost} />}

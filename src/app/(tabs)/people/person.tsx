@@ -6,7 +6,7 @@
 import { ActivityIndicator, StyleSheet, Image, useColorScheme, FlatList, Pressable } from "react-native";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { View, Text } from "@/src/components/Themed";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
@@ -99,13 +99,12 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                         style={{ marginLeft: 0.5, marginBottom: 2 }}
                     />
                 </Pressable>
-                {/* <Pressable
+                <Pressable
                     style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                     onPress={() => {
                         if (!callStarted) {
                             setCallStarted(true);
-                            const payload = encodeURIComponent(JSON.stringify(user));
-                            router.push(`/call?user=${payload}` as any);
+                            router.push(`/call?id=${user.id}&direction=outgoing` as any);
                             setTimeout(() => setCallStarted(false), 3000);
                         }
                     }}
@@ -116,26 +115,7 @@ const UserInfoScreen = ({ user }: UserInfoScreenProps) => {
                         color={Colors[colorScheme ?? 'light'].text}
                         style={{ margin: 0 }}
                     />
-                </Pressable> */}
-                {/* Заглушка, потом убрать */}
-                <Pressable
-                    style={[useColorScheme() === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { opacity: 0.5 }]}
-                    onPress={() => {
-                        setShowPlaceholder(true);
-                    }}
-                >
-                    <FontAwesome
-                        name="phone"
-                        size={25}
-                        color={Colors[colorScheme ?? 'light'].text}
-                        style={{ margin: 0, opacity: 0.5 }}
-                    />
                 </Pressable>
-                <Dialog.Container visible={showPlaceholder}>
-                    <Dialog.Title>Звонки в разработке</Dialog.Title>
-                    <Dialog.Description style={{marginTop: 10}}>По запросам пользователей, в будущих версиях приложения появится функционал звонков.{`\n\n`}За выходом новой версии можно следить в самом низу экрана настроек.</Dialog.Description>
-                    <Dialog.Button label="Понятно" onPress={() => setShowPlaceholder(false)} />
-                </Dialog.Container>
             </View>
         </View>
     );
