@@ -29,7 +29,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const [encryptionType, setEncryptionTypeLocal] = useState<string>("");
     const [notificationStatus, setNotificationStatusLocal] = useState<string>("");
-    const [voxUsername, setVoxUsername] = useState<string>("");
+    const [callErrorMessage, setCallErrorMessage] = useState<string>("");
     const [callActive, setCallActive] = useState<boolean>(false);
     const webviewRef = useRef<WebView>(null);
 
@@ -348,7 +348,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
     return (
         <NevkaContext.Provider value={{
-            locales, webviewRef, callActive,
+            locales, webviewRef, callActive, callErrorMessage,
             voxLogin,
             token, setToken,
             loggedUser, setLoggedUser,
@@ -398,6 +398,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                                 if (router.canGoBack()) router.back();
                             } else if (data.type === 'CallConnected') {
                                 setCallActive(true);
+                            } else if (data.type === 'CallError') {
+                                setCallActive(false);
+                                setCallErrorMessage(data.message);
                             } else {
                                 console.log('Voximplant: ', data);
                             }
