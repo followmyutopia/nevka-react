@@ -125,7 +125,7 @@ export default function people() {
             ></TextInput>
             {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 style={{ flex: 1, width: '100%' }}
-                data={peopleData}
+                data={peopleData?.filter(item => item.id != loggedUser)}
                 renderItem={({ item }) => <PeopleListItem user={item} />}
                 ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Никого не найдено</Text>}
                 ListFooterComponent={<View style={{height: 80}}></View>}
