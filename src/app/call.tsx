@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, useColorScheme, Image, Pressable, ActivityIndicator } from "react-native";
 import Colors from "../constants/Colors";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNevkaProvider } from "../providers/nevkaProvider";
@@ -21,7 +21,7 @@ type UserData = {
 };
 
 export default function Call() {
-    const { token, setToken, loggedUser, webviewRef, callActive }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, webviewRef, callActive, callErrorMessage }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const { id, direction } = useLocalSearchParams<{ id: string; direction: string }>();
@@ -30,6 +30,7 @@ export default function Call() {
     const [userData, setUserData] = useState<UserData>();
     const [showIncomingCallButtons, setShowIncomingCallButtons] = useState(false);
     const [showCallButtons, setShowCallButtons] = useState(false);
+    const [showErrorButtons, setShowErrorButtons] = useState(false);
     const colorScheme = useColorScheme();
     const isFocused = useIsFocused();
 
@@ -97,9 +98,13 @@ export default function Call() {
                 if (direction === "outgoing") {
                     setStatusString("Выполняется вызов...");
                     setShowCallButtons(true);
+                    setShowErrorButtons(false);
+                    setShowIncomingCallButtons(false);
                 } else {
                     setStatusString("Входящий вызов...");
                     setShowIncomingCallButtons(true);
+                    setShowErrorButtons(false);
+                    setShowCallButtons(false);
                 }
             });
         }
@@ -123,6 +128,14 @@ export default function Call() {
             }, 1000);
         }
     }, [callActive]);
+
+    useEffect(() => {
+        if (callErrorMessage !== "") {
+            setStatusString(callErrorMessage);
+            setShowCallButtons(false);
+            setShowErrorButtons(true);
+        }
+    }, [callErrorMessage]);
 
     return (
         <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background, width: '100%' }]}>
@@ -215,6 +228,26 @@ export default function Call() {
                             size={25}
                             color={Colors[colorScheme ?? 'light'].text}
                             style={{ transform: [{ rotate: '135deg' }] }}
+                        />
+                    </Pressable>
+                </View> : null}
+
+                {showErrorButtons ? <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    width: '90%',
+                    padding: 20
+                }}>
+
+                    <Pressable
+                        style={({ pressed }) => [colorScheme === 'light' ? styles.lightRoundButton : styles.darkRoundButton, { backgroundColor: pressed ? colorScheme === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : colorScheme === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                        onPress={() => {
+                            router.back();
+                        }}>
+                        <FontAwesome
+                            name="times"
+                            size={25}
+                            color={Colors[colorScheme ?? 'light'].text}
                         />
                     </Pressable>
                 </View> : null}
