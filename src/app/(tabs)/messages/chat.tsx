@@ -1,12 +1,12 @@
 /**
- * Nevka Mobile v1.5
+ * Nevka Mobile v1.6
  * 2025 Avicus Delacroix
  */
 
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, TouchableOpacity, useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState, useRef } from "react";
 import Colors from "@/src/constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
@@ -362,7 +362,18 @@ export default function chat() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: name }} />
+            <Stack.Screen options={{
+                title: name,
+                headerTitle: () => (
+                    <TouchableOpacity
+                        onPress={() => router.navigate({
+                            pathname: '/(tabs)/people/person',
+                            params: { id, name },
+                        })}>
+                        <Text style={{ fontSize: 17, fontWeight: '600' }}>{name}</Text>
+                    </TouchableOpacity>
+                )
+            }} />
             {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
                 inverted
                 initialNumToRender={1000}
