@@ -426,6 +426,7 @@ export default function profile() {
         const subscription = AppState.addEventListener("change", nextAppState => {
             if (appState.current.match(/inactive|background/) && nextAppState === "active") {
                 setVoxLogged(false);
+                getUserData(loggedUser);
             }
             appState.current = nextAppState;
         });
