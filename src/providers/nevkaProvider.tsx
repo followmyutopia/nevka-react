@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.5
+ * Nevka Mobile v1.6
  * 2025 Avicus Delacroix
  */
 
@@ -32,6 +32,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [callActive, setCallActive] = useState<boolean>(false);
     const [voxUsername, setVoxUsername] = useState("");
     const [voxLogged, setVoxLogged] = useState(false);
+    const [latestVersion, setLatestVersion] = useState("");
     const webviewRef = useRef<WebView>(null);
 
     const setMessageCounter = async (value: number) => {
@@ -363,7 +364,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             theme, setTheme,
             encryptionType, setEncryptionType,
             encode, decode,
-            notificationStatus, setNotificationStatus
+            notificationStatus, setNotificationStatus,
+            latestVersion, setLatestVersion
         }}>
             {children}
             <View
@@ -405,7 +407,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                                 setCallErrorMessage(data.message);
                             } else if (data.type === 'SdkDisconnected' || data.type === 'ConnectionError') {
                                 console.log('Voximplant: SDK disconnected');
-                                voxLogin(voxUsername);
+                                setCallErrorMessage('Ошибка соединения');
+                                setVoxLogged(false);
                             } else if (data.type === 'CallFailed' || data.type === 'CallDisconnected') {
                                 setCallActive(false);
                                 if (router.canGoBack()) router.back();

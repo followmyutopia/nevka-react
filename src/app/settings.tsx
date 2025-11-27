@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.5
+ * Nevka Mobile v1.6
  * 2025 Avicus Delacroix
  */
 
@@ -30,7 +30,7 @@ type UserData = {
 };
 
 export default function settings() {
-    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType, setIsNameSet }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType, setIsNameSet, latestVersion, setLatestVersion }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -46,7 +46,6 @@ export default function settings() {
     const [changingPassword, setChangingPassword] = useState(false);
     const [image, setImage] = useState("");
     const [currentAvatar, setCurrentAvatar] = useState("");
-    const [latestVersion, setLatestVersion] = useState("");
     const [expoGoLink, setExpoGoLink] = useState("");
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");

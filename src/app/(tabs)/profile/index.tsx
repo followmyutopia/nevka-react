@@ -1,5 +1,5 @@
 /**
- * Nevka Mobile v1.5
+ * Nevka Mobile v1.6
  * 2025 Avicus Delacroix
  */
 
@@ -15,6 +15,7 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Colors from "@/src/constants/Colors";
 import { AppState } from "react-native";
+import * as AppConfig from "../../../../app.json"
 
 type UserData = {
     id: string,
@@ -227,7 +228,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
 }
 
 export default function profile() {
-    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin, voxUsername, setVoxUsername, voxLogged, setVoxLogged }: any = useNevkaProvider();
+    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin, voxUsername, setVoxUsername, voxLogged, setVoxLogged, latestVersion, setLatestVersion }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -240,6 +241,7 @@ export default function profile() {
     const [showStatusEditor, setShowStatusEditor] = useState(false);
     const [showDeletePostDialog, setShowDeletePostDialog] = useState(false);
     const [postToDelete, setPostToDelete] = useState("");
+    const [expoGoLink, setExpoGoLink] = useState("");
 
     const colorScheme = useColorScheme();
     const appState = useRef(AppState.currentState);
@@ -394,6 +396,21 @@ export default function profile() {
         }
     }
 
+    // const checkUpdate = async () => {
+    //     try {
+    //         const response = await fetch('https://nevka.site/api/checkUpdate.php');
+    //         const json = await response.json();
+    //         setLatestVersion(json.latestVersion);
+    //         setExpoGoLink(json.expoGo);
+
+    //         if (AppConfig.expo.version != latestVersion) {
+    //             console.log("Outdated version!!!");
+    //         }
+    //     } catch (error) {
+    //         console.log("Ошибка запроса последней версии, проблемы с соединением?\n" + error);
+    //     }
+    // }
+
     useEffect(() => {
         if (isFocused) {
             setTimeout(() => setUpdate(update + 1), 5000);
@@ -401,6 +418,7 @@ export default function profile() {
             console.log("Updated: UserData for: " + loggedUser);
             getWall(loggedUser);
             console.log("Updated: Wall for: " + loggedUser);
+            // checkUpdate();
         }
     }, [update, isFocused]);
 
@@ -408,15 +426,16 @@ export default function profile() {
         const subscription = AppState.addEventListener("change", nextAppState => {
             if (appState.current.match(/inactive|background/) && nextAppState === "active") {
                 setVoxLogged(false);
-                getUserData(loggedUser);
             }
             appState.current = nextAppState;
         });
 
+        if (!voxLogged) getUserData(loggedUser);
+
         return () => {
             subscription.remove();
         };
-    }, [appState.current]);
+    }, [appState.current, voxLogged]);
 
     return (
         <View style={styles.container}>
