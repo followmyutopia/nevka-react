@@ -388,7 +388,7 @@ export default function chat() {
                     <FontAwesome
                         name="reply"
                         size={27}
-                        color={Colors[colorScheme ?? 'light'].text}
+                        color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                     />
                 </View>
                 <Text numberOfLines={2}
@@ -406,7 +406,7 @@ export default function chat() {
                         <FontAwesome
                             name="times"
                             size={27}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                             style={{ opacity: pressed ? 0.5 : 1 }}
                         />
                     )}

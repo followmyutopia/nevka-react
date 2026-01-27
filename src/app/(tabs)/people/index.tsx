@@ -54,7 +54,7 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
                         <FontAwesome
                             name="envelope-o"
                             size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                             style={{ marginLeft: 1, marginBottom: 2 }}
                         />
                     </Pressable>

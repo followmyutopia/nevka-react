@@ -27,7 +27,7 @@ export default function MenuStack() {
                 //                 <FontAwesome
                 //                     name="cog"
                 //                     size={25}
-                //                     color={Colors[colorScheme ?? 'light'].text}
+                //                     color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                 //                     style={{ marginTop: 0, marginLeft: 7.5, opacity: pressed ? 0.5 : 1 }}
                 //                 />
                 //             )}

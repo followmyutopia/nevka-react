@@ -88,7 +88,7 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
                                 <FontAwesome
                                     name="heart"
                                     size={18}
-                                    color={likesArray.includes(parseInt(me)) ? 'crimson' : Colors[colorScheme ?? 'light'].text}
+                                    color={likesArray.includes(parseInt(me)) ? 'crimson' : Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                                     style={{ opacity: pressed ? 0.5 : 1 }} />
                                 {likesArray.length > 0 ? <Text style={{
                                     fontSize: 15,
@@ -106,7 +106,7 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
                     }}><FontAwesome
                             name="heart"
                             size={18}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                         />
                         <ActivityIndicator size={15} style={{
                             marginLeft: 10

@@ -343,7 +343,7 @@ export default function settings() {
                             <FontAwesome
                                 name="times"
                                 size={25}
-                                color={Colors[colorScheme ?? 'light'].text}
+                                color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                                 style={{ marginBottom: 2 }}
                             />
                         </Pressable>
