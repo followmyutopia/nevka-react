@@ -7,7 +7,6 @@
     "icon": "./assets/icns/ios-dark.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/icns/splash-icon-light.png",
       "resizeMode": "contain",
@@ -61,7 +60,8 @@
       ],
       "expo-localization",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true

@@ -34,8 +34,8 @@ export default function MenuStack() {
                                 <FontAwesome
                                     name="plus"
                                     size={25}
-                                    color={Colors[colorScheme ?? 'light'].text}
-                                    style={{ marginTop: 2, marginLeft: 8, opacity: pressed ? 0.5 : 1 }}
+                                    color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
+                                    style={{ marginTop: 2, opacity: pressed ? 0.5 : 1 }}
                                 />
                             )}
                         </Pressable>
@@ -48,7 +48,7 @@ export default function MenuStack() {
                                 <FontAwesome
                                     name="comments-o"
                                     size={25}
-                                    color={Colors[colorScheme ?? 'light'].text}
+                                    color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                                     style={{ marginHorizontal: 5, marginBottom: 4, opacity: pressed ? 0.5 : 1 }}
                                 />
                             )}
@@ -81,8 +81,8 @@ export default function MenuStack() {
                             <FontAwesome
                                 name={encryptionType == "NE5" ? "lock" : "unlock-alt"}
                                 size={21}
-                                color={Colors[colorScheme ?? 'light'].text}
-                                style={{ marginTop: 1, marginLeft: 11, opacity: pressed ? 0.5 : 1 }}
+                                color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
+                                style={{ marginTop: 1, opacity: pressed ? 0.5 : 1 }}
                             />
                         )}
                     </Pressable>
@@ -107,8 +107,8 @@ export default function MenuStack() {
                                 <FontAwesome
                                     name="plus"
                                     size={25}
-                                    color={Colors[colorScheme ?? 'light'].text}
-                                    style={{ marginTop: 2, marginLeft: 8, opacity: pressed ? 0.5 : 1 }}
+                                    color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
+                                    style={{ marginTop: 2, opacity: pressed ? 0.5 : 1 }}
                                 />
                             )}
                         </Pressable>

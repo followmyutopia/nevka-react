@@ -179,7 +179,7 @@ export default function Call() {
                         <FontAwesome
                             name="phone"
                             size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                             style={{}}
                         />
                     </Pressable>
@@ -192,7 +192,7 @@ export default function Call() {
                         <FontAwesome
                             name="phone"
                             size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                             style={{ transform: [{ rotate: '135deg' }] }}
                         />
                     </Pressable>
@@ -214,7 +214,7 @@ export default function Call() {
                         <FontAwesome
                             name="phone"
                             size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                             style={{}}
                         />
                     </Pressable> */}
@@ -227,7 +227,7 @@ export default function Call() {
                         <FontAwesome
                             name="phone"
                             size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                             style={{ transform: [{ rotate: '135deg' }] }}
                         />
                     </Pressable>
@@ -249,7 +249,7 @@ export default function Call() {
                         <FontAwesome
                             name="times"
                             size={25}
-                            color={Colors[colorScheme ?? 'light'].text}
+                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                         />
                     </Pressable>
                 </View> : null}

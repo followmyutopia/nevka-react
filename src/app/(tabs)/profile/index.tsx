@@ -103,7 +103,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                     <FontAwesome
                         name="pencil-square-o"
                         size={25}
-                        color={Colors[colorScheme ?? 'light'].text}
+                        color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                         style={{ marginLeft: 4 }}
                     />
                 </Pressable>
@@ -114,7 +114,7 @@ const MyInfoScreen = ({ user, onStatusChange }: MyInfoScreenProps) => {
                     <FontAwesome
                         name="cog"
                         size={25}
-                        color={Colors[colorScheme ?? 'light'].text}
+                        color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                         style={{ margin: 0 }}
                     />
                 </Pressable>
@@ -211,7 +211,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
                                 <FontAwesome
                                     name="heart"
                                     size={18}
-                                    color={likesArray.includes(parseInt(user.id)) ? 'crimson' : Colors[colorScheme ?? 'light'].text}
+                                    color={likesArray.includes(parseInt(user.id)) ? 'crimson' : Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                                     style={{ opacity: pressed ? 0.5 : 1 }} />
                                 {likesArray.length != 0 ? <Text style={{
                                     fontSize: 15,
