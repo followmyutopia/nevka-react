@@ -3,7 +3,7 @@
  * 2025-2026 Avicus Delacroix
  */
 
-import { createContext, PropsWithChildren, useContext, useEffect, useState, useRef } from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState, useRef, use } from "react";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance, StyleSheet, View } from "react-native";
@@ -11,6 +11,8 @@ import { RelativePathString, router } from "expo-router";
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { WebView } from 'react-native-webview';
+import Dialog from "react-native-dialog";
+import { get } from "react-native/Libraries/NativeComponent/NativeComponentRegistry";
 
 const NevkaContext = createContext({});
 
@@ -29,12 +31,15 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [encryptionType, setEncryptionTypeLocal] = useState<string>("");
     const [notificationStatus, setNotificationStatusLocal] = useState<string>("");
     const [domain, setDomainLocal] = useState<string>("");
+    const [notice, setNoticeLocal] = useState<string>("");
+    const [newNotice, setNewNotice] = useState<string>("");
     const [callErrorMessage, setCallErrorMessage] = useState<string>("");
     const [callActive, setCallActive] = useState<boolean>(false);
     const [voxUsername, setVoxUsername] = useState("");
     const [voxLogged, setVoxLogged] = useState(false);
     const [latestVersion, setLatestVersion] = useState("");
     const webviewRef = useRef<WebView>(null);
+    const [noticeVisible, setNoticeVisible] = useState(false);
 
     const setMessageCounter = async (value: number) => {
         setMessageCounterLocal(value);
@@ -101,6 +106,26 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         setDomainLocal(value);
         try {
             await AsyncStorage.setItem('domain', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const setNotice = async (value: string) => {
+        setNoticeLocal(value);
+        try {
+            await AsyncStorage.setItem('notice', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const getNotice = async () => {
+        try {
+            const value = await AsyncStorage.getItem('notice');
+            if (value !== null) {
+                setNoticeLocal(value);
+            }
         } catch (e) {
             console.log("AsyncStorage error: " + e);
         }
@@ -352,6 +377,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             });
             const json = await response.json();
             setDomain(json.domain)
+            setNewNotice(json.message);
             console.log("Current domain: "+json.domain);
         } catch (e) {
             console.log(e);
@@ -359,8 +385,9 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     }
 
     useEffect(() => {
-        initCheck();
+        getNotice();
         getDomain();
+        initCheck();
         getToken();
         getLoggedUser();
         getTheme();
@@ -387,6 +414,13 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             responseListener.remove();
         };
     }, [])
+
+    useEffect(() => {
+        if (newNotice !== notice) {
+            setNotice(newNotice);
+            setNoticeVisible(true);
+        }
+    }, [newNotice]);
 
     return (
         <NevkaContext.Provider value={{
@@ -415,7 +449,13 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                     width: 1,
                     height: 1,
                     overflow: 'hidden',
-                }}>
+                }}><Dialog.Container visible={noticeVisible}>
+                    <Dialog.Title>Важные новости</Dialog.Title>
+                    <Dialog.Description>{notice}</Dialog.Description>
+                    <Dialog.Button label="Понятно" onPress={() => {
+                        setNoticeVisible(false);
+                    }} />
+                </Dialog.Container>
                 <WebView
                     ref={webviewRef}
                     source={{ uri: domain+'/api/vox.html' }}
