@@ -121,7 +121,7 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
 }
 
 export default function feed() {
-    const { token, setToken, loggedUser }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const [feedData, setFeedData] = useState<WallData[]>([]);
@@ -138,7 +138,7 @@ export default function feed() {
         setFeedLoading(true);
 
         try {
-            const response = await fetch('https://nevka.site/api/getFeed.php', {
+            const response = await fetch(domain+'/api/getFeed.php', {
                 method: 'POST',
                 body: formData
             });
@@ -165,7 +165,7 @@ export default function feed() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/likePost.php', {
+            const response = await fetch(domain+'/api/likePost.php', {
                 method: 'POST',
                 body: formData
             });

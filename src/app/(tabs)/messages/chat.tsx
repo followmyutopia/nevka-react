@@ -168,7 +168,7 @@ const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: Messa
 }
 
 export default function chat() {
-    const { loggedUser, token, setToken, encryptionType, encode, decode }: any = useNevkaProvider();
+    const { domain, loggedUser, token, setToken, encryptionType, encode, decode }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
@@ -195,7 +195,7 @@ export default function chat() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getMessages.php', {
+            const response = await fetch(domain+'/api/getMessages.php', {
                 method: 'POST',
                 body: formData
             });
@@ -293,7 +293,7 @@ export default function chat() {
             setStatus("");
 
             try {
-                const response = await fetch('https://nevka.site/api/sendMessage.php', {
+                const response = await fetch(domain+'/api/sendMessage.php', {
                     method: 'POST',
                     body: formData
                 });

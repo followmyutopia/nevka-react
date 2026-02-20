@@ -28,7 +28,7 @@ export default function signup() {
     const [buttonInactive, setButtonInactive] = useState(false);
     const [emailEditable, setEmailEditable] = useState(true);
 
-    const { token, setToken, setLoggedUser }: any = useNevkaProvider();
+    const { domain, token, setToken, setLoggedUser }: any = useNevkaProvider();
     if (token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const sendConfirmation = async () => {
@@ -43,7 +43,7 @@ export default function signup() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/sendConfirmation.php', {
+            const response = await fetch(domain+'/api/sendConfirmation.php', {
                 method: 'POST',
                 body: formData
             });
@@ -85,7 +85,7 @@ export default function signup() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/signUp.php', {
+                const response = await fetch(domain+'/api/signUp.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -116,7 +116,7 @@ export default function signup() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/login.php', {
+            const response = await fetch(domain+'/api/login.php', {
                 method: 'POST',
                 body: formData
             });

@@ -79,7 +79,7 @@ const ChatsListItem = ({ user, loggedUser }: ChatsListItemProps) => {
 }
 
 export default function messages() {
-    const { token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet, decode, notificationStatus, setNotificationStatus, pushToken, setPushToken }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser, messageCounter, setMessageCounter, isNameSet, decode, notificationStatus, setNotificationStatus, pushToken, setPushToken }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const [update, setUpdate] = useState(0);
@@ -96,7 +96,7 @@ export default function messages() {
         if (loggedUser == "1") formData.append("safe", "true");
 
         try {
-            const response = await fetch('https://nevka.site/api/getChats.php', {
+            const response = await fetch(domain+'/api/getChats.php', {
                 method: 'POST',
                 body: formData
             });
@@ -149,7 +149,7 @@ export default function messages() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/setPushToken.php', {
+                const response = await fetch(domain+'/api/setPushToken.php', {
                     method: 'POST',
                     body: formData
                 });

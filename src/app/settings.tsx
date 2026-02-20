@@ -30,7 +30,7 @@ type UserData = {
 };
 
 export default function settings() {
-    const { token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType, setIsNameSet, latestVersion, setLatestVersion }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser, pushToken, setPushToken, setTheme, locales, encryptionType, setEncryptionType, setIsNameSet, latestVersion, setLatestVersion }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> }
     const colorScheme = useColorScheme();
 
@@ -106,7 +106,7 @@ export default function settings() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getUserData.php', {
+            const response = await fetch(domain+'/api/getUserData.php', {
                 method: 'POST',
                 body: formData
             });
@@ -150,7 +150,7 @@ export default function settings() {
             setSettingUserData(true);
 
             try {
-                const response = await fetch('https://nevka.site/api/setUserData.php', {
+                const response = await fetch(domain+'/api/setUserData.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -180,7 +180,7 @@ export default function settings() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/setPushToken.php', {
+                const response = await fetch(domain+'/api/setPushToken.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -230,7 +230,7 @@ export default function settings() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/setAvatar.php', {
+                const response = await fetch(domain+'/api/setAvatar.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -275,7 +275,7 @@ export default function settings() {
             setSettingUserData(true);
 
             try {
-                const response = await fetch('https://nevka.site/api/changePassword.php', {
+                const response = await fetch(domain+'/api/changePassword.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -305,7 +305,7 @@ export default function settings() {
 
     const checkUpdate = async () => {
         try {
-            const response = await fetch('https://nevka.site/api/checkUpdate.php');
+            const response = await fetch(domain+'/api/checkUpdate.php');
             const json = await response.json();
             setLatestVersion(json.latestVersion);
             setExpoGoLink(json.expoGo);
@@ -315,7 +315,7 @@ export default function settings() {
     }
 
     const getNewVersion = () => {
-        const url = Platform.OS === 'ios' ? expoGoLink : 'https://nevka.site/android';
+        const url = Platform.OS === 'ios' ? expoGoLink : domain+'/android';
         Linking.openURL(url);
     }
 
