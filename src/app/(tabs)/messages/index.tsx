@@ -6,7 +6,7 @@
 import { StyleSheet, Image, useColorScheme, ActivityIndicator, FlatList, Pressable } from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
-import { Link, Redirect, router } from "expo-router";
+import { Link, Redirect, router, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as Notifications from "expo-notifications";
@@ -88,6 +88,7 @@ export default function messages() {
     const [loading, setLoading] = useState(true);
     const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
     const isFocused = useIsFocused();
+    const [dotColor, setDotColor] = useState('green');
 
     const getChats = async (token: string) => {
         const formData = new FormData();
@@ -136,6 +137,7 @@ export default function messages() {
             }
         } catch (error) {
             console.log("Ошибка запроса чатов, проблемы с соединением?\n" + error);
+            setDotColor('red');
         } finally {
             setLoading(false);
         }
@@ -182,6 +184,7 @@ export default function messages() {
         ws.onopen = () => {
             ws.send(JSON.stringify({ token: token, subscribeToChatList: true }));
             console.log("WebSocket connection opened (Chat list)");
+            setDotColor('blue');
         };
 
         ws.onmessage = (e) => {
@@ -214,6 +217,7 @@ export default function messages() {
 
         ws.onclose = (e) => {
             console.log("WebSocket connection closed (Chat list):", e.code);
+            setDotColor('green');
 
             getChats(token);
             console.log("Updated: Chats via API");
@@ -234,6 +238,14 @@ export default function messages() {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{
+                headerTitle: () => (
+                    <Text style={{ fontSize: 17, fontWeight: '600' }}>
+                        Сообщения
+                        <Text style={{ fontSize: 17, fontWeight: '900', color: dotColor }}>  •</Text>
+                    </Text>
+                )
+            }} />
             {loading ? <ActivityIndicator /> : <FlatList
                 style={{ flex: 1, width: '100%' }}
                 data={chatsData}
