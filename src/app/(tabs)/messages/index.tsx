@@ -88,7 +88,7 @@ export default function messages() {
     const [loading, setLoading] = useState(true);
     const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
     const isFocused = useIsFocused();
-    const [dotColor, setDotColor] = useState('green');
+    const [dotColor, setDotColor] = useState('yellow');
 
     const getChats = async (token: string) => {
         const formData = new FormData();
@@ -184,7 +184,6 @@ export default function messages() {
         ws.onopen = () => {
             ws.send(JSON.stringify({ token: token, subscribeToChatList: true }));
             console.log("WebSocket connection opened (Chat list)");
-            setDotColor('blue');
         };
 
         ws.onmessage = (e) => {
@@ -213,14 +212,15 @@ export default function messages() {
             setMessageCounter(newMessageCounter);
             if (newMessageCounter == 0) Notifications.dismissAllNotificationsAsync();
             console.log("Updated: Chats via WS");
+            setDotColor('blue');
         };
 
         ws.onclose = (e) => {
             console.log("WebSocket connection closed (Chat list):", e.code);
-            setDotColor('green');
 
             getChats(token);
             console.log("Updated: Chats via API");
+            setDotColor('green');
             setTimeout(() => setUpdate(update + 1), 5000);
         };
 
