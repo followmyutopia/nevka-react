@@ -21,7 +21,7 @@ type UserData = {
 };
 
 export default function Call() {
-    const { token, setToken, loggedUser, webviewRef, callActive, callErrorMessage, setCallErrorMessage }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser, webviewRef, callActive, callErrorMessage, setCallErrorMessage }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const { id, direction } = useLocalSearchParams<{ id: string; direction: string }>();
@@ -41,7 +41,7 @@ export default function Call() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getUserData.php', {
+            const response = await fetch(domain+'/api/getUserData.php', {
                 method: 'POST',
                 body: formData
             });

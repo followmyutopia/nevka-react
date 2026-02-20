@@ -200,7 +200,7 @@ const WallPost = ({ item, user, likeHandler, me }: WallPostProps) => {
 }
 
 export default function person() {
-    const { token, setToken, loggedUser }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
     const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
 
@@ -220,7 +220,7 @@ export default function person() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getUserData.php', {
+            const response = await fetch(domain+'/api/getUserData.php', {
                 method: 'POST',
                 body: formData
             });
@@ -245,7 +245,7 @@ export default function person() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getWall.php', {
+            const response = await fetch(domain+'/api/getWall.php', {
                 method: 'POST',
                 body: formData
             });
@@ -272,7 +272,7 @@ export default function person() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/likePost.php', {
+            const response = await fetch(domain+'/api/likePost.php', {
                 method: 'POST',
                 body: formData
             });

@@ -228,7 +228,7 @@ const WallPost = ({ item, user, deleteHandler, likeHandler }: WallPostProps) => 
 }
 
 export default function profile() {
-    const { token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin, voxUsername, setVoxUsername, voxLogged, setVoxLogged, latestVersion, setLatestVersion }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser, setIsNameSet, notificationStatus, setNotificationStatus, voxLogin, voxUsername, setVoxUsername, voxLogged, setVoxLogged, latestVersion, setLatestVersion }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -253,7 +253,7 @@ export default function profile() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getUserData.php', {
+            const response = await fetch(domain+'/api/getUserData.php', {
                 method: 'POST',
                 body: formData
             });
@@ -290,7 +290,7 @@ export default function profile() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getWall.php', {
+            const response = await fetch(domain+'/api/getWall.php', {
                 method: 'POST',
                 body: formData
             });
@@ -320,7 +320,7 @@ export default function profile() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/setStatus.php', {
+            const response = await fetch(domain+'/api/setStatus.php', {
                 method: 'POST',
                 body: formData
             });
@@ -353,7 +353,7 @@ export default function profile() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/deletePost.php', {
+            const response = await fetch(domain+'/api/deletePost.php', {
                 method: 'POST',
                 body: formData
             });
@@ -378,7 +378,7 @@ export default function profile() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/likePost.php', {
+            const response = await fetch(domain+'/api/likePost.php', {
                 method: 'POST',
                 body: formData
             });
@@ -398,7 +398,7 @@ export default function profile() {
 
     // const checkUpdate = async () => {
     //     try {
-    //         const response = await fetch('https://nevka.site/api/checkUpdate.php');
+    //         const response = await fetch(domain+'/api/checkUpdate.php');
     //         const json = await response.json();
     //         setLatestVersion(json.latestVersion);
     //         setExpoGoLink(json.expoGo);

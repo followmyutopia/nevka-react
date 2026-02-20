@@ -28,6 +28,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const [encryptionType, setEncryptionTypeLocal] = useState<string>("");
     const [notificationStatus, setNotificationStatusLocal] = useState<string>("");
+    const [domain, setDomainLocal] = useState<string>("");
     const [callErrorMessage, setCallErrorMessage] = useState<string>("");
     const [callActive, setCallActive] = useState<boolean>(false);
     const [voxUsername, setVoxUsername] = useState("");
@@ -91,6 +92,26 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         setNotificationStatusLocal(value);
         try {
             await AsyncStorage.setItem('notificationStatus', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const setDomain = async (value: string) => {
+        setDomainLocal(value);
+        try {
+            await AsyncStorage.setItem('domain', value);
+        } catch (e) {
+            console.log("AsyncStorage error: " + e);
+        }
+    };
+
+    const getDomain = async () => {
+        try {
+            const value = await AsyncStorage.getItem('domain');
+            if (value !== null) {
+                setDomainLocal(value);
+            }
         } catch (e) {
             console.log("AsyncStorage error: " + e);
         }
@@ -309,7 +330,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/checkVoxUsername.php', {
+            const response = await fetch(domain+'/api/checkVoxUsername.php', {
                 method: 'POST',
                 body: formData
             });
@@ -330,7 +351,8 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                 method: 'GET'
             });
             const json = await response.json();
-            console.log(json.domain);
+            setDomain(json.domain)
+            console.log("Current domain: "+json.domain);
         } catch (e) {
             console.log(e);
         }
@@ -338,6 +360,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
 
     useEffect(() => {
         initCheck();
+        getDomain();
         getToken();
         getLoggedUser();
         getTheme();
@@ -350,11 +373,14 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         });
 
         const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
-            const data: PushDataObject = response.notification.request.content.data;
-            if (data.url) {
-                router.navigate(data.url, { withAnchor: true })
+            const raw = response.notification.request.content.data;
+            if (raw && typeof raw === 'object' && 'url' in raw) {
+                const data = raw as PushDataObject;
+                if (data.url) {
+                    router.navigate(data.url, { withAnchor: true });
+                }
             }
-        });
+         });
 
         return () => {
             notificationListener.remove();
@@ -365,7 +391,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
     return (
         <NevkaContext.Provider value={{
             locales, webviewRef, callActive,
-            voxLogin,
+            voxLogin, domain,
             voxUsername, setVoxUsername,
             voxLogged, setVoxLogged,
             callErrorMessage, setCallErrorMessage,
@@ -378,7 +404,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
             encryptionType, setEncryptionType,
             encode, decode,
             notificationStatus, setNotificationStatus,
-            latestVersion, setLatestVersion
+            latestVersion, setLatestVersion,
         }}>
             {children}
             <View
@@ -392,7 +418,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
                 }}>
                 <WebView
                     ref={webviewRef}
-                    source={{ uri: 'https://nevka.site/api/vox.html' }}
+                    source={{ uri: domain+'/api/vox.html' }}
                     style={{
                         flex: 1,
                         backgroundColor: 'transparent',

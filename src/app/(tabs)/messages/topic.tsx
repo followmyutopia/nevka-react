@@ -59,7 +59,7 @@ const TopicMessage = ({ item }: TopicMessageProps) => {
 };
 
 export default function topic() {
-    const { token, setToken }: any = useNevkaProvider();
+    const { domain, token, setToken }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -83,7 +83,7 @@ export default function topic() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getTopic.php', {
+            const response = await fetch(domain+'/api/getTopic.php', {
                 method: 'POST',
                 body: formData
             });
@@ -124,7 +124,7 @@ export default function topic() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/sendTopicReply.php', {
+                const response = await fetch(domain+'/api/sendTopicReply.php', {
                     method: 'POST',
                     body: formData
                 });

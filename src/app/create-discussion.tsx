@@ -14,7 +14,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function settings() {
-    const { token, setToken }: any = useNevkaProvider();
+    const { domain, token, setToken }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> }
 
     const [title, setTitle] = useState("");
@@ -45,7 +45,7 @@ export default function settings() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/createTopic.php', {
+                const response = await fetch(domain+'/api/createTopic.php', {
                     method: 'POST',
                     body: formData
                 });

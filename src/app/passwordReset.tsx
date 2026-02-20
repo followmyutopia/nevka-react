@@ -28,7 +28,7 @@ export default function signup() {
     const [buttonInactive, setButtonInactive] = useState(false);
     const [emailEditable, setEmailEditable] = useState(true);
 
-    const { token }: any = useNevkaProvider();
+    const { domain, token }: any = useNevkaProvider();
     if (token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const sendConfirmation = async () => {
@@ -43,7 +43,7 @@ export default function signup() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/sendPRC.php', {
+            const response = await fetch(domain+'/api/sendPRC.php', {
                 method: 'POST',
                 body: formData
             });
@@ -85,7 +85,7 @@ export default function signup() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/resetPassword.php', {
+                const response = await fetch(domain+'/api/resetPassword.php', {
                     method: 'POST',
                     body: formData
                 });

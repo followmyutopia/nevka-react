@@ -65,7 +65,7 @@ const PeopleListItem = ({ user }: PeopleListItemProps) => {
 }
 
 export default function people() {
-    const { token, loggedUser, isNameSet }: any = useNevkaProvider();
+    const { domain, token, loggedUser, isNameSet }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -83,7 +83,7 @@ export default function people() {
         if (loggedUser == "1") formData.append("safe", "true");
 
         try {
-            const response = await fetch('https://nevka.site/api/getPeople.php', {
+            const response = await fetch(domain+'/api/getPeople.php', {
                 method: 'POST',
                 body: formData
             });

@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements"
 
 export default function index() {
-    const { token, setToken, loggedUser, setLoggedUser }: any = useNevkaProvider();
+    const { domain, token, setToken, loggedUser, setLoggedUser }: any = useNevkaProvider();
     if (token != "") { return <Redirect href={'/(tabs)/profile'} /> }
 
     const [login, setLogin] = useState("");
@@ -46,7 +46,7 @@ export default function index() {
             formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
             try {
-                const response = await fetch('https://nevka.site/api/login.php', {
+                const response = await fetch(domain+'/api/login.php', {
                     method: 'POST',
                     body: formData
                 });

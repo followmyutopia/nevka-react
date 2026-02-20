@@ -50,7 +50,7 @@ const DiscListItem = ({ item }: DiscListItemProps) => {
 }
 
 export default function discussions() {
-    const { token, isNameSet }: any = useNevkaProvider();
+    const { domain, token, isNameSet }: any = useNevkaProvider();
     if (token == "") { return <Redirect href={'/'} /> };
 
     const isFocused = useIsFocused();
@@ -67,7 +67,7 @@ export default function discussions() {
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch('https://nevka.site/api/getDiscussions.php', {
+            const response = await fetch(domain+'/api/getDiscussions.php', {
                 method: 'POST',
                 body: formData
             });
