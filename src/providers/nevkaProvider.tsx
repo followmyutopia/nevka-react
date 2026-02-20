@@ -324,7 +324,20 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         }
     }
 
+    const initCheck = async () => {
+        try {
+            const response = await fetch('https://followmyutopia.github.io/nevka-settings.json', {
+                method: 'GET'
+            });
+            const json = await response.json();
+            console.log(json.domain);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
+        initCheck();
         getToken();
         getLoggedUser();
         getTheme();
