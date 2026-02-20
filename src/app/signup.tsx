@@ -1,6 +1,6 @@
 /**
- * Nevka Mobile v1.6
- * 2025 Avicus Delacroix
+ * Nevka Mobile v1.7
+ * 2025-2026 Avicus Delacroix
  */
 
 import { StyleSheet, TextInput, useColorScheme, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";

@@ -1,6 +1,6 @@
 /**
- * Nevka Mobile v1.6
- * 2025 Avicus Delacroix
+ * Nevka Mobile v1.7
+ * 2025-2026 Avicus Delacroix
  */
 
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
@@ -134,7 +134,7 @@ export default function settings() {
                             <FontAwesome
                                 name="picture-o"
                                 size={27}
-                                color={Colors[useColorScheme() ?? 'light'].text}
+                                color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                                 style={{ opacity: pressed ? 0.5 : 1 }}
                             />
                         )}
@@ -144,7 +144,7 @@ export default function settings() {
                             <FontAwesome
                                 name="window-close-o"
                                 size={27}
-                                color={Colors[useColorScheme() ?? 'light'].text}
+                                color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                                 style={{ opacity: pressed ? 0.5 : 1 }}
                             />
                         )}

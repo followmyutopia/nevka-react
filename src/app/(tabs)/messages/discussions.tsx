@@ -1,6 +1,6 @@
 /**
- * Nevka Mobile v1.6
- * 2025 Avicus Delacroix
+ * Nevka Mobile v1.7
+ * 2025-2026 Avicus Delacroix
  */
 
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
@@ -26,6 +26,7 @@ type DiscListItemProps = {
 }
 
 const DiscListItem = ({ item }: DiscListItemProps) => {
+    const colorScheme = useColorScheme();
     return (
         <Link href={{
             pathname: '/(tabs)/messages/topic',
@@ -36,7 +37,7 @@ const DiscListItem = ({ item }: DiscListItemProps) => {
                     <FontAwesome
                         name="comments-o"
                         size={50}
-                        color={Colors[useColorScheme() ?? 'light'].text}
+                        color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
                         style={{ height: '100%', width: 70, padding: 10 }}
                     />
                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', height: '100%', padding: '2%', paddingLeft: '4%', flex: 1 }}>
