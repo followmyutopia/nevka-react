@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.7
+ * 2025-2026 Avicus Delacroix
+ */
+
 import Colors from "@/src/constants/Colors";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -25,29 +30,14 @@ type WallPostProps = {
     me: string
 }
 
-
-const safeParseLikes = (likes: string) => {
-    if (!likes || likes === '{}') {
-        return [];
-    }
-
-    try {
-        const parsed = JSON.parse(likes);
-        return Array.isArray(parsed) ? parsed : [];
-    } catch {
+const WallPost = memo(({ item, likeHandler, me }: WallPostProps) => {
+    const likesArray = useMemo(() => {
         try {
-            const normalized = likes
-                .replace(/\\'/g, "'");
-            const parsed = JSON.parse(normalized);
-            return Array.isArray(parsed) ? parsed : [];
+            return JSON.parse(item.likes);
         } catch {
             return [];
         }
-    }
-};
-
-const WallPost = memo(({ item, likeHandler, me }: WallPostProps) => {
-    const likesArray = useMemo(() => safeParseLikes(item.likes), [item.likes]);
+    }, [item.likes]);
     const colorScheme = useColorScheme();
 
     return (
@@ -198,7 +188,7 @@ export default function feed() {
             } else if (json.result == "success") {
                 setFeedData(prevData => prevData.map(item =>
                     item.id === postId
-                        ? { ...item, likes: '[]' }
+                        ? { ...item, likes: '{}' }
                         : item
                 ));
                 getFeed(page);
