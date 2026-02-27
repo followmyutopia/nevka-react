@@ -1,3 +1,8 @@
+/**
+ * Nevka Mobile v1.7
+ * 2025-2026 Avicus Delacroix
+ */
+
 import Colors from "@/src/constants/Colors";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -225,7 +230,7 @@ export default function feed() {
     }, [getFeed, page]);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}> 
+        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}>
             <FlatList
                 ListHeaderComponent={<Pressable
                     style={createPostButtonStyle}
