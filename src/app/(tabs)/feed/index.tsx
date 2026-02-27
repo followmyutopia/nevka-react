@@ -230,7 +230,7 @@ export default function feed() {
     }, [getFeed, page]);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}> 
             <FlatList
                 ListHeaderComponent={<Pressable
                     style={createPostButtonStyle}
