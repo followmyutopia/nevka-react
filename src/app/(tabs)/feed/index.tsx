@@ -3,7 +3,7 @@ import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
 import { Redirect, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useColorScheme, View, Image, Text, Pressable, StyleSheet, ActivityIndicator, FlatList } from "react-native";
 import FullWidthImage from "react-native-fullwidth-image";
 
@@ -21,12 +21,59 @@ type WallData = {
 
 type WallPostProps = {
     item: WallData,
-    likeHandler: (id: any) => void,
+    likeHandler: (id: string) => void,
     me: string
 }
 
-const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
-    const likesArray = JSON.parse(item.likes);
+function isSameWallPost(prev: WallData, next: WallData) {
+    return prev.id === next.id &&
+        prev.text === next.text &&
+        prev.image === next.image &&
+        prev.timestamp === next.timestamp &&
+        prev.formattedTime === next.formattedTime &&
+        prev.likes === next.likes &&
+        prev.author === next.author &&
+        prev.authorName === next.authorName &&
+        prev.authorAvatar === next.authorAvatar;
+}
+
+function isSameFeed(prev: WallData[], next: WallData[]) {
+    if (prev.length !== next.length) {
+        return false;
+    }
+
+    for (let i = 0; i < prev.length; i++) {
+        if (!isSameWallPost(prev[i], next[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+const safeParseLikes = (likes: string) => {
+    if (!likes || likes === '{}') {
+        return [];
+    }
+
+    try {
+        const parsed = JSON.parse(likes);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        try {
+            const normalized = likes
+                .replace(/\\'/g, "'");
+            const parsed = JSON.parse(normalized);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    }
+};
+
+const WallPost = memo(({ item, likeHandler, me }: WallPostProps) => {
+    const likesArray = useMemo(() => safeParseLikes(item.likes), [item.likes]);
     const colorScheme = useColorScheme();
 
     return (
@@ -39,7 +86,7 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
             padding: 15,
         }}>
 
-            <Pressable 
+            <Pressable
                 onPress={() => router.navigate(`/(tabs)/people/person?id=${item.author}&name=${item.authorName}`, { withAnchor: true })}
                 style={{
                     flexDirection: 'row', height: 50, paddingBottom: '2%'
@@ -118,7 +165,11 @@ const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
 
         </View>
     );
-}
+}, (prev, next) => (
+    prev.me === next.me &&
+    prev.likeHandler === next.likeHandler &&
+    isSameWallPost(prev.item, next.item)
+));
 
 export default function feed() {
     const { domain, token, setToken, loggedUser }: any = useNevkaProvider();
@@ -127,18 +178,17 @@ export default function feed() {
     const [feedData, setFeedData] = useState<WallData[]>([]);
     const [feedLoading, setFeedLoading] = useState(true);
     const [page, setPage] = useState<number>(1);
-    const [update, setUpdate] = useState(0);
     const colorScheme = useColorScheme();
     const isFocused = useIsFocused();
 
-    const getFeed = async (pageId: number) => {
+    const getFeed = useCallback(async (pageId: number) => {
         const formData = new FormData();
         formData.append("page", pageId.toString());
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
         setFeedLoading(true);
 
         try {
-            const response = await fetch(domain+'/api/getFeed.php', {
+            const response = await fetch(domain + '/api/getFeed.php', {
                 method: 'POST',
                 body: formData
             });
@@ -146,26 +196,28 @@ export default function feed() {
             if (json.result == "failure") {
                 console.log("getFeed error: " + json.error)
             } else if (json.result == "empty") {
-                setFeedData([]);
+                setFeedData(prev => prev.length === 0 ? prev : []);
             } else if (json.result == "success") {
-                json.feed.pop();
-                setFeedData(json.feed);
+                const nextFeed = Array.isArray(json.feed)
+                    ? json.feed.slice(0, -1)
+                    : [];
+                setFeedData(prev => isSameFeed(prev, nextFeed) ? prev : nextFeed);
             }
         } catch (error) {
             console.log("Ошибка запроса стены, проблемы с соединением?\n" + error);
         } finally {
             setFeedLoading(false);
         }
-    }
+    }, [domain]);
 
-    const likePost = async (postId: string) => {
+    const likePost = useCallback(async (postId: string) => {
         const formData = new FormData();
         formData.append("token", token);
         formData.append("postId", postId);
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch(domain+'/api/likePost.php', {
+            const response = await fetch(domain + '/api/likePost.php', {
                 method: 'POST',
                 body: formData
             });
@@ -176,47 +228,74 @@ export default function feed() {
                 }
                 console.log("likePost error: " + json.error)
             } else if (json.result == "success") {
-                setFeedData(feedData.map(item =>
+                setFeedData(prevData => prevData.map(item =>
                     item.id === postId
-                        ? { ...item, likes: '{}' } // update the property
-                        : item                        // keep others unchanged
-                )
-                );
+                        ? { ...item, likes: '[]' }
+                        : item
+                ));
                 getFeed(page);
             }
         } catch (error) {
             console.log("Ошибка лайка записи, проблемы с соединением?\n" + error);
         }
-    }
+    }, [domain, getFeed, page, setToken, token]);
 
     useEffect(() => {
-        if (isFocused) {
-            setTimeout(() => setUpdate(update + 1), 10000);
-            getFeed(page);
-            console.log("Updated: Feed, pages: " + page);
+        if (!isFocused) {
+            return;
         }
-    }, [update, isFocused]);
+
+        getFeed(page);
+        console.log("Updated: Feed, pages: " + page);
+
+        const interval = setInterval(() => {
+            getFeed(page);
+        }, 10000);
+
+        return () => clearInterval(interval);
+    }, [getFeed, isFocused, page]);
+
+    const createPostButtonStyle = useCallback(({ pressed }: { pressed: boolean }) => {
+        const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
+        const pressedColor = colorScheme === 'light'
+            ? 'rgba(0, 0, 0, 0.11)'
+            : 'rgba(255, 255, 255, 0.11)';
+
+        return [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }];
+    }, [colorScheme]);
+
+    const handleEndReached = useCallback(() => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        getFeed(nextPage);
+        console.log("Requested: Feed, pages: " + nextPage);
+    }, [getFeed, page]);
+
+    const renderFeedItem = useCallback(({ item }: { item: WallData }) => (
+        <WallPost item={item} likeHandler={likePost} me={loggedUser} />
+    ), [likePost, loggedUser]);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}> 
             <FlatList
                 ListHeaderComponent={<Pressable
-                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
+                    style={createPostButtonStyle}
                     onPress={() => router.navigate('/create-wall')}
                 >
                     <Text style={{ fontSize: 20, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>Написать пост</Text>
                 </Pressable>}
                 ListFooterComponent={feedLoading ? <ActivityIndicator style={{ marginTop: 20, marginBottom: 120 }} /> : <View style={{ height: 80 }}></View>}
                 style={{ flex: 1, width: '100%' }}
-                data={feedData || <ActivityIndicator />}
-                renderItem={({ item }) => <WallPost item={item} likeHandler={likePost} me={loggedUser} />}
-                onEndReached={() => {
-                    const nextPage = page + 1;
-                    setPage(nextPage);
-                    getFeed(nextPage);
-                    console.log("Requested: Feed, pages: " + nextPage);
-                }}
-                onEndReachedThreshold={page < 5 ? page : 5}
+                data={feedData}
+                keyExtractor={(item) => item.id}
+                renderItem={renderFeedItem}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
+                initialNumToRender={5}
+                windowSize={7}
+                maxToRenderPerBatch={4}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews
             />
         </View>
     );
