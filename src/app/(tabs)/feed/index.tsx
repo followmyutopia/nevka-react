@@ -156,10 +156,10 @@ export default function feed() {
             if (json.result == "failure") {
                 console.log("getFeed error: " + json.error)
             } else if (json.result == "empty") {
-                setFeedData([]);
+                setFeedData(prev => prev.length === 0 ? prev : []);
             } else if (json.result == "success") {
                 json.feed.pop();
-                setFeedData(json.feed);
+                setFeedData(prev => isSameFeed(prev, json.feed) ? prev : json.feed);
             }
         } catch (error) {
             console.log("Ошибка запроса стены, проблемы с соединением?\n" + error);
