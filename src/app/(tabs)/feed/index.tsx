@@ -1,14 +1,9 @@
-/**
- * Nevka Mobile v1.7
- * 2025-2026 Avicus Delacroix
- */
-
 import Colors from "@/src/constants/Colors";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
 import { Redirect, router } from "expo-router";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useColorScheme, View, Image, Text, Pressable, StyleSheet, ActivityIndicator, FlatList } from "react-native";
 import FullWidthImage from "react-native-fullwidth-image";
 
@@ -26,18 +21,12 @@ type WallData = {
 
 type WallPostProps = {
     item: WallData,
-    likeHandler: (id: string) => void,
+    likeHandler: (id: any) => void,
     me: string
 }
 
-const WallPost = memo(({ item, likeHandler, me }: WallPostProps) => {
-    const likesArray = useMemo(() => {
-        try {
-            return JSON.parse(item.likes);
-        } catch {
-            return [];
-        }
-    }, [item.likes]);
+const WallPost = ({ item, likeHandler, me }: WallPostProps) => {
+    const likesArray = JSON.parse(item.likes);
     const colorScheme = useColorScheme();
 
     return (
@@ -50,7 +39,7 @@ const WallPost = memo(({ item, likeHandler, me }: WallPostProps) => {
             padding: 15,
         }}>
 
-            <Pressable
+            <Pressable 
                 onPress={() => router.navigate(`/(tabs)/people/person?id=${item.author}&name=${item.authorName}`, { withAnchor: true })}
                 style={{
                     flexDirection: 'row', height: 50, paddingBottom: '2%'
@@ -129,7 +118,7 @@ const WallPost = memo(({ item, likeHandler, me }: WallPostProps) => {
 
         </View>
     );
-});
+}
 
 export default function feed() {
     const { domain, token, setToken, loggedUser }: any = useNevkaProvider();
@@ -138,17 +127,18 @@ export default function feed() {
     const [feedData, setFeedData] = useState<WallData[]>([]);
     const [feedLoading, setFeedLoading] = useState(true);
     const [page, setPage] = useState<number>(1);
+    const [update, setUpdate] = useState(0);
     const colorScheme = useColorScheme();
     const isFocused = useIsFocused();
 
-    const getFeed = useCallback(async (pageId: number) => {
+    const getFeed = async (pageId: number) => {
         const formData = new FormData();
         formData.append("page", pageId.toString());
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
         setFeedLoading(true);
 
         try {
-            const response = await fetch(domain + '/api/getFeed.php', {
+            const response = await fetch(domain+'/api/getFeed.php', {
                 method: 'POST',
                 body: formData
             });
@@ -156,26 +146,26 @@ export default function feed() {
             if (json.result == "failure") {
                 console.log("getFeed error: " + json.error)
             } else if (json.result == "empty") {
-                setFeedData(prev => prev.length === 0 ? prev : []);
+                setFeedData([]);
             } else if (json.result == "success") {
                 json.feed.pop();
-                setFeedData(prev => isSameFeed(prev, json.feed) ? prev : json.feed);
+                setFeedData(json.feed);
             }
         } catch (error) {
             console.log("Ошибка запроса стены, проблемы с соединением?\n" + error);
         } finally {
             setFeedLoading(false);
         }
-    }, [domain]);
+    }
 
-    const likePost = useCallback(async (postId: string) => {
+    const likePost = async (postId: string) => {
         const formData = new FormData();
         formData.append("token", token);
         formData.append("postId", postId);
         formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
         try {
-            const response = await fetch(domain + '/api/likePost.php', {
+            const response = await fetch(domain+'/api/likePost.php', {
                 method: 'POST',
                 body: formData
             });
@@ -186,68 +176,47 @@ export default function feed() {
                 }
                 console.log("likePost error: " + json.error)
             } else if (json.result == "success") {
-                setFeedData(prevData => prevData.map(item =>
+                setFeedData(feedData.map(item =>
                     item.id === postId
-                        ? { ...item, likes: '{}' }
-                        : item
-                ));
+                        ? { ...item, likes: '{}' } // update the property
+                        : item                        // keep others unchanged
+                )
+                );
                 getFeed(page);
             }
         } catch (error) {
             console.log("Ошибка лайка записи, проблемы с соединением?\n" + error);
         }
-    }, [domain, getFeed, page, setToken, token]);
+    }
 
     useEffect(() => {
-        if (!isFocused) {
-            return;
-        }
-
-        getFeed(page);
-        console.log("Updated: Feed, pages: " + page);
-
-        const interval = setInterval(() => {
+        if (isFocused) {
+            setTimeout(() => setUpdate(update + 1), 10000);
             getFeed(page);
-        }, 10000);
-
-        return () => clearInterval(interval);
-    }, [getFeed, isFocused, page]);
-
-    const createPostButtonStyle = useCallback(({ pressed }: { pressed: boolean }) => {
-        const buttonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
-        const pressedColor = colorScheme === 'light'
-            ? 'rgba(0, 0, 0, 0.11)'
-            : 'rgba(255, 255, 255, 0.11)';
-
-        return [buttonStyle, { backgroundColor: pressed ? pressedColor : buttonStyle.backgroundColor }];
-    }, [colorScheme]);
-
-    const handleEndReached = useCallback(() => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        getFeed(nextPage);
-        console.log("Requested: Feed, pages: " + nextPage);
-    }, [getFeed, page]);
+            console.log("Updated: Feed, pages: " + page);
+        }
+    }, [update, isFocused]);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}> 
+        <View style={[styles.container, { backgroundColor: colorScheme === 'light' ? Colors.light.background : Colors.dark.background }]}>
             <FlatList
                 ListHeaderComponent={<Pressable
-                    style={createPostButtonStyle}
+                    style={({ pressed }) => [useColorScheme() === 'light' ? styles.lightButton : styles.darkButton, { backgroundColor: pressed ? useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.11)' : 'rgba(255, 255, 255, 0.11)' : useColorScheme() === 'light' ? styles.lightButton.backgroundColor : styles.darkButton.backgroundColor }]}
                     onPress={() => router.navigate('/create-wall')}
                 >
                     <Text style={{ fontSize: 20, color: colorScheme === 'light' ? Colors.light.text : Colors.dark.text }}>Написать пост</Text>
                 </Pressable>}
                 ListFooterComponent={feedLoading ? <ActivityIndicator style={{ marginTop: 20, marginBottom: 120 }} /> : <View style={{ height: 80 }}></View>}
                 style={{ flex: 1, width: '100%' }}
-                data={feedData}
-                keyExtractor={(item) => item.id}
+                data={feedData || <ActivityIndicator />}
                 renderItem={({ item }) => <WallPost item={item} likeHandler={likePost} me={loggedUser} />}
-                onEndReached={handleEndReached}
-                onEndReachedThreshold={0.5}
-                initialNumToRender={5}
-                windowSize={7}
-                removeClippedSubviews
+                onEndReached={() => {
+                    const nextPage = page + 1;
+                    setPage(nextPage);
+                    getFeed(nextPage);
+                    console.log("Requested: Feed, pages: " + nextPage);
+                }}
+                onEndReachedThreshold={page < 5 ? page : 5}
             />
         </View>
     );
