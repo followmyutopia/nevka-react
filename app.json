@@ -28,7 +28,6 @@
         "backgroundColor": "#122730"
       },
       "permissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.followmyutopia.nevka"
@@ -39,6 +38,15 @@
       "favicon": "./assets/icns/favicon.ico"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          }
+        }
+      ],
       [
         "expo-image-picker",
         {
