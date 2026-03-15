@@ -75,18 +75,18 @@ export default function MenuStack() {
                 headerStyle: {
                     backgroundColor: 'transparent',
                 },
-                headerRight: () => (
-                    <Pressable onPress={toggleEncryption}>
-                        {({ pressed }) => (
-                            <FontAwesome
-                                name={encryptionType == "NE5" ? "lock" : "unlock-alt"}
-                                size={21}
-                                color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
-                                style={{ marginTop: 1, opacity: pressed ? 0.5 : 1 }}
-                            />
-                        )}
-                    </Pressable>
-                ),
+                // headerRight: () => (
+                //     <Pressable onPress={toggleEncryption}>
+                //         {({ pressed }) => (
+                //             <FontAwesome
+                //                 name={encryptionType == "NE5" ? "lock" : "unlock-alt"}
+                //                 size={21}
+                //                 color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
+                //                 style={{ marginTop: 1, opacity: pressed ? 0.5 : 1 }}
+                //             />
+                //         )}
+                //     </Pressable>
+                // ),
                 headerBackground: () => (
                     <LinearGradient
                         colors={[colorScheme === 'light' ? Colors.light.tabs : Colors.dark.tabs,

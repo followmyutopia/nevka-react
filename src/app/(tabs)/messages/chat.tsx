@@ -252,9 +252,9 @@ export default function chat() {
         if (!sending && id && (text != "" || image != "")) {
             setSending(true);
 
-            if (encryptionType == "NE5") {
+            // if (encryptionType == "NE5") {
                 text = "NE5[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
-            }
+            // }
 
             const formData = new FormData();
             formData.append("token", token);

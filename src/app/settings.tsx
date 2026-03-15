@@ -57,7 +57,7 @@ export default function settings() {
 
     const [themeSwitch, setThemeSwitch] = useState(false);
     const [notificationSwitch, setNotificationSwitch] = useState(false);
-    const [encryptionSwitch, setEncryptionSwitch] = useState(false);
+    const [encryptionSwitch, setEncryptionSwitch] = useState(true);
 
     const toggleTheme = () => {
         if (themeSwitch) {
@@ -69,21 +69,21 @@ export default function settings() {
         }
     }
 
-    const toggleEncryption = () => {
-        if (encryptionSwitch) {
-            setEncryptionType('');
-            setEncryptionSwitch(false);
-        } else {
-            setEncryptionType('NE5');
-            setEncryptionSwitch(true);
-        }
-    }
+    // const toggleEncryption = () => {
+    //     if (encryptionSwitch) {
+    //         setEncryptionType('');
+    //         setEncryptionSwitch(false);
+    //     } else {
+    //         setEncryptionType('NE5');
+    //         setEncryptionSwitch(true);
+    //     }
+    // }
 
-    const checkEncryptionState = () => {
-        console.log("Encryption: " + encryptionType)
-        if (encryptionType == "NE5") setEncryptionSwitch(true);
-        else setEncryptionSwitch(false);
-    }
+    // const checkEncryptionState = () => {
+    //     console.log("Encryption: " + encryptionType)
+    //     if (encryptionType == "NE5") setEncryptionSwitch(true);
+    //     else setEncryptionSwitch(false);
+    // }
 
     const toggleNotifications = () => {
         if (notificationSwitch) {
@@ -322,7 +322,7 @@ export default function settings() {
     useEffect(() => {
         getUserData(loggedUser);
         checkUpdate();
-        checkEncryptionState();
+        // checkEncryptionState();
 
         if (colorScheme === 'dark') setThemeSwitch(true);
     }, [pushToken]);
@@ -441,9 +441,9 @@ export default function settings() {
                     <Text style={{ fontSize: 26, marginVertical: '5%' }}>Безопасность</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
                         <Text style={{ fontSize: 20 }}>Шифрование сообщений</Text>
-                        <Switch value={encryptionSwitch} onValueChange={toggleEncryption} />
+                        <Switch value={encryptionSwitch} onValueChange={() => setEncryptionSwitch(true)} />
                     </View>
-                    <Text style={{ fontSize: 16, textAlign: 'center', marginHorizontal: 10, marginVertical: -5 }}>Внимание! При включенном шифровании, сообщения шифруются на вашем устройстве при отправке, и их невозможно будет прочитать с веб-версии.</Text>
+                    <Text style={{ fontSize: 16, textAlign: 'center', marginHorizontal: 10, marginVertical: -5 }}>Начиная с версии приложения 1.8 и версии сайта 1.14, шифрование NE5 включено по умолчанию и его нельзя отключить.</Text>
                     <Text style={{ fontSize: 24, marginTop: '5%', marginBottom: '2%' }}>Смена пароля</Text>
                     <Text style={styles.label}>Старый пароль:</Text>
                     <TextInput style={inputStyle}
