@@ -2,7 +2,7 @@
   "expo": {
     "name": "Nevka",
     "slug": "Nevka",
-    "version": "1.8",
+    "version": "1.8.1",
     "orientation": "portrait",
     "icon": "./assets/icns/ios-dark.png",
     "scheme": "myapp",
@@ -27,9 +27,7 @@
         "foregroundImage": "./assets/icns/adaptive-icon.png",
         "backgroundColor": "#122730"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
+      "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "com.followmyutopia.nevka"
     },
     "web": {

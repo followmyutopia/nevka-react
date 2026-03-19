@@ -1,28 +1,28 @@
 /**
- * Nevka Mobile v1.7
+ * Nevka Mobile v1.8
  * 2025-2026 Avicus Delacroix
  */
 
-const tintColorLight = '#2f95dc';
-const tintColorDark = '#fff';
+const tintColorLight = "#2f95dc";
+const tintColorDark = "#fff";
 
 export default {
   light: {
-    text: 'rgba(0, 0, 0, 0.8)',
-    background: 'rgba(188, 215, 229, 1)',
+    text: "rgba(0, 0, 0, 0.8)",
+    background: "rgba(188, 215, 229, 1)",
     tint: tintColorLight,
-    tabIconDefault: '#ccc',
+    tabIconDefault: "#ccc",
     tabIconSelected: tintColorLight,
-    tabs: 'rgba(131, 197, 231, 1)',
-    borders: 'rgba(92, 198, 252, 0.5)'
+    tabs: "rgba(98, 180, 222, 1)",
+    borders: "rgba(43, 184, 255, 0.5)",
   },
   dark: {
-    text: 'rgba(255, 255, 255, 0.8)',
-    background: 'rgba(3, 27, 39, 1)',
+    text: "rgba(255, 255, 255, 0.8)",
+    background: "rgba(3, 27, 39, 1)",
     tint: tintColorDark,
-    tabIconDefault: '#ccc',
+    tabIconDefault: "#ccc",
     tabIconSelected: tintColorDark,
-    tabs: 'rgba(0, 9, 15, 1)',
-    borders: 'rgba(0, 85, 128, 0.5)'
-  }
+    tabs: "rgba(0, 9, 15, 1)",
+    borders: "rgba(0, 96, 144, 0.5)",
+  },
 };

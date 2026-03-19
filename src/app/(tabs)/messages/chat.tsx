@@ -1,9 +1,19 @@
 /**
- * Nevka Mobile v1.7
+ * Nevka Mobile v1.8
  * 2025-2026 Avicus Delacroix
  */
 
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, TouchableOpacity, useColorScheme } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import { View, Text } from "@/src/components/Themed";
 import { useNevkaProvider } from "@/src/providers/nevkaProvider";
 import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
@@ -13,495 +23,694 @@ import { useIsFocused } from "@react-navigation/native";
 import FullWidthImage from "react-native-fullwidth-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements";
-import * as ImagePicker from 'expo-image-picker';
-import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import * as ImagePicker from "expo-image-picker";
+import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import { isLiquidGlassAvailable } from "expo-glass-effect";
 
 type MessageData = {
-    id: string,
-    me: string,
-    text: string,
-    image: string,
-    timestamp: string,
-    formattedTime: string,
-    isUnread: string,
-    reply: string,
-    encrypted?: boolean
+  id: string;
+  me: string;
+  text: string;
+  image: string;
+  timestamp: string;
+  formattedTime: string;
+  isUnread: string;
+  reply: string;
+  encrypted?: boolean;
 };
 
 type MessageItemProps = {
-    item: MessageData,
-    replyHandler: (id: any) => void,
-    decodeHandler: (hash: string, key: string) => string,
-    keyIdentifier: string
-}
+  item: MessageData;
+  replyHandler: (id: any) => void;
+  decodeHandler: (hash: string, key: string) => string;
+  keyIdentifier: string;
+};
 
-const MessageItem = ({ item, replyHandler, decodeHandler, keyIdentifier }: MessageItemProps) => {
-    if (item.text.startsWith("NE5[") && item.text.endsWith("]")) {
-        item.text = decodeHandler(item.text.slice(4, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
-        item.encrypted = true;
-    }
-
-    if (item.reply.startsWith("NE5[") && item.reply.endsWith("]")) {
-        item.reply = decodeHandler(item.reply.slice(4, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
-    }
-
-    if (item.reply.startsWith("Вы: NE5[") && item.reply.endsWith("]")) {
-        item.reply = "Вы: " + decodeHandler(item.reply.slice(8, -1), "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier);
-    }
-
-    if ((/^NE[1234]\[/.test(item.text)) && item.text.endsWith("]")) {
-        item.text = "[Устаревшее шифрование]";
-        item.encrypted = true;
-    }
-
-    if ((/^NE[1234]\[/.test(item.reply)) && item.reply.endsWith("]")) {
-        item.reply = "[Устаревшее шифрование]";
-    }
-
-    if ((/^(Вы: )?NE[1234]\[/.test(item.reply)) && item.reply.endsWith("]")) {
-        item.reply = "[Устаревшее шифрование]";
-    }
-
-    if ((/^NE[678]\[/.test(item.text)) && item.text.endsWith("]")) {
-        item.text = "[Обновите приложение]";
-        item.encrypted = true;
-    }
-
-    if ((/^NE[678]\[/.test(item.reply)) && item.reply.endsWith("]")) {
-        item.reply = "[Обновите приложение]";
-    }
-
-    if ((/^(Вы: )?NE[678]\[/.test(item.reply)) && item.reply.endsWith("]")) {
-        item.reply = "[Обновите приложение]";
-    }
-
-    const swipeableRef = useRef<any>(null);
-
-    const renderRightActions = () => {
-        return (
-            <View style={{ width: 1 }}></View>
-        );
-    };
-
-    return (
-        <Swipeable
-            hitSlop={{ left: -60 }}
-            renderRightActions={() => renderRightActions()}
-            onSwipeableWillOpen={() => {
-                swipeableRef.current?.close();
-                replyHandler(item.id);
-            }}
-            ref={swipeableRef}
-        >
-            <View style={{
-                backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.04)',
-                borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders,
-                borderWidth: 1,
-                alignSelf: item.me === 'true' ? 'flex-end' : 'flex-start',
-                borderRadius: 16,
-                maxWidth: '84%',
-                marginHorizontal: '3%',
-                marginVertical: '1%'
-            }}>
-                {item.reply != "" ? <View style={{
-                    backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
-                    flexDirection: 'row',
-                    borderBottomWidth: 1,
-                    borderBottomColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
-                }}><FontAwesome
-                        name="reply"
-                        size={16}
-                        color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                        style={{ marginTop: 7, marginLeft: 10 }} />
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            fontSize: 16,
-                            marginVertical: 5,
-                            marginHorizontal: 10,
-                            marginRight: 28,
-                            color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
-                        }}>{item.reply}</Text></View> : null}
-                {item.text != "" ? <Text style={{
-                    fontSize: 17,
-                    paddingHorizontal: 10,
-                    paddingTop: 5,
-                    paddingBottom: item.image != "" ? 2 : 0
-                }}>{item.text}</Text> : null}
-                {item.image != "" ? <FullWidthImage style={{
-                    minWidth: '100%',
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: useColorScheme() === 'light' ? Colors.light.borders : Colors.dark.borders
-                }} source={{ uri: item.image }}>
-                </FullWidthImage> : null}
-                <View style={{
-                    backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
-                    flexDirection: 'row', justifyContent: 'space-between'
-                }}>
-                    <View style={{
-                        backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)',
-                        flexDirection: 'row'
-                    }}><FontAwesome
-                            name={item.isUnread == '1' ? 'circle' : 'check-circle'}
-                            size={14}
-                            color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                            style={{ marginTop: 7, marginLeft: 10 }}
-                        />
-                        {item.encrypted ? <FontAwesome
-                            name={'lock'}
-                            size={14}
-                            color={useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'}
-                            style={{ marginTop: 7.5, marginLeft: 7 }}
-                        /> : null}</View>
-                    <Text style={{
-                        fontSize: 14,
-                        marginVertical: 5,
-                        marginHorizontal: 10,
-                        color: useColorScheme() === 'light' ? 'darkslategray' : 'lightslategray'
-                    }}>{item.formattedTime}</Text>
-                </View>
-            </View>
-        </Swipeable>
+const MessageItem = ({
+  item,
+  replyHandler,
+  decodeHandler,
+  keyIdentifier,
+}: MessageItemProps) => {
+  if (item.text.startsWith("NE5[") && item.text.endsWith("]")) {
+    item.text = decodeHandler(
+      item.text.slice(4, -1),
+      "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
     );
-}
+    item.encrypted = true;
+  }
+
+  if (item.reply.startsWith("NE5[") && item.reply.endsWith("]")) {
+    item.reply = decodeHandler(
+      item.reply.slice(4, -1),
+      "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+    );
+  }
+
+  if (item.reply.startsWith("Вы: NE5[") && item.reply.endsWith("]")) {
+    item.reply =
+      "Вы: " +
+      decodeHandler(
+        item.reply.slice(8, -1),
+        "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+      );
+  }
+
+  if (/^NE[1234]\[/.test(item.text) && item.text.endsWith("]")) {
+    item.text = "[Устаревшее шифрование]";
+    item.encrypted = true;
+  }
+
+  if (/^NE[1234]\[/.test(item.reply) && item.reply.endsWith("]")) {
+    item.reply = "[Устаревшее шифрование]";
+  }
+
+  if (/^(Вы: )?NE[1234]\[/.test(item.reply) && item.reply.endsWith("]")) {
+    item.reply = "[Устаревшее шифрование]";
+  }
+
+  if (/^NE[678]\[/.test(item.text) && item.text.endsWith("]")) {
+    item.text = "[Обновите приложение]";
+    item.encrypted = true;
+  }
+
+  if (/^NE[678]\[/.test(item.reply) && item.reply.endsWith("]")) {
+    item.reply = "[Обновите приложение]";
+  }
+
+  if (/^(Вы: )?NE[678]\[/.test(item.reply) && item.reply.endsWith("]")) {
+    item.reply = "[Обновите приложение]";
+  }
+
+  const swipeableRef = useRef<any>(null);
+
+  const renderRightActions = () => {
+    return <View style={{ width: 1 }}></View>;
+  };
+
+  return (
+    <Swipeable
+      hitSlop={{ left: -60 }}
+      renderRightActions={() => renderRightActions()}
+      onSwipeableWillOpen={() => {
+        swipeableRef.current?.close();
+        replyHandler(item.id);
+      }}
+      ref={swipeableRef}
+    >
+      <View
+        style={{
+          backgroundColor:
+            useColorScheme() === "light"
+              ? "rgba(0, 0, 0, 0.04)"
+              : "rgba(255, 255, 255, 0.04)",
+          borderColor:
+            useColorScheme() === "light"
+              ? Colors.light.borders
+              : Colors.dark.borders,
+          borderWidth: 1,
+          alignSelf: item.me === "true" ? "flex-end" : "flex-start",
+          borderRadius: 16,
+          maxWidth: "84%",
+          marginHorizontal: "3%",
+          marginVertical: "1%",
+        }}
+      >
+        {item.reply != "" ? (
+          <View
+            style={{
+              backgroundColor:
+                useColorScheme() === "light"
+                  ? "rgba(0, 0, 0, 0)"
+                  : "rgba(255, 255, 255, 0)",
+              flexDirection: "row",
+              borderBottomWidth: 1,
+              borderBottomColor:
+                useColorScheme() === "light"
+                  ? Colors.light.borders
+                  : Colors.dark.borders,
+            }}
+          >
+            <FontAwesome
+              name="reply"
+              size={16}
+              color={
+                useColorScheme() === "light"
+                  ? "darkslategray"
+                  : "lightslategray"
+              }
+              style={{ marginTop: 7, marginLeft: 10 }}
+            />
+            <Text
+              numberOfLines={1}
+              style={{
+                fontSize: 16,
+                marginVertical: 5,
+                marginHorizontal: 10,
+                marginRight: 28,
+                color:
+                  useColorScheme() === "light"
+                    ? "darkslategray"
+                    : "lightslategray",
+              }}
+            >
+              {item.reply}
+            </Text>
+          </View>
+        ) : null}
+        {item.text != "" ? (
+          <Text
+            style={{
+              fontSize: 17,
+              paddingHorizontal: 10,
+              paddingTop: 5,
+              paddingBottom: item.image != "" ? 2 : 0,
+            }}
+          >
+            {item.text}
+          </Text>
+        ) : null}
+        {item.image != "" ? (
+          <FullWidthImage
+            style={{
+              minWidth: "100%",
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor:
+                useColorScheme() === "light"
+                  ? Colors.light.borders
+                  : Colors.dark.borders,
+            }}
+            source={{ uri: item.image }}
+          ></FullWidthImage>
+        ) : null}
+        <View
+          style={{
+            backgroundColor:
+              useColorScheme() === "light"
+                ? "rgba(0, 0, 0, 0)"
+                : "rgba(255, 255, 255, 0)",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor:
+                useColorScheme() === "light"
+                  ? "rgba(0, 0, 0, 0)"
+                  : "rgba(255, 255, 255, 0)",
+              flexDirection: "row",
+            }}
+          >
+            <FontAwesome
+              name={item.isUnread == "1" ? "circle" : "check-circle"}
+              size={14}
+              color={
+                useColorScheme() === "light"
+                  ? "darkslategray"
+                  : "lightslategray"
+              }
+              style={{ marginTop: 7, marginLeft: 10 }}
+            />
+            {item.encrypted ? (
+              <FontAwesome
+                name={"lock"}
+                size={14}
+                color={
+                  useColorScheme() === "light"
+                    ? "darkslategray"
+                    : "lightslategray"
+                }
+                style={{ marginTop: 7.5, marginLeft: 7 }}
+              />
+            ) : null}
+          </View>
+          <Text
+            style={{
+              fontSize: 14,
+              marginVertical: 5,
+              marginHorizontal: 10,
+              color:
+                useColorScheme() === "light"
+                  ? "darkslategray"
+                  : "lightslategray",
+            }}
+          >
+            {item.formattedTime}
+          </Text>
+        </View>
+      </View>
+    </Swipeable>
+  );
+};
 
 export default function chat() {
-    const { domain, loggedUser, token, setToken, encryptionType, encode, decode }: any = useNevkaProvider();
-    if (token == "") { return <Redirect href={'/'} /> };
-    const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
+  const {
+    domain,
+    loggedUser,
+    token,
+    setToken,
+    encryptionType,
+    encode,
+    decode,
+  }: any = useNevkaProvider();
+  if (token == "") {
+    return <Redirect href={"/"} />;
+  }
+  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
 
-    const isFocused = useIsFocused();
-    const [update, setUpdate] = useState(0);
-    const colorScheme = useColorScheme();
-    const [messagesData, setMessagesData] = useState<MessageData[]>();
-    const [loading, setLoading] = useState(true);
-    const [message, setMessage] = useState("");
-    const inputStyle = colorScheme === 'light' ? styles.lightInput : styles.darkInput;
-    const headerHeight = useHeaderHeight();
-    const [image, setImage] = useState("");
-    const [status, setStatus] = useState("");
-    const [sending, setSending] = useState(false);
-    const [replyTo, setReplyTo] = useState("");
-    const [textToReply, setTextToReply] = useState("");
-    const [keyIdentifier, setKeyIdentifier] = useState("");
-    const latestMessage = useRef('');
+  const isFocused = useIsFocused();
+  const [update, setUpdate] = useState(0);
+  const colorScheme = useColorScheme();
+  const [messagesData, setMessagesData] = useState<MessageData[]>();
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const inputStyle =
+    colorScheme === "light" ? styles.lightInput : styles.darkInput;
+  const headerHeight = useHeaderHeight();
+  const [image, setImage] = useState("");
+  const [status, setStatus] = useState("");
+  const [sending, setSending] = useState(false);
+  const [replyTo, setReplyTo] = useState("");
+  const [textToReply, setTextToReply] = useState("");
+  const [keyIdentifier, setKeyIdentifier] = useState("");
+  const latestMessage = useRef("");
 
-    const getMessages = async (token: string, chat: string) => {
-        const formData = new FormData();
-        formData.append("token", token);
-        formData.append("chat", chat);
-        formData.append("api-key", "qonxod-Kicmad-4puvhy");
+  const getMessages = async (token: string, chat: string) => {
+    const formData = new FormData();
+    formData.append("token", token);
+    formData.append("chat", chat);
+    formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
-        try {
-            const response = await fetch(domain+'/api/getMessages.php', {
-                method: 'POST',
-                body: formData
-            });
-            const json = await response.json();
-            if (json.result == "failure") {
-                if (json.error == "wrong_token") {
-                    setToken("");
-                }
-                console.log("getMessages error: " + json.error)
-            } else if (json.result == "empty") {
-                setMessagesData([]);
-            } else if (json.result == "success") {
-                json.messages.pop();
-                json.messages.forEach((obj: MessageData) => {
-                    obj.encrypted = false;
-                });
-                setMessagesData(json.messages);
-            }
-        } catch (error) {
-            console.log("Ошибка запроса сообщений с " + chat + ", проблемы с соединением?\n" + error);
-        } finally {
-            setLoading(false);
+    try {
+      const response = await fetch(domain + "/api/getMessages.php", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await response.json();
+      if (json.result == "failure") {
+        if (json.error == "wrong_token") {
+          setToken("");
         }
+        console.log("getMessages error: " + json.error);
+      } else if (json.result == "empty") {
+        setMessagesData([]);
+      } else if (json.result == "success") {
+        json.messages.pop();
+        json.messages.forEach((obj: MessageData) => {
+          obj.encrypted = false;
+        });
+        setMessagesData(json.messages);
+      }
+    } catch (error) {
+      console.log(
+        "Ошибка запроса сообщений с " +
+          chat +
+          ", проблемы с соединением?\n" +
+          error,
+      );
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const pickImage = async () => {
-        if (!sending) {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                base64: true
-            });
+  const pickImage = async () => {
+    if (!sending) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        base64: true,
+      });
 
-            if (!result.canceled) {
-                setImage('data:' + result.assets[0].mimeType + ';base64,' + result.assets[0].base64);
-                setStatus("Выбран файл: " + result.assets[0].fileName);
-                if (result.assets[0].mimeType == "image/heic") {
-                    setStatus(`Формат HEIC пока не поддерживается. Используйте только JPG/PNG.`);
-                    setImage("");
-                }
-                // need to delete the file from the cache, wtf
-            }
+      if (!result.canceled) {
+        setImage(
+          "data:" +
+            result.assets[0].mimeType +
+            ";base64," +
+            result.assets[0].base64,
+        );
+        setStatus("Выбран файл: " + result.assets[0].fileName);
+        if (result.assets[0].mimeType == "image/heic") {
+          setStatus(
+            `Формат HEIC пока не поддерживается. Используйте только JPG/PNG.`,
+          );
+          setImage("");
         }
-    };
-
-    const resetImage = () => {
-        if (!sending) {
-            setImage("");
-            setStatus("");
-        }
-    };
-
-    const sendMessage = async () => {
-        let text = latestMessage.current.trim();
-
-        if (!sending && id && (text != "" || image != "")) {
-            setSending(true);
-
-            // if (encryptionType == "NE5") {
-                text = "NE5[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
-            // }
-
-            const formData = new FormData();
-            formData.append("token", token);
-            formData.append("chat", id);
-            formData.append("text", text);
-            formData.append("image", image);
-            formData.append("reply", replyTo);
-            formData.append("api-key", "qonxod-Kicmad-4puvhy");
-
-            const preview = {
-                id: "0",
-                me: "true",
-                text: text,
-                image: image,
-                timestamp: Math.floor(Date.now() / 1000).toString(),
-                formattedTime: "Отправка...",
-                isUnread: "1",
-                reply: "",
-                encrypted: encryptionType == "" ? false : true
-            };
-
-            if (replyTo !== "") {
-                const messageObject = messagesData?.find(item => item.id === replyTo);
-                const replyString = messageObject?.text || "(изображение)";
-                if (messageObject!.me === "true") {
-                    preview['reply'] = "Вы: " + replyString;
-                } else {
-                    preview['reply'] = replyString;
-                }
-            }
-
-            setMessagesData([...messagesData!, preview]);
-            setMessage("");
-            setImage("");
-            setReplyTo("");
-            setStatus("");
-
-            try {
-                const response = await fetch(domain+'/api/sendMessage.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const json = await response.json();
-                if (json.result == "failure") {
-                    if (json.error == "wrong_token") {
-                        setToken("");
-                    }
-                    setStatus(json.error);
-                    setMessage(text);
-                } else if (json.result == "success") {
-                    latestMessage.current = '';
-                }
-            } catch (error) {
-                console.log("Ошибка отправки сообщения " + id + ", проблемы с соединением?\n" + error);
-            } finally {
-                setSending(false);
-            }
-        }
+      }
     }
+  };
 
-    const reply = (id: string) => {
-        setReplyTo(id);
-        const messageObject = messagesData?.find(item => item.id === id);
-        setTextToReply(messageObject?.text || "(изображение)")
+  const resetImage = () => {
+    if (!sending) {
+      setImage("");
+      setStatus("");
     }
+  };
 
-    useEffect(() => {
-        if (isFocused) {
-            if (loggedUser <= id) {
-                setKeyIdentifier("-chat-" + loggedUser + "-" + id);
-            } else {
-                setKeyIdentifier("-chat-" + id + "-" + loggedUser);
-            }
+  const sendMessage = async () => {
+    let text = latestMessage.current.trim();
 
-            const ws = new WebSocket('ws://nevka.site:7190');
+    if (!sending && id && (text != "" || image != "")) {
+      setSending(true);
+      text =
+        "NE5[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
 
-            ws.onopen = () => {
-                ws.send(JSON.stringify({ token: token, subscribeToChat: id }));
-                console.log("WebSocket connection opened (Chat)");
-            };
+      const formData = new FormData();
+      formData.append("token", token);
+      formData.append("chat", id);
+      formData.append("text", text);
+      formData.append("image", image);
+      formData.append("reply", replyTo);
+      formData.append("api-key", "qonxod-Kicmad-4puvhy");
 
-            ws.onmessage = (e) => {
-                const data = JSON.parse(e.data);
-                setMessagesData(data);
-                setLoading(false);
-                console.log("Updated: Messages via WS for: " + id);
-            };
+      const preview = {
+        id: "0",
+        me: "true",
+        text: text,
+        image: image,
+        timestamp: Math.floor(Date.now() / 1000).toString(),
+        formattedTime: "Отправка...",
+        isUnread: "1",
+        reply: "",
+        encrypted: encryptionType == "" ? false : true,
+      };
 
-            ws.onclose = (e) => {
-                console.log("WebSocket connection closed (Chat):", e.code);
-
-                if (e.code == 1006 || e.code == 1001) {
-                    // if websocket is not available or terminated, get messages via API
-                    getMessages(token, id);
-                    console.log("Updated: Messages via API for: " + id);
-                    setTimeout(() => setUpdate(update + 1), 500);
-                }
-            };
-
-            return () => {
-                ws.close();
-            };
+      if (replyTo !== "") {
+        const messageObject = messagesData?.find((item) => item.id === replyTo);
+        const replyString = messageObject?.text || "(изображение)";
+        if (messageObject!.me === "true") {
+          preview["reply"] = "Вы: " + replyString;
+        } else {
+          preview["reply"] = replyString;
         }
-    }, [update, isFocused, id]);
+      }
 
-    return (
-        <View style={styles.container}>
-            <Stack.Screen options={{
-                title: name,
-                headerTitle: () => (
-                    <TouchableOpacity
-                        onPress={() => router.navigate({
-                            pathname: '/(tabs)/people/person',
-                            params: { id, name },
-                        })}>
-                        <Text style={{ fontSize: 17, fontWeight: '600' }}>{name}</Text>
-                    </TouchableOpacity>
-                )
-            }} />
-            {loading ? <ActivityIndicator style={{ flex: 1 }} /> : <FlatList
-                inverted
-                initialNumToRender={1000}
-                style={{ flex: 1, width: '100%' }}
-                data={messagesData}
-                contentContainerStyle={{ flexDirection: 'column-reverse' }}
-                renderItem={({ item }) => <MessageItem item={item} replyHandler={reply} decodeHandler={decode} keyIdentifier={keyIdentifier} />}
-                ListEmptyComponent={<Text style={{ fontSize: 18, textAlign: 'center', margin: 15, color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray' }}>Сообщений нет</Text>}
-            />}
-            {replyTo === "" ? null : <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <View style={{ justifyContent: 'center', alignItems: 'center', margin: '3%', marginBottom: 0 }}>
-                    <FontAwesome
-                        name="reply"
-                        size={27}
-                        color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
-                    />
-                </View>
-                <Text numberOfLines={2}
-                    style={{
-                        color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
-                        fontSize: 17,
-                        margin: '1%',
-                        marginBottom: -1,
-                        flex: 1,
-                        justifyContent: 'center'
-                    }}>Ответ на: {textToReply}</Text>
-                <Pressable style={{ justifyContent: 'center', alignItems: 'center', margin: '3%', paddingHorizontal: 4 }}
-                    onPress={() => setReplyTo("")}>
-                    {({ pressed }) => (
-                        <FontAwesome
-                            name="times"
-                            size={27}
-                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }}
-                        />
-                    )}
-                </Pressable>
-            </View>}
-            {status === "" ? null : <Text style={{
-                color: colorScheme === 'light' ? 'darkslategray' : 'lightslategray',
-                fontSize: 17,
-                marginTop: 7,
-                marginHorizontal: '3%',
-                textAlign: 'center'
-            }}>{status}</Text>}
-            <KeyboardAvoidingView
-                style={{ flexDirection: 'row', marginBottom: isLiquidGlassAvailable() ? 80 : null }}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                keyboardVerticalOffset={headerHeight}
+      setMessagesData([...messagesData!, preview]);
+      setMessage("");
+      setImage("");
+      setReplyTo("");
+      setStatus("");
+
+      try {
+        const response = await fetch(domain + "/api/sendMessage.php", {
+          method: "POST",
+          body: formData,
+        });
+        const json = await response.json();
+        if (json.result == "failure") {
+          if (json.error == "wrong_token") {
+            setToken("");
+          }
+          setStatus(json.error);
+          setMessage(text);
+        } else if (json.result == "success") {
+          latestMessage.current = "";
+        }
+      } catch (error) {
+        console.log(
+          "Ошибка отправки сообщения " +
+            id +
+            ", проблемы с соединением?\n" +
+            error,
+        );
+      } finally {
+        setSending(false);
+      }
+    }
+  };
+
+  const reply = (id: string) => {
+    setReplyTo(id);
+    const messageObject = messagesData?.find((item) => item.id === id);
+    setTextToReply(messageObject?.text || "(изображение)");
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      if (loggedUser <= id) {
+        setKeyIdentifier("-chat-" + loggedUser + "-" + id);
+      } else {
+        setKeyIdentifier("-chat-" + id + "-" + loggedUser);
+      }
+
+      const ws = new WebSocket("ws://nevka.site:7190");
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ token: token, subscribeToChat: id }));
+        console.log("WebSocket connection opened (Chat)");
+      };
+
+      ws.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        setMessagesData(data);
+        setLoading(false);
+        console.log("Updated: Messages via WS for: " + id);
+      };
+
+      ws.onclose = (e) => {
+        console.log("WebSocket connection closed (Chat):", e.code);
+
+        if (e.code == 1006 || e.code == 1001) {
+          getMessages(token, id);
+          console.log("Updated: Messages via API for: " + id);
+          setTimeout(() => setUpdate(update + 1), 500);
+        }
+      };
+
+      return () => {
+        ws.close();
+      };
+    }
+  }, [update, isFocused, id]);
+
+  return (
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: name,
+          headerTitle: () => (
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(tabs)/people/person",
+                  params: { id, name },
+                })
+              }
             >
-                {image === "" ? <Pressable style={{ justifyContent: 'center', alignItems: 'flex-start', margin: '3%' }}
-                    onPress={pickImage}>
-                    {({ pressed }) => (
-                        <FontAwesome
-                            name="picture-o"
-                            size={27}
-                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }}
-                        />
-                    )}
-                </Pressable> : <Pressable style={{ justifyContent: 'center', alignItems: 'flex-start', margin: '3%', paddingHorizontal: 1 }}
-                    onPress={resetImage}>
-                    {({ pressed }) => (
-                        <FontAwesome
-                            name="window-close-o"
-                            size={27}
-                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }}
-                        />
-                    )}
-                </Pressable>}
-                <TextInput
-                    multiline
-                    enterKeyHint='send'
-                    style={inputStyle}
-                    value={message}
-                    onChangeText={(text) => {
-                        setMessage(text);
-                        latestMessage.current = text;
-                    }}
-                    maxLength={1023}
-                    submitBehavior='submit'
-                    onSubmitEditing={sendMessage}
-                ></TextInput>
-                <Pressable style={{ justifyContent: 'center', alignItems: 'flex-end', margin: '3%' }}
-                    onPress={sendMessage}>
-                    {({ pressed }) => (
-                        <FontAwesome
-                            name="paper-plane-o"
-                            size={27}
-                            color={Colors[(colorScheme === 'dark' ? 'dark' : 'light')].text}
-                            style={{ opacity: pressed ? 0.5 : 1 }}
-                        />
-                    )}
-                </Pressable>
-            </KeyboardAvoidingView>
+              <Text style={{ fontSize: 17, fontWeight: "600" }}>{name}</Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      {loading ? (
+        <ActivityIndicator style={{ flex: 1 }} />
+      ) : (
+        <FlatList
+          inverted
+          initialNumToRender={1000}
+          style={{ flex: 1, width: "100%" }}
+          data={messagesData}
+          contentContainerStyle={{ flexDirection: "column-reverse" }}
+          renderItem={({ item }) => (
+            <MessageItem
+              item={item}
+              replyHandler={reply}
+              decodeHandler={decode}
+              keyIdentifier={keyIdentifier}
+            />
+          )}
+          ListEmptyComponent={
+            <Text
+              style={{
+                fontSize: 18,
+                textAlign: "center",
+                margin: 15,
+                color:
+                  colorScheme === "light" ? "darkslategray" : "lightslategray",
+              }}
+            >
+              Сообщений нет
+            </Text>
+          }
+        />
+      )}
+      {replyTo === "" ? null : (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "3%",
+              marginBottom: 0,
+            }}
+          >
+            <FontAwesome
+              name="reply"
+              size={27}
+              color={Colors[colorScheme === "dark" ? "dark" : "light"].text}
+            />
+          </View>
+          <Text
+            numberOfLines={2}
+            style={{
+              color:
+                colorScheme === "light" ? "darkslategray" : "lightslategray",
+              fontSize: 17,
+              margin: "1%",
+              marginBottom: -1,
+              flex: 1,
+              justifyContent: "center",
+            }}
+          >
+            Ответ на: {textToReply}
+          </Text>
+          <Pressable
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "3%",
+              paddingHorizontal: 4,
+            }}
+            onPress={() => setReplyTo("")}
+          >
+            {({ pressed }) => (
+              <FontAwesome
+                name="times"
+                size={27}
+                color={Colors[colorScheme === "dark" ? "dark" : "light"].text}
+                style={{ opacity: pressed ? 0.5 : 1 }}
+              />
+            )}
+          </Pressable>
         </View>
-    );
+      )}
+      {status === "" ? null : (
+        <Text
+          style={{
+            color: colorScheme === "light" ? "darkslategray" : "lightslategray",
+            fontSize: 17,
+            marginTop: 7,
+            marginHorizontal: "3%",
+            textAlign: "center",
+          }}
+        >
+          {status}
+        </Text>
+      )}
+      <KeyboardAvoidingView
+        style={{
+          flexDirection: "row",
+          marginBottom: isLiquidGlassAvailable() ? 80 : null,
+        }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={headerHeight}
+      >
+        {image === "" ? (
+          <Pressable
+            style={{
+              justifyContent: "center",
+              alignItems: "flex-start",
+              margin: "3%",
+            }}
+            onPress={pickImage}
+          >
+            {({ pressed }) => (
+              <FontAwesome
+                name="picture-o"
+                size={27}
+                color={Colors[colorScheme === "dark" ? "dark" : "light"].text}
+                style={{ opacity: pressed ? 0.5 : 1 }}
+              />
+            )}
+          </Pressable>
+        ) : (
+          <Pressable
+            style={{
+              justifyContent: "center",
+              alignItems: "flex-start",
+              margin: "3%",
+              paddingHorizontal: 1,
+            }}
+            onPress={resetImage}
+          >
+            {({ pressed }) => (
+              <FontAwesome
+                name="window-close-o"
+                size={27}
+                color={Colors[colorScheme === "dark" ? "dark" : "light"].text}
+                style={{ opacity: pressed ? 0.5 : 1 }}
+              />
+            )}
+          </Pressable>
+        )}
+        <TextInput
+          multiline
+          enterKeyHint="send"
+          style={inputStyle}
+          value={message}
+          onChangeText={(text) => {
+            setMessage(text);
+            latestMessage.current = text;
+          }}
+          maxLength={1023}
+          submitBehavior="submit"
+          onSubmitEditing={sendMessage}
+        ></TextInput>
+        <Pressable
+          style={{
+            justifyContent: "center",
+            alignItems: "flex-end",
+            margin: "3%",
+          }}
+          onPress={sendMessage}
+        >
+          {({ pressed }) => (
+            <FontAwesome
+              name="paper-plane-o"
+              size={27}
+              color={Colors[colorScheme === "dark" ? "dark" : "light"].text}
+              style={{ opacity: pressed ? 0.5 : 1 }}
+            />
+          )}
+        </Pressable>
+      </KeyboardAvoidingView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    darkInput: {
-        flex: 1,
-        maxHeight: 80,
-        color: Colors.dark.text,
-        backgroundColor: 'rgba(255, 255, 255, 0.04)',
-        padding: '3%',
-        borderRadius: 25,
-        marginVertical: '3%',
-        fontSize: 17,
-        borderWidth: 1,
-        borderColor: Colors.dark.borders
-    },
-    lightInput: {
-        flex: 1,
-        maxHeight: 80,
-        color: Colors.light.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.04)',
-        padding: '3%',
-        borderRadius: 25,
-        marginVertical: '3%',
-        fontSize: 17,
-        borderWidth: 1,
-        borderColor: Colors.light.borders
-    },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  darkInput: {
+    flex: 1,
+    maxHeight: 80,
+    color: Colors.dark.text,
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    padding: "3%",
+    borderRadius: 25,
+    marginVertical: "3%",
+    fontSize: 17,
+    borderWidth: 1,
+    borderColor: Colors.dark.borders,
+  },
+  lightInput: {
+    flex: 1,
+    maxHeight: 80,
+    color: Colors.light.text,
+    backgroundColor: "rgba(0, 0, 0, 0.04)",
+    padding: "3%",
+    borderRadius: 25,
+    marginVertical: "3%",
+    fontSize: 17,
+    borderWidth: 1,
+    borderColor: Colors.light.borders,
+  },
 });

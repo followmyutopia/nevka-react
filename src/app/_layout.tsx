@@ -1,39 +1,37 @@
 /**
- * Nevka Mobile v1.7
+ * Nevka Mobile v1.8
  * 2025-2026 Avicus Delacroix
  */
 
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-import NevkaProvider from '../providers/nevkaProvider';
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { useColorScheme } from '@/src/components/useColorScheme';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import NevkaProvider from "../providers/nevkaProvider";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useColorScheme } from "@/src/components/useColorScheme";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: 'Невка',
+  initialRouteName: "Невка",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -55,19 +53,40 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <NevkaProvider>
         <GestureHandlerRootView>
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="signup" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="passwordReset" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen
+              name="signup"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="passwordReset"
+              options={{ presentation: "modal", headerShown: false }}
+            />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="create-discussion" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="create-wall" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="agreement" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="call" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen
+              name="settings"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="create-discussion"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="create-wall"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="agreement"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="call"
+              options={{ presentation: "modal", headerShown: false }}
+            />
           </Stack>
         </GestureHandlerRootView>
       </NevkaProvider>
