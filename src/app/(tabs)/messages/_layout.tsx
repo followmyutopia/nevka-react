@@ -45,26 +45,6 @@ export default function MenuStack() {
               </Pressable>
             </Link>
           ),
-          headerLeft: () => (
-            <Link href="/(tabs)/messages/discussions" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="comments-o"
-                    size={25}
-                    color={
-                      Colors[colorScheme === "dark" ? "dark" : "light"].text
-                    }
-                    style={{
-                      marginHorizontal: 5,
-                      marginBottom: 4,
-                      opacity: pressed ? 0.5 : 1,
-                    }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
           headerStyle: {
             backgroundColor: "transparent",
           },
@@ -88,68 +68,6 @@ export default function MenuStack() {
         options={{
           title: "Чат",
           headerBackTitle: "Сообщения",
-          headerTitleAlign: "center",
-          headerStyle: {
-            backgroundColor: "transparent",
-          },
-          headerBackground: () => (
-            <LinearGradient
-              colors={[
-                colorScheme === "light" ? Colors.light.tabs : Colors.dark.tabs,
-                colorScheme === "light"
-                  ? Colors.light.background
-                  : Colors.dark.background,
-              ]}
-              style={{ flex: 1 }}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="discussions"
-        options={{
-          title: "Обсуждения",
-          headerTitleAlign: "center",
-          headerRight: () => (
-            <Link href="/create-discussion" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="plus"
-                    size={25}
-                    color={
-                      Colors[colorScheme === "dark" ? "dark" : "light"].text
-                    }
-                    style={{ marginTop: 2, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-          headerStyle: {
-            backgroundColor: "transparent",
-          },
-          headerBackground: () => (
-            <LinearGradient
-              colors={[
-                colorScheme === "light" ? Colors.light.tabs : Colors.dark.tabs,
-                colorScheme === "light"
-                  ? Colors.light.background
-                  : Colors.dark.background,
-              ]}
-              style={{ flex: 1 }}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="topic"
-        options={{
-          title: "Тема",
           headerTitleAlign: "center",
           headerStyle: {
             backgroundColor: "transparent",
