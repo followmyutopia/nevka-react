@@ -198,7 +198,6 @@ export default function messages() {
         console.log("getChats error: " + json.error);
       } else if (json.result == "empty") {
         setChatsData([]);
-        console.log(json.error);
       } else if (json.result == "success") {
         json.chats.pop();
         json.chats.forEach((obj: ChatsData) => {

@@ -172,7 +172,6 @@ export default function people() {
         console.log("getPeople error: " + json.error);
       } else if (json.result == "empty") {
         setPeopleData([]);
-        console.log(json.error);
       } else if (json.result == "success") {
         json.people.pop();
         setPeopleData(json.people);

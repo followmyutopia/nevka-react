@@ -63,7 +63,6 @@ export default function signup() {
         body: formData,
       });
       const json = await response.json();
-      console.log(json);
       if (json.result == "failure") {
         setEmailStatus(json.error);
         setEmailEditable(true);
