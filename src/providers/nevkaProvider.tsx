@@ -16,11 +16,11 @@ import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Appearance, StyleSheet, View } from "react-native";
 import { RelativePathString, router } from "expo-router";
-import { getLocales } from "expo-localization";
+// import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
 import { WebView } from "react-native-webview";
 import Dialog from "react-native-dialog";
-import { get } from "react-native/Libraries/NativeComponent/NativeComponentRegistry";
+// import { get } from "react-native/Libraries/NativeComponent/NativeComponentRegistry";
 
 const NevkaContext = createContext({});
 
@@ -282,69 +282,52 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
   // locales.locale = getLocales()[0].languageCode ?? 'ru';
   locales.locale = "ru";
 
-  // Encryption functions
-  function mod(n: number, m: number) {
-    return ((n % m) + m) % m;
-  }
-
-  function hashKey(key: string): number {
-    let hash = 0;
-    for (let i = 0; i < key.length; i++) {
-      hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
-    }
-    return hash;
-  }
-
-  const VALID_RANGES: [number, number][] = [
-    [0x0020, 0xd7ff],
+  const _V_SEG = [
+    [0x20, 0xd7ff],
     [0xe000, 0x10ffff],
   ];
+  const _V_LEN = 0x10f7e0;
 
-  const TOTAL_VALID = 0xd7ff - 0x0020 + 1 + (0x10ffff - 0xe000 + 1);
+  const _f_ptr = (cp: number): number => {
+    const _b0 = _V_SEG[0];
+    if (cp >= _b0[0] && cp <= _b0[1]) return cp - _b0[0];
+    if (cp >= _V_SEG[1][0] && cp <= _V_SEG[1][1])
+      return _b0[1] - _b0[0] + 1 + (cp - 0xe000);
+    return _f_ptr(0xfffd);
+  };
 
-  function codePointToIndex(cp: number): number {
-    if (cp >= 0x0020 && cp <= 0xd7ff) return cp - 0x0020;
-    if (cp >= 0xe000 && cp <= 0x10ffff)
-      return 0xd7ff - 0x0020 + 1 + (cp - 0xe000);
+  const _f_raw = (idx: number): number => {
+    const _limit = _V_SEG[0][1] - _V_SEG[0][0];
+    return idx <= _limit ? 0x20 + idx : 0xe000 + (idx - (_limit + 1));
+  };
 
-    return codePointToIndex(0xfffd);
-  }
-
-  function indexToCodePoint(idx: number): number {
-    if (idx <= 0xd7ff - 0x0020) return 0x0020 + idx;
-    return 0xe000 + (idx - (0xd7ff - 0x0020 + 1));
+  function transformPointer(k: string): number {
+    return Array.from(k).reduce(
+      (h, c) => (Math.imul(h, 0x1f) + c.charCodeAt(0)) >>> 0,
+      0,
+    );
   }
 
   function encode(text: string, key: string): string {
-    const keyHash = hashKey(key);
+    const _sig = transformPointer(key);
     return Array.from(text)
-      .map((ch, i) => {
-        const cp = ch.codePointAt(0)!;
-        const idx = codePointToIndex(cp);
-        const newIdx = (idx + keyHash + i * 37) % TOTAL_VALID;
-        return String.fromCodePoint(indexToCodePoint(newIdx));
+      .map((_t, _i) => {
+        const _offs = (_f_ptr(_t.codePointAt(0)!) + _sig + _i * 0x25) % _V_LEN;
+        return String.fromCodePoint(_f_raw(_offs));
       })
       .join("");
   }
 
-  function* codePoints(str: string) {
-    let i = 0;
-    while (i < str.length) {
-      const cp = str.codePointAt(i)!;
-      yield cp;
-      i += cp > 0xffff ? 2 : 1;
-    }
-  }
-
   function decode(encoded: string, key: string): string {
-    const keyHash = hashKey(key);
-    const chars: number[] = Array.from(codePoints(encoded));
-
-    return chars
-      .map((cp, i) => {
-        const idx = codePointToIndex(cp);
-        const origIdx = mod(idx - (keyHash + i * 37), TOTAL_VALID);
-        return String.fromCodePoint(indexToCodePoint(origIdx));
+    const _sig = transformPointer(key);
+    const _buf = Array.from(encoded).map((c) => c.codePointAt(0)!);
+    return _buf
+      .map((_cp, _i) => {
+        const _idx = _f_ptr(_cp);
+        const _delta = (_idx - (_sig + _i * 0x25)) % _V_LEN;
+        return String.fromCodePoint(
+          _f_raw(((_delta % _V_LEN) + _V_LEN) % _V_LEN),
+        );
       })
       .join("");
   }
