@@ -21,6 +21,7 @@ import Colors from "@/src/constants/Colors";
 import Dialog from "react-native-dialog";
 import { registerForNotifications } from "../../../providers/expoNotifications";
 import { useIsFocused } from "@react-navigation/native";
+const ne5ChatKey = process.env.EXPO_PUBLIC_CHAT_KEY;
 
 type ChatsData = {
   id: string;
@@ -222,7 +223,7 @@ export default function messages() {
             }
             obj.lastText = decode(
               obj.lastText.slice(4, -1),
-              "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+              ne5ChatKey + keyIdentifier,
             );
             obj.encrypted = true;
           } else obj.encrypted = false;
@@ -309,7 +310,7 @@ export default function messages() {
           }
           obj.lastText = decode(
             obj.lastText.slice(4, -1),
-            "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+            ne5ChatKey + keyIdentifier,
           );
           obj.encrypted = true;
         } else obj.encrypted = false;

@@ -21,6 +21,7 @@ import { I18n } from "i18n-js";
 import { WebView } from "react-native-webview";
 import Dialog from "react-native-dialog";
 // import { get } from "react-native/Libraries/NativeComponent/NativeComponentRegistry";
+const voxKey = process.env.EXPO_PUBLIC_VOX_PASS;
 
 const NevkaContext = createContext({});
 
@@ -335,7 +336,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
   const voxLogin = (username: string) => {
     console.log("Voximplant: logging in as " + username);
     webviewRef.current?.injectJavaScript(`
-            window.login('${username}'+'@nevka.avicus.n4.voximplant.com', 'PASTE_VOX_PASSWORD_HERE');
+            window.login('${username}'+'@nevka.avicus.n4.voximplant.com', ${voxKey});
             true;
         `);
   };
@@ -481,7 +482,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
         </Dialog.Container>
         <WebView
           ref={webviewRef}
-          source={{ uri: domain + "/api/vox.html" }}
+          source={{ uri: "https://nevka.online/api/vox.html" }}
           style={{
             flex: 1,
             backgroundColor: "transparent",

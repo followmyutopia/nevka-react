@@ -26,6 +26,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import * as ImagePicker from "expo-image-picker";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
+const ne5ChatKey = process.env.EXPO_PUBLIC_CHAT_KEY;
 
 type MessageData = {
   id: string;
@@ -55,7 +56,7 @@ const MessageItem = ({
   if (item.text.startsWith("NE5[") && item.text.endsWith("]")) {
     item.text = decodeHandler(
       item.text.slice(4, -1),
-      "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+      ne5ChatKey + keyIdentifier,
     );
     item.encrypted = true;
   }
@@ -63,7 +64,7 @@ const MessageItem = ({
   if (item.reply.startsWith("NE5[") && item.reply.endsWith("]")) {
     item.reply = decodeHandler(
       item.reply.slice(4, -1),
-      "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+      ne5ChatKey + keyIdentifier,
     );
   }
 
@@ -72,7 +73,7 @@ const MessageItem = ({
       "Вы: " +
       decodeHandler(
         item.reply.slice(8, -1),
-        "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier,
+        ne5ChatKey + keyIdentifier,
       );
   }
 
@@ -372,7 +373,7 @@ export default function chat() {
     if (!sending && id && (text != "" || image != "")) {
       setSending(true);
       text =
-        "NE5[" + encode(text, "PASTE_PRIVATE_CHAT_KEY_HERE" + keyIdentifier) + "]";
+        "NE5[" + encode(text, ne5ChatKey + keyIdentifier) + "]";
 
       const formData = new FormData();
       formData.append("token", token);
