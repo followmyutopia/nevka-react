@@ -28,7 +28,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
@@ -69,10 +68,6 @@ function RootLayoutNav() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="settings"
-              options={{ presentation: "modal", headerShown: false }}
-            />
-            <Stack.Screen
-              name="create-discussion"
               options={{ presentation: "modal", headerShown: false }}
             />
             <Stack.Screen
