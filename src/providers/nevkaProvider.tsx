@@ -379,6 +379,7 @@ export default function NevkaProvider({ children }: PropsWithChildren) {
       console.log("Current domain: " + json.domain);
     } catch (e) {
       console.log(e);
+      setDomain("https://nevka.online");
     }
   };
 

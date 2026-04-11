@@ -279,7 +279,7 @@ export default function messages() {
       router.navigate("/settings");
     }
 
-    const ws = new WebSocket("ws://nevka.site:7190");
+    const ws = new WebSocket("ws://nevka.online:7190");
 
     ws.onopen = () => {
       ws.send(JSON.stringify({ token: token, subscribeToChatList: true }));
